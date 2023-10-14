@@ -1,17 +1,15 @@
-import org.antlr.v4.runtime.tree.ParseTree;
-
 public abstract class Refactoring {
-    public ParseTree refactor(ParseTree tree) throws RefactoringException{
-        if (!this.checkPreconditions(tree)) {
+    public String refactor(String text) throws RefactoringException{
+        if (!this.checkPreconditions(text)) {
             throw new RefactoringException("Preconditions not met.");
         }
-        ParseTree refactoredTree = this.transform(tree);
-        if (!this.checkPostconditions(refactoredTree)) {
+        String refactoredText = this.transform(text);
+        if (!this.checkPostconditions(refactoredText)) {
             throw new RefactoringException("Postconditions not met.");
         }
-        return refactoredTree;
+        return refactoredText;
     }
-    protected abstract boolean checkPreconditions(ParseTree tree);
-    protected abstract ParseTree transform(ParseTree tree);
-    protected abstract boolean checkPostconditions(ParseTree tree);
+    protected abstract boolean checkPreconditions(String text);
+    protected abstract String transform(String text);
+    protected abstract boolean checkPostconditions(String text);
 }
