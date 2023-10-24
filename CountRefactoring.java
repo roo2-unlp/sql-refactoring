@@ -2,7 +2,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-class CountRefactoring extends Refactoring{
+class CountRefactoring extends Refactoring {
     private String preconditionText = null;
 
     private SQLiteParser createSQLiteParser(String text) {
