@@ -13,6 +13,8 @@ class CountRefactoring extends Refactoring {
     }
 
     protected boolean checkPreconditions(String text) {
+        if ( ! text.contains("COUNT") && ! text.contains("count")) { return false; }
+
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 

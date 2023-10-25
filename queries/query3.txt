@@ -1,0 +1,1 @@
+select count(*) from alumnos where dni>25000000 and dni<30000000;
