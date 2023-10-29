@@ -3,7 +3,6 @@ import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
 class CountRefactoring extends Refactoring {
-    private String preconditionText = null;
 
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -13,19 +12,11 @@ class CountRefactoring extends Refactoring {
     }
 
     protected boolean checkPreconditions(String text) {
-        if ( ! text.contains("COUNT") && ! text.contains("count")) { return false; }
-
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0) {
-            preconditionText = null;
-            return false;
-        }
-        
-        preconditionText = newParseTree.getText();
-        
-        return true;
+        return (parser.getNumberOfSyntaxErrors() > 0 || !text.toLowerCase().contains("count(*)"));
+
     }
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
@@ -37,10 +28,7 @@ class CountRefactoring extends Refactoring {
         return transformedText;
     }
     protected boolean checkPostconditions(String text) {
-        if (preconditionText == null) {
-            return false;
-        }
+        return !text.toLowerCase().contains("count(*)");// Deberia agregar antes el select?
 
-        return preconditionText.equals(text);
     }
 }
