@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.beans.Transient;
 
@@ -9,8 +10,9 @@ public class ReplaceOrWithInRefactoringTest{
     public void replaceOrWithInRefactorAQuery() throws RefactoringException {
         String result;
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        result = refactoring.refactor("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';");  
-        assertTrue(true,result);
+        //result = refactoring.refactor("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';");  
+        
+        assertTrue(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';"));
         
  
     }

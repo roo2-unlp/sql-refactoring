@@ -15,13 +15,17 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 	protected boolean checkPreconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
-
-        if (parser.getNumberOfSyntaxErrors() > 0 || 
-        (!this.chequearOR(text)  || !this.chequearComparacionIgualdad(text) || !this.chequearIgualdadDeCampos(text) 
-        || !this.chequearCondiciones(text))) {
-            preconditionText = null;
-            return false;
+        try {
+            if (parser.getNumberOfSyntaxErrors() > 0 || 
+            (!this.chequearOR(text)  || !this.chequearComparacionIgualdad(text) || !this.chequearIgualdadDeCampos(text) )) {
+                System.out.println("dentro IF");
+                preconditionText = null;
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("No cumple con la precondicion");
         }
+        
 
         preconditionText = newParseTree.getText();
         
@@ -30,19 +34,19 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 
     //SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado = 'Casado';
 
-    private String obtenerClausulaWhere(String text) {
+    private String obtenerClausulaWhere(String text) throws Exception{
         String[] partesSql = text.split("WHERE");
-        if (partesSql.lenght() > 2 ){
-            return throw new Exception;
+        if (partesSql.length > 2 ){
+            throw new Exception();
         }
         return partesSql[1]; //Me quedo con la clausula where y su contenido
     }
 
-    private boolean chequearOR(String text) {
+    private boolean chequearOR(String text) throws Exception{
         return obtenerClausulaWhere(text).contains(" OR ");
     }
 
-    private boolean chequearComparacionIgualdad(String text) {
+    private boolean chequearComparacionIgualdad(String text) throws Exception{
         String cadena = obtenerClausulaWhere(text);
         return cadena.contains("=") && !contieneOperadoresComparacion(cadena);
     }
@@ -53,33 +57,23 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
             cadena.contains("!=");
     }
 
-    private boolean chequearIgualdadDeCampos(String text) {
+    private boolean chequearIgualdadDeCampos(String text) throws Exception{
         String cadena = obtenerClausulaWhere(text);
-        String condicionOR = cadena.split("OR");
-        String[] campo = condicionOR.split("=");
+        String[] condicionOR = cadena.split("OR");
+        String[] campo = condicionOR[0].split("=");
         for (String condicion : condicionOR) {
-            if (!condicion.trim().startsWith(campo[0])) {
+            if (!condicion.trim().startsWith(campo[0].trim())) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean chequearCondiciones(String text) {
-    String[] condiciones = text.split(" OR ");
 
-    for (String condicion : condiciones) {
-        if (!condicion.trim().startsWith("estado_civil = ")) {
-            return false;
-        }
-    }
-
-    return true;
-}
 	@Override
 	protected String transform(String text) {
 		// TODO Auto-generated method stub
-		return this.checkPreconditions(text);
+		return null;
 	}
 
 	@Override
