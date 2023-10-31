@@ -4,13 +4,13 @@ import java.util.List;
 public class CountAndTableVisitor {
 
     List<ParserRuleContext> countNodes = new ArrayList<>(4);
-    List<String> columnNames = new ArrayList<>(4);
+    List<String> tableNames = new ArrayList<>(4);
 
     public List<ParserRuleContext> getCountNodes() {
         return this.countNodes;
     }
     public List<String> getTableNamesAndAlias() {
-        return columnNames;
+        return tableNames;
     }
 
     @Override
@@ -19,9 +19,9 @@ public class CountAndTableVisitor {
         if (ctx.table_name() != null) {
             // Obtiene el nombre de la tabla o alias.
             if (ctx.table_alias() != null){
-                this.columnNames.add(ctx.table_alias().getText());
+                this.tableNames.add(ctx.table_alias().getText());
             }else{
-                this.columnNames.add(ctx.table_name().getText());
+                this.tableNames.add(ctx.table_name().getText());
             }
         }
 
