@@ -46,10 +46,14 @@ public class LikeRefactoring extends Refactoring {
         ParseTree tree = parser.parse();
 
         LikeVisitor visitor = new LikeVisitor(); // creo el visitor
-        String transformedText = visitor.visitParse(visitor.visitLiteral_value(tree)); // supongo que va asi.. hace la
-                                                                                       // transformacion del contenido
-                                                                                       // del visitor de esa regla
+        // String transformedText=visitor.visitParse(visitor.visitLiteral_value(tree));
+        // supongo que va asi..
+        // hace la transformacion del contenido del visitor de esa regla
 
+        // o va asi?
+        String transformedText = visitor.generalVisit(tree);
+
+        String i = visitor.visitLiteral_value(tree);
         return transformedText;
     }
 
