@@ -42,4 +42,22 @@ public class LikeRefactoringTest {
 
     }
 
+    @Test
+    public void LikeRefactoringInMiddleAndFirst() throws RefactoringException {
+        String result;
+        LikeRefactoring refactoring = new LikeRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name WHERE nombre LIKE '%a%r';");
+        assertTrue(result.equals("SELECT * FROM table_name WHERE nombre LIKE 'ar%';"));
+
+    }
+
+    @Test
+    public void NoneLikeRefactoring() throws RefactoringException {
+        String result;
+        LikeRefactoring refactoring = new LikeRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name WHERE nombre LIKE 'ar';");
+        assertTrue(result.equals("SELECT * FROM table_name WHERE nombre LIKE 'ar';"));
+
+    }
+
 }
