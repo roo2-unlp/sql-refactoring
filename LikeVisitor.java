@@ -4,22 +4,21 @@ import sqlitegrammar.*;
 
 public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
 
-    public String generalVisit(SQLiteParser.ParseContext ctx) {
+    @Override
+    public String visitParse(SQLiteParser.ParseContext ctx) {
+        this.visitChildren(ctx);
+        return ctx.getText();
+    }
+
+    //entro al nodo q me interesa (se hace de esta manera?)
+    public String visitLiteral_value(SQLiteParser.ExprContext ctx) {
         if (ctx.getChild(1).getText().equals("LIKE") || ctx.getChild(1).getText().equals("like")) {
-            visitParse(ctx.getChild(2));
+            this.executeAction(ctx.getChild(2)); //cuando encuentro el nodo, realizo el refactor
         }
         return visitChildren(ctx);
     }
-    // como funciona el visitChildren? (lo vimos de un compañero)
-
-    // como recorremos el arbol?
-
-    // como evaluamos q estemos en el nodo correcto?
-
-    // la regla es el literal_value ?
-
-    @Override
-    public String visitParse(SQLiteParser.ParseContext ctx) {
+ 
+        public String executeAction(SQLiteParser.ParseContext ctx){ 
         String value = ctx.getText(); // tomo el texto
         String refactoredValue = value.replace("%", ""); // le saco todos los %
         return refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo

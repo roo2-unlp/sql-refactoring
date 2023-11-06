@@ -5,17 +5,6 @@ import sqlitegrammar.*;
 public class LikeRefactoring extends Refactoring {
     private String preconditionText = null;
 
-    public String refactor(String text) throws RefactoringException {
-        if (!this.checkPreconditions(text)) {
-            throw new RefactoringException("Preconditions not met.");
-        }
-        String refactoredText = this.transform(text);
-        if (!this.checkPostconditions(refactoredText)) {
-            throw new RefactoringException("Postconditions not met.");
-        }
-        return refactoredText;
-    }
-
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
@@ -33,7 +22,7 @@ public class LikeRefactoring extends Refactoring {
         }
 
         preconditionText = newParseTree.getText();
-
+        // el % es exclusivo de la clausula LIKE. https://www.sqlite.org/lang_expr.html
         if (!preconditionText.contains("%")) {
             return false;
         }
@@ -45,15 +34,9 @@ public class LikeRefactoring extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-        LikeVisitor visitor = new LikeVisitor(); // creo el visitor
-        // String transformedText=visitor.visitParse(visitor.visitLiteral_value(tree));
-        // supongo que va asi..
-        // hace la transformacion del contenido del visitor de esa regla
+        LikeVisitor visitor = new LikeVisitor(); 
+        String transformedText = visitor.visit(tree);
 
-        // o va asi?
-        String transformedText = visitor.generalVisit(tree);
-
-        String i = visitor.visitLiteral_value(tree);
         return transformedText;
     }
 
