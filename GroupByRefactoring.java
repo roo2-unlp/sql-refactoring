@@ -1,9 +1,9 @@
-
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class NullRefactoring extends Refactoring{
+public class GroupByRefactoring extends Refactoring {
+    
     private String preconditionText = null;
 
     private SQLiteParser createSQLiteParser (String text) {
@@ -14,6 +14,7 @@ public class NullRefactoring extends Refactoring{
     }
 
     protected boolean checkPreconditions(String text) {
+        // hace el visitor 
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
@@ -26,7 +27,6 @@ public class NullRefactoring extends Refactoring{
         
         return true;
     }
-    
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
@@ -43,4 +43,5 @@ public class NullRefactoring extends Refactoring{
 
         return preconditionText.equals(text);
     }
+     
 }
