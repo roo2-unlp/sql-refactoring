@@ -1,0 +1,21 @@
+Para ejecutar los siguientes comandos es necesario que la variable CLASSPATH posea:
+- La dirección donde se encuentra antlr4 
+- La dirección donde se encuentra hamcrest
+- La dirección donde se encuentra junit
+- La carpeta donde están las clases generadas por antlr4
+
+Ejemplo de mi variable CLASSPATH:
+CLASSPATH="C:\JavaLib\antlr-4.13.1-complete.jar;C:\JavaLib\junit-4.13.2.jar;C:\JavaLib\hamcrest-all-1.3.jar;.\sqlitegrammar;."
+
+URL que explica instalación Junit y utilización por terminal:
+https://hikmetcakir.medium.com/how-to-run-test-classes-in-command-line-2322da70195f
+
+Para compilar los archivos java (si está el CLASSPATH configurado):
+javac -d output .\sqlitegrammar\*.java .\*.java
+
+Para ejecutar el Test Case por terminal (si está el CLASSPATH configurado):
+cd output
+java org.junit.runner.JUnitCore NullRefactoringTest
+
+En el caso de que no se configure la variable CLASSPATH, puede añadirse a los comandos anteriores la opcion "-cp". Ejemplo propio:
+javac -cp "C:\JavaLib\antlr-4.13.1-complete.jar;C:\JavaLib\junit-4.13.2.jar;C:\JavaLib\hamcrest-all-1.3.jar;.\sqlitegrammar;." -d output .\sqlitegrammar\*.java .\*.java
