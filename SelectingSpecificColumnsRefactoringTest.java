@@ -5,22 +5,22 @@ import java.beans.Transient;
 import org.junit.Test;
 
 
-public class NullRefactoringTest {
+public class SelectingSpecificColumnsRefactoringTest {
 
     @Test 
-    public void nullrefactorAQuery() throws RefactoringException {
+    public void SelectingSpecificColumnsRefactorAQuery() throws RefactoringException {
         String result;
-        Refactoring refactoring = new NullRefactoring();
+        Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
         result = refactoring.refactor("SELECT * FROM table_name;");  
         assertTrue(result.length() == 27);
  
     }
 
     @Test 
-    public void nullrefactorABadQuery()  {
+    public void SelectingSpecificColumnsRefactorABadQuery()  {
         
         boolean failure = false;
-        Refactoring refactoring = new NullRefactoring();
+        Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
         try{
             refactoring.refactor("FOOBAR * WHERE 1=1;");  
         }
@@ -28,6 +28,15 @@ public class NullRefactoringTest {
 
         assertTrue(failure);
             
+    }
+
+     @Test 
+    public void SelectingSpecificColumnsRefactorAQueryAsterisco() throws RefactoringException {
+        String result, textoNoEsperado ="SELECT *";
+        Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name;");
+        result = result.substring(0,8);
+        assertTrue(textoNoEsperado.equals(result));
     }
 
 

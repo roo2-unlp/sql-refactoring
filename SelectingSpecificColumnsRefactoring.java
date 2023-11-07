@@ -3,7 +3,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class NullRefactoring extends Refactoring{
+public class SelectingSpecificColumnsRefactoring extends Refactoring{
     private String preconditionText = null;
 
     private SQLiteParser createSQLiteParser (String text) {
@@ -30,7 +30,7 @@ public class NullRefactoring extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-        NullVisitor visitor = new NullVisitor();
+        SelectingSpecificColumnsVisitor visitor = new SelectingSpecificColumnsVisitor();
         String transformedText = visitor.visit(tree);
         
         return transformedText;
