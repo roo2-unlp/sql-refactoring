@@ -28,7 +28,7 @@ public class GroupByRefactoring extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0 && checkDistinctAfterSelect(text)) {
+        if (parser.getNumberOfSyntaxErrors() == 0 && checkDistinctAfterSelect(text)) {
             preconditionText = newParseTree.getText();
             return true;
         }
