@@ -2,8 +2,7 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class GroupByRefactoring extends Refactoring {
-    
+public class GroupByRefactoring extends Refactoring{
     private String preconditionText = null;
 
     private SQLiteParser createSQLiteParser (String text) {
@@ -13,19 +12,30 @@ public class GroupByRefactoring extends Refactoring {
         return new SQLiteParser(tokens);
     }
 
+    // private boolean checkIncludedDistinct(String text) {
+    //     // Check if the text includes a the worid "DISTINCT"
+    //     return text.contains("DISTINCT");
+        
+    // }
+
+    private boolean checkDistinctAfterSelect(String text) {
+        // Check if the text includes a the worid "DISTINCT"
+        return text.contains("SELECT DISTINCT");
+        
+    }
+
     protected boolean checkPreconditions(String text) {
-        // hace el visitor 
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0) {
-            preconditionText = null;
-            return false;
+        if (parser.getNumberOfSyntaxErrors() > 0 && checkDistinctAfterSelect(text)) {
+            preconditionText = newParseTree.getText();
+            return true;
         }
         
-        preconditionText = newParseTree.getText();
+        preconditionText = null;
         
-        return true;
+        return false;
     }
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
@@ -43,5 +53,4 @@ public class GroupByRefactoring extends Refactoring {
 
         return preconditionText.equals(text);
     }
-     
 }
