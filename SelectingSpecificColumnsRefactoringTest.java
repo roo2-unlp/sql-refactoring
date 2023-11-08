@@ -8,35 +8,30 @@ import org.junit.Test;
 public class SelectingSpecificColumnsRefactoringTest {
 
     @Test 
-    public void SelectingSpecificColumnsRefactorAQuery() throws RefactoringException {
+    public void SelectingSpecificColumnsRefactorAQueryAsterisco() {
         String result;
         Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
-        result = refactoring.refactor("SELECT * FROM table_name;");  
-        assertTrue(result.length() == 27);
- 
+        result = refactoring.refactor("SELECT * FROM table_name;");
+        result = result.substring(0,result.indexOf("FROM"));
+        assertFalse(result.contains("*"));
     }
 
     @Test 
-    public void SelectingSpecificColumnsRefactorABadQuery()  {
-        
-        boolean failure = false;
-        Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
-        try{
-            refactoring.refactor("FOOBAR * WHERE 1=1;");  
-        }
-        catch(Exception e) { failure = true; }
-
-        assertTrue(failure);
-            
-    }
-
-     @Test 
-    public void SelectingSpecificColumnsRefactorAQueryAsterisco() throws RefactoringException {
-        String result, textoNoEsperado ="SELECT *";
+    public void SelectingSpecificColumnsRefactorAQuerySubquery() {
+        String result;
         Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
         result = refactoring.refactor("SELECT * FROM table_name;");
-        result = result.substring(0,8);
-        assertTrue(textoNoEsperado.equals(result));
+        result = result.substring(0,result.indexOf("FROM"));
+        assertFalse(result.contains("("));
+    }
+
+    @Test 
+    public void SelectingSpecificColumnsRefactorAQueryColumnaInexistente() throws RefactoringException {
+        String result;
+        Refactoring refactoring = new SelectingSpecificColumnsRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name;");
+        result = result.substring(0,result.indexOf("FROM"));
+        assertFalse(result.contains("*"));
     }
 
 

@@ -4,5 +4,8 @@
         "c:\\JavaLib\\antlr-4.13.1-complete.jar",
         "c:\\JavaLib\\hamcrest-all-1.3.jar",
         "c:\\JavaLib\\junit-4.13.2.jar"
+    ],
+    "java.project.sourcePaths": [
+        "sqlitegrammar"
     ]
 }
