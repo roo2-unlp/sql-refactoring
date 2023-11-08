@@ -1,8 +1,10 @@
 
 public class RenameAlias extends Refactoring {
 
-	public void renameAlias() {
-		
+	private String alias;
+	
+	public void renameAlias(String alias) {
+		this.alias = alias;
 	}
 	public boolean aliasExist() {
 		return true;
