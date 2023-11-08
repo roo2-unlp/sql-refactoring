@@ -26,10 +26,15 @@ public class LimitWithOrderBy extends Refactoring{
         return true;
     }
     protected String transform(String text) {
+        //verificar que el texto tenga el limit
+        //si no lo tiene que lo setee
+        if(!text.contains("LIMIT")){
+            text = text + "LIMIT 5";
+        }
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-        NullVisitor visitor = new NullVisitor();
+        LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
         String transformedText = visitor.visit(tree);
         
         return transformedText;
