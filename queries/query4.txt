@@ -1,2 +1,8 @@
-
-SELECT COUNT(*) FROM EMPLEADOS as aeee INNER JOIN (SELECT COUNT(*) FROM ADMINISTRATIVE_ROL) AS Subquery ON EMPLEADOS.ID = Subquery.COUNT WHERE EMPLEADOS.AGE IN ( SELECT COUNT(*) FROM ACTUALLY_WORKING as worker) GROUP BY EMPLEADOS.ID HAVING COUNT(*) > 100;
+SELECT 
+(SELECT COUNT(*) FROM Usuarios) AS TotalUsuarios,
+(SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18) AS UsuariosMayoresDeEdad,
+(SELECT COUNT(*) FROM Usuarios WHERE Genero = 'Femenino') AS UsuariosFemeninos,
+(SELECT COUNT(*) FROM Usuarios WHERE Ciudad = 'Nueva York') AS UsuariosEnNuevaYork,
+(SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18 AND Ciudad = 'Nueva York') AS UsuariosMayoresDeEdadEnNuevaYork
+FROM Usuarios
+ LIMIT 1;
