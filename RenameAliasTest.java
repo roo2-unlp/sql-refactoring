@@ -1,79 +1,80 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RenameAliasTest {
+	private RenameAlias refactoring;
+	private String queryWithAlias;
+	private String queryWithoutAlias;
+	private String queryRefactored;
 
-	/*
-	 * @Test
-	 * public void renameAlias() {
-	 * String result;
-	 * Refactoring refactoring = new RenameAlias();
-	 * String query = "FROM Products AS Pro\r\n"
-	 * + "	INNER JOIN Categories AS Cat\r\n"
-	 * + "	ON Pro.CategoryID = Cat.CategoryID";
-	 * assertNotEqual(nombreAlias, refactoring.refactor(query))
-	 * refactoring.setAlias(nombreAlias);
-	 * assertEquals()
-	 * }
-	 */
-	@Test
-	public void testRenameAlias() throws RefactoringException {
-		RenameAlias refactoring = new RenameAlias();
-		refactoring.renameAlias("pais"); // agregaría también nuevo alias
-		String query = "SELECT nombre AS nom_pais FROM paises";
+	@BeforeEach
+	void setUp() throws Exception {
 
-		// chequearía las precondiciones antes de refactorizar
-		String refactoredSql = refactoring.refactor(query);
+		refactoring = new RenameAlias();
+		// Seteo el alias que quiero cambiar y el nuevo alias
+		refactoring.setAlias("nom_pais", "pais");
 
-		boolean preconditions = refactoring.checkPreconditions(query);
-		boolean postconditions = refactoring.checkPostconditions(refactoring.refactor(query));
-
-		// Verifica que las condiciones previas y posteriores se cumplan
-		assertTrue(preconditions);
-		assertTrue(postconditions);
-
-		assertEquals("SELECT nombre AS pais FROM paises", refactoredSql);
+		queryWithAlias = "SELECT nombre AS nom_pais FROM paises";
+		// Query sin alias
+		queryWithoutAlias = "SELECT nombre FROM paises";
+		// Query refactorizada
+		queryRefactored = "SELECT nombre AS pais FROM paises";
 	}
 
 	@Test
-	public void aliasExist() {
-		RenameAlias refactoring = new RenameAlias();
-		// chequear que el alias que quiero cambiar exista
-		refactoring.renameAlias("pais");
-		String query = "SELECT nombre AS pais FROM paises";
-
-		try {
-			refactoring.refactor(query);
-			fail("se deberia lanzar una excepción porque el alias ya existe");
-		} catch (RefactoringException e) {
-			assertEquals("Preconditions not met.", e.getMessage());
-		}
+	public void testAliasExist() {
+		// Testea que si el alias existe, se haya cambiado correctamente
+		assertTrue(refactoring.aliasExist(queryWithAlias, "nom_pais"));
+		assertEquals(queryRefactored, refactoring.refactor(queryWithAlias));
 	}
 
 	@Test
-	public void newAliasNotExist() {
-		RenameAlias refactoring = new RenameAlias();
-		// chequear que el nuevo alias no exista
-		refactoring.renameAlias("pais");
-		String query = "SELECT nombre AS p FROM paises";
-		String refactoredSql = refactoring.refactor(query);
-		assertEquals("SELECT nombre AS pais FROM paises", refactoredSql);
+	public void testAliasNotExist() {
+		// Testea que si el alias no existe la query no haya cambiado
+		assertFalse(refactoring.aliasExist(queryWithAlias, "nom_p"));
+		assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
 	}
 
 	@Test
-	public void postConditionsFailed() {
-		RenameAlias refactoring = new RenameAlias();
-		refactoring.renameAlias("legajo* ");
-		String query = "SELECT numero_de_legajo AS nro_legajo FROM estudiantes";
-		try {
-			String refactoredSql = refactoring.refactor(query);
-			fail("se deberia lanzar una excepción porque el alias es válido pero"
-					+ "la consulta es sintacticamente incorrecta");
-		} catch (RefactoringException e) {
-			assertEquals("Postconditions not met.", e.getMessage());
-		}
+	public void testQueryWithouAlias() {
+		// Testea que la query sin alias no se haya cambiado
+		assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
+	}
+
+	@Test
+	public void testNewAliasNotExist() {
+		// Testea que el nuevo alias no exista
+		assertTrue(refactoring.newAliasNotExist(queryWithAlias, "pais"));
+	}
+
+	@Test
+	public void testNewAliasExist() {
+		// Testea que si el nuevo alias ya existe no se hacen cambios
+		assertEquals(queryRefactored, refactoring.refactor(queryRefactored));
+	}
+
+	@Test
+	public void testInvalidAlias() {
+		// Testea que el alias no sea una palabra reservada
+		refactoring.setAlias("nom_pais", "*");
+		assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+	}
+
+	@Test
+	public void testAliasIsNameOfTable() {
+		// Testea que si el alias es igual al nombre de la tabla no se hace el cambio
+		refactoring.setAlias("nom_pais", "paises");
+		assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+	}
+
+	@Test
+	public void testAliasIsNameOfColumn() {
+		// Testea que si el alias es igual al nombre de la columna no se hace el cambio
+		refactoring.setAlias("nom_pais", "nombre");
+		assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
 	}
 }
