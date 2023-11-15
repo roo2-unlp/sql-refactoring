@@ -1,6 +1,6 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import sqlitegrammar.*;
+//import sqlitegrammar..*;
 
 public class LikeRefactoring extends Refactoring {
     private String preconditionText = null;

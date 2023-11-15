@@ -1,6 +1,6 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import sqlitegrammar.*;
+//import sqlitegrammar.*;
 
 public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
 
@@ -10,17 +10,18 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
         return ctx.getText();
     }
 
-    //entro al nodo q me interesa (se hace de esta manera?)
-    public String visitLiteral_value(SQLiteParser.ExprContext ctx) {
+    //entro al nodo q me interesa (se hace de esta manera?) (visitLiteral_value --> linea258, SQLiteParserBaseVisitor)
+    public String visitExpr(SQLiteParser.ExprContext ctx) {
+        System.out.println("dhhdhdhd"+ ctx.LIKE_());
         if (ctx.getChild(1).getText().equals("LIKE") || ctx.getChild(1).getText().equals("like")) {
-            this.executeAction(ctx.getChild(2)); //cuando encuentro el nodo, realizo el refactor
+           // this.executeAction(ctx.getChild(2)); //cuando encuentro el nodo, realizo el refactor
         }
         return visitChildren(ctx);
     }
  
-        public String executeAction(SQLiteParser.ParseContext ctx){ 
-        String value = ctx.getText(); // tomo el texto
-        String refactoredValue = value.replace("%", ""); // le saco todos los %
-        return refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
-    }
+   // public String executeAction(SQLiteParser.ParseTree ctx){ 
+     //   String value = ctx.getText(); // tomo el texto
+       // String refactoredValue = value.replace("%", ""); // le saco todos los %
+        //return refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
+    //}
 }
