@@ -4,8 +4,13 @@ import sqlitegrammar.*;
 
 public class GroupByVisitor extends SQLiteParserBaseVisitor<String>{
     @Override
-    public String visitSelect_core(SQLiteParser.Select_coreContext context) { 
+    public String visitParse(SQLiteParser.ParseContext ctx) { 
         //TODO chequear si necesitamos este visitParse u otro metodo de SQLITEParserBaseVisitor
-        return context.getText(); 
+        return ctx.getText(); 
+    }
+    @Override
+    public String visitSelect_core(SQLiteParser.Select_coreContext ctx){
+        return "";
+
     }
 }
