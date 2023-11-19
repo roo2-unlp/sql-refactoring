@@ -1,0 +1,1 @@
+SELECT COUNT(*) as cant_productos, SUM(precio) as precio_total FROM producto;

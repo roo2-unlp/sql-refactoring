@@ -1,8 +1,8 @@
 SELECT 
-(SELECT COUNT(*) FROM Usuarios) AS TotalUsuarios,
-(SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18) AS UsuariosMayoresDeEdad,
-(SELECT COUNT(*) FROM Usuarios WHERE Genero = 'Femenino') AS UsuariosFemeninos,
-(SELECT COUNT(*) FROM Usuarios WHERE Ciudad = 'Nueva York') AS UsuariosEnNuevaYork,
-(SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18 AND Ciudad = 'Nueva York') AS UsuariosMayoresDeEdadEnNuevaYork
+    (SELECT COUNT(*) FROM Usuarios) AS TotalUsuarios,
+    (SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18) AS UsuariosMayoresDeEdad,
+    (SELECT COUNT(*) FROM Usuarios WHERE Genero = 'Femenino') AS UsuariosFemeninos,
+    (SELECT COUNT(*) FROM Usuarios WHERE Ciudad = 'Nueva York') AS UsuariosEnNuevaYork,
+    (SELECT COUNT(*) FROM Usuarios WHERE Edad >= 18 AND Ciudad = 'Nueva York') AS UsuariosMayoresDeEdadEnNuevaYork
 FROM Usuarios
- LIMIT 1;
+LIMIT 1;

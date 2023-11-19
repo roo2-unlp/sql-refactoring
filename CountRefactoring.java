@@ -4,12 +4,11 @@ import sqlitegrammar.*;
 
 class CountRefactoring extends Refactoring {
     private String preconditionQueryText;
+    private CommonTokenStream tokens;
+    private String columnName;
 
-    private SQLiteParser createSQLiteParser(String text) {
-        CharStream charStream = CharStreams.fromString(text);
-        SQLiteLexer lexer = new SQLiteLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new SQLiteParser(tokens);
+    public CountRefactoring(String columnName) {
+        this.columnName = columnName;
     }
 
     protected boolean checkPreconditions(String query) {
@@ -27,16 +26,26 @@ class CountRefactoring extends Refactoring {
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
-
-        CountVisitor visitor = new CountVisitor();
-        String transformedText = visitor.visit(tree);//Falta implementar
+        CountVisitor visitor = new CountVisitor(tokens, this.columnName);
+        String transformedText = visitor.visit(tree);
         return transformedText.replace("<EOF>", "");
     }
 
-    protected boolean checkPostconditions(String text) {
-        return !text.equalsIgnoreCase("preconditionQueryText");
-        /* Basta con analizar que sean distintas una vez asumidas las pre condiciones?
-        * Envio cómo string la variable hasta que se desarrolle la funcionalidad
-        */
+    protected boolean checkPostconditions(String query) {
+        SQLiteParser parser = this.createSQLiteParser(query);
+        ParseTree newParseTree = parser.parse();
+        if (parser.getNumberOfSyntaxErrors() > 0){
+            return false;
+        }
+        CountFinderVisitor visitor = new CountFinderVisitor();
+        visitor.visit(newParseTree);
+        return ! visitor.existCountFunctionWithStar();
+    }
+
+    private SQLiteParser createSQLiteParser(String text) {
+        CharStream charStream = CharStreams.fromString(text);
+        SQLiteLexer lexer = new SQLiteLexer(charStream);
+        tokens = new CommonTokenStream(lexer);
+        return new SQLiteParser(tokens);
     }
 }

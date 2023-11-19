@@ -1,0 +1,5 @@
+SELECT COUNT (column)  
+FROM A 
+WHERE ID > 1 
+GROUP BY 
+HAVING (age > 17);
