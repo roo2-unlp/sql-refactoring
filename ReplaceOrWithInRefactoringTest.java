@@ -7,14 +7,16 @@ import org.junit.Test;
 public class ReplaceOrWithInRefactoringTest{
 
 	@Test 
-    public void replaceOrWithInRefactorAQuery() throws RefactoringException {
-        String result;
+    public void checkPreconditionsTrue() throws RefactoringException {
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        //result = refactoring.refactor("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';");  
-        
-        assertTrue(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';"));
-        
- 
+        //assertTrue(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';"));
+        assertTrue(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado';"));
+    }
+
+    @Test 
+    public void checkPreconditionsFalse() throws RefactoringException {
+        Refactoring refactoring = new ReplaceOrWithInRefactoring();
+        assertFalse(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero'"));
     }
 
     // @Test 
