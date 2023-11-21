@@ -21,7 +21,9 @@ public class LikeRefactoring extends Refactoring {
             return false;
         }
 
-        preconditionText = newParseTree.getText();
+        //preconditionText = newParseTree.getText();
+        preconditionText = text;
+
         // el % es exclusivo de la clausula LIKE. https://www.sqlite.org/lang_expr.html
         if (!preconditionText.contains("%")) {
             return false;
