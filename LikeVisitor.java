@@ -14,15 +14,18 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
     public String visitExpr(SQLiteParser.ExprContext ctx) {
         System.out.println("Entre a la expresion "+ ctx.LIKE_());
         if((ctx.LIKE_().equals("LIKE")) || ctx.LIKE_().equals("like")){ //si estamos en una expresion like, tomo el valor del hijo derecho
-            this.executeAction(ctx.getChild(2));
+            //this.executeAction(ctx.getChild(2));
             // return this.executeAction(ctx.getChild(2)) ????
+            String value = ctx.getChild(2).getText(); // tomo el texto
+            String refactoredValue = value.replace("%", ""); // le saco todos los %
+            refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
         }
         return visitChildren(ctx);
     }
  
-   public String executeAction(SQLiteParser.ParseTree ctx){ 
-        String value = ctx.getText(); // tomo el texto
-        String refactoredValue = value.replace("%", ""); // le saco todos los %
-        return refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
-    }
+    // public String executeAction(SQLiteParser.ParseTree ctx){ 
+    //     String value = ctx.getText(); // tomo el texto
+    //     String refactoredValue = value.replace("%", ""); // le saco todos los %
+    //     return refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
+    // }
 }
