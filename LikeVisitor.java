@@ -12,10 +12,13 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
 
     //entro al nodo q me interesa 
     public String visitExpr(SQLiteParser.ExprContext ctx) {
-        System.out.println("Entre a la expresion "+ ctx.LIKE_());
-        if((ctx.LIKE_().equals("LIKE")) || ctx.LIKE_().equals("like")){ //si estamos en una expresion like, tomo el valor del hijo derecho
+        System.out.println("Entre a la expresion "+ ctx.LIKE_().getClass() + " , " + ctx.LIKE_().getText());
+
+        if ((ctx.LIKE_().getText().equalsIgnoreCase("LIKE"))){//si estamos en una expresion like, tomo el valor del hijo derecho, 
+                                                            //agregue el getText xq sino no entraba cuando se cumplia la condicion y cambie el OR por el equalsIgnoreCase
             //this.executeAction(ctx.getChild(2));
             // return this.executeAction(ctx.getChild(2)) ????
+            System.out.println("entre, tipo de child: "+ ctx.getChild(2).getClass());
             String value = ctx.getChild(2).getText(); // tomo el texto
             String refactoredValue = value.replace("%", ""); // le saco todos los %
             refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo

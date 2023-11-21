@@ -29,7 +29,7 @@ public class LikeRefactoringTest {
         String result;
         LikeRefactoring refactoring = new LikeRefactoring();
         result = refactoring.refactor("SELECT * FROM table_name WHERE nombre LIKE 'a%r';");
-        assertTrue(result.equals("SELECT * FROM table_name WHERE nombre LIKE 'ar%';"));
+        assertTrue(result.equals("SELECT * FROM table_name WHERE nombre like 'ar%';"));
 
     }
 
