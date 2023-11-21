@@ -3,7 +3,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import sqlitegrammar.*;
 
 class CountRefactoring extends Refactoring {
-    private String preconditionQueryText;
     private CommonTokenStream tokens;
     private String columnName;
 
@@ -17,7 +16,6 @@ class CountRefactoring extends Refactoring {
         if (parser.getNumberOfSyntaxErrors() > 0){
             return false;
         }
-        this.preconditionQueryText = query;
         CountFinderVisitor visitor = new CountFinderVisitor();
         visitor.visit(newParseTree);
         return  visitor.existCountFunctionWithStar();
@@ -45,7 +43,7 @@ class CountRefactoring extends Refactoring {
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
-        tokens = new CommonTokenStream(lexer);
+        this.tokens = new CommonTokenStream(lexer);
         return new SQLiteParser(tokens);
     }
 }
