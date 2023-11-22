@@ -39,19 +39,18 @@ public class GroupByRefactoring extends Refactoring {
 
         String transformedText= visitor.visit(tree);  
 
-
-
+        
         return transformedText;
         
     }
 
     @Override
     protected boolean checkPostconditions(String text) {
+        System.out.println(text);
         SQLiteParser parser = this.createSQLiteParser(text);        
-        ParseTree newParseTree = parser.parse();
-   
-
-        if (parser.getNumberOfSyntaxErrors()>0) {
+        ParseTree tree = parser.parse(); 
+        
+        if (parser.getNumberOfSyntaxErrors() > 0 && parser.select_core().groupByExpr == null) {
             return false;            
         }          
 
