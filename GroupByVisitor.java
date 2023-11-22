@@ -6,8 +6,6 @@ import sqlitegrammar.*;
 
 public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
 
-    private StringBuilder modifiedQuery = new StringBuilder();  
-
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
 
@@ -33,10 +31,5 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
         
         return ctx.getText();
     }
-
-    public String getModifiedQuery(){
-        return modifiedQuery.toString();
-    }
-  
 
 }

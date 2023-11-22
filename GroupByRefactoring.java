@@ -29,7 +29,7 @@ public class GroupByRefactoring extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);        
         ParseTree newParseTree = parser.parse();
    
-        //Preguntar en caso que sea un sql sintacticamente correcto pero sin group by 
+        //Preguntar en caso que sea un sql sintacticamente correcto pero sin group 
         //Preguntar en caso que sea un sql sintacticamente incorrecto sin group by deberiamos tomarlo como algo que se puede transformar? ya que el getNumberOfSystaxErrors ej: Select name from persona p name; donde faltaria agregar el group by al final de p ?
         System.out.println("text en pre conditions");
         System.out.println(text);
