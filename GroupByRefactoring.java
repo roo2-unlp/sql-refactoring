@@ -49,11 +49,12 @@ public class GroupByRefactoring extends Refactoring {
         ParseTree tree = parser.parse(); 
         GroupByVisitor visitor = new GroupByVisitor();
 
+        //Deberiamos cambiar la implementacion del append para que vaya dentro del visitor? 
         String transformedText= visitor.visit(tree);  
         StringBuilder finalTransformed = new StringBuilder();
-        //TODO agregar el stmtParemeter donde necesitemos cambiarlo, por ejemplo dentro del select y en el group by 
+        //TODO verificar donde agregar el stmtParemeter donde necesitemos cambiarlo, por ejemplo dentro del select y en el group by en este caso quedo luego del transformed
         finalTransformed.append(transformedText)
-        .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());
+        .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());//buscando alternativas para formatear bien el string
         
         finalTransformed.append(preconditionText+this.stmtParameter+";");
         

@@ -35,8 +35,8 @@ public class GroupByRefactoringTest {
     public void checkGroupByFormat() throws RefactoringException{
         String result; 
         Refactoring refactoring = new GroupByRefactoring();        
-        ((GroupByRefactoring) refactoring).setStmtParameter("P.name");
-        result = refactoring.refactor("SELECT P.name,p.edad FROM PERSONA P;");//Caso exitoso
+        ((GroupByRefactoring) refactoring).setStmtParameter("P.name,p.edad");
+        result = refactoring.refactor("SeleCT P.name,p.edad FROM PERSONA P;");//Caso exitoso
         //result = refactoring.refactor("SELECT * FROM PERSONA P GROUP BY p.Name"); //Caso que tiene un problema en el select
         
         assertEquals("Select P.name FROM PERSONA P GROUP BY P.name;",result);
