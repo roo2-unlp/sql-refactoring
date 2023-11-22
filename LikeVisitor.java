@@ -12,7 +12,7 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
 
     //entro al nodo q me interesa 
     public String visitExpr(SQLiteParser.ExprContext ctx) {
-        System.out.println("Entre a la expresion "+ ctx.LIKE_().getClass() + " , " + ctx.LIKE_().getText());
+        //System.out.println("Entre a la expresion "+ ctx.LIKE_().getClass() + " , " + ctx.LIKE_().getText());
 
         if ((ctx.LIKE_().getText().equalsIgnoreCase("LIKE"))){//si estamos en una expresion like, tomo el valor del hijo derecho, 
                                                             //agregue el getText xq sino no entraba cuando se cumplia la condicion y cambie el OR por el equalsIgnoreCase

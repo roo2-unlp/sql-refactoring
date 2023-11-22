@@ -30,6 +30,11 @@ public class LikeRefactoring extends Refactoring {
         }
 
         return true;
+
+        //con visitor que chequea precond
+        // CheckPreCondVisitor PreCondVisitor = new CheckPreCondVisitor();
+        // PreCondVisitor.visit(newParseTree);
+        // return PreCondVisitor.PreConditionsAreMet();
     }
 
     protected String transform(String text) {
@@ -46,6 +51,12 @@ public class LikeRefactoring extends Refactoring {
         if (preconditionText == null) {
             return false;
         }
+        //aca podria ir un visitor chequeando la post condicion (que la expr del like tenga el % a lo ultimo)
+        //creo que va un visitor porque al solo poder modificar la consulta no tenemos valores de respuesta a las consultas de los test que coincidan
+        //con visitor que chequea postcond
+        // CheckPostCondVisitor PostCondVisitor = new CheckPostCondVisitor();
+        // PostCondVisitor.visit(newParseTree);
+        // return PostCondVisitor.PostConditionsAreMet();
 
         return preconditionText.equals(text);
     }
