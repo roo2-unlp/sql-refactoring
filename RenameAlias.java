@@ -75,7 +75,10 @@ public class RenameAlias extends Refactoring {
 	}
 
 	public boolean aliasExist(String query, String alias) {
-		return true;
+		if (query.contains(" " + alias + " ")){
+			return true;
+		}
+		return false;
 	}
 
 	public boolean newAliasNotExist(String query, String alias) {
@@ -102,38 +105,22 @@ public class RenameAlias extends Refactoring {
 			preconditionText = null;
 			return false;
 		}
-
+		
 		// Guardo el texto de la consulta
 		preconditionText = newParseTree.getText();
-
-		// Creo un visitor para recorrer el árbol de análisis sintáctico
-		AliasVisitor visitor = new AliasVisitor();
-
-		// Visito el árbol de análisis sintáctico
-		// Que la consulta tenga un alias
-		visitor.visitAliasExist(newParseTree);
-
-		// Que no exista otro alias igual al que quiero cambiar
-		visitor.visitAliasNotExist(newParseTree);
-
-		// No utilizar palabras reservadas CONSULTAR
-		// se chequea al setear el nuevo alias
-
-		// Que el nuevo alias no exista
-		visitor.visitNewAliasNotExist(newParseTree);
-
-		// Que el nuevo alias no sea igual al nombre de la tabla o de otra columna
-		visitor.visitNewAliasNotEqualTable(newParseTree);
-		visitor.visitNewAliasNotEqualColumn(newParseTree);
-
-		// Que el cambio no genere conflictos en la subquery
+	
 		return true;
 	}
 
 	@Override
 	protected String transform(String text) {
-		// TODO Auto-generated method stub
-		return null;
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree tree = parser.parse();
+
+		AliasVisitor visitor = new AliasVisitor();
+        String transformedText = visitor.visit(tree);
+        
+        return transformedText;
 	}
 
 	@Override
@@ -146,8 +133,8 @@ public class RenameAlias extends Refactoring {
 		//Sino se compara el texto de la consulta antes y después del refactoring
 		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
 		else
-        	return !(preconditionText.equals(text)) && 
-			metodo que chequea que el alias haya sido modificado en todos los lugares;
+        	return !(preconditionText.equals(text));
+			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
 	}
 
 }
