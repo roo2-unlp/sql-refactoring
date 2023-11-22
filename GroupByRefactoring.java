@@ -21,7 +21,7 @@ public class GroupByRefactoring extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);        
         ParseTree newParseTree = parser.parse();
    
-        //Valido que exista el select exista 
+        
         if (parser.getNumberOfSyntaxErrors()>0) {
             return false;            
         }
@@ -39,15 +39,21 @@ public class GroupByRefactoring extends Refactoring {
 
         String transformedText= visitor.visit(tree);  
 
+
+
         return transformedText;
         
     }
 
     @Override
     protected boolean checkPostconditions(String text) {
-        if (preconditionText == null) {
-            return false;
-        }           
+        SQLiteParser parser = this.createSQLiteParser(text);        
+        ParseTree newParseTree = parser.parse();
+   
+
+        if (parser.getNumberOfSyntaxErrors()>0) {
+            return false;            
+        }          
 
         return preconditionText.equals(text);
     }   
