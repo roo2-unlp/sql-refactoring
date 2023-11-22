@@ -8,6 +8,14 @@ import sqlitegrammar.*;
 public class GroupByRefactoring extends Refactoring {
 
     private String preconditionText = "GROUP BY";
+    private String stmtParameter;
+
+    
+   
+
+    public void setStmtParameter(String stmtParemeter){
+        this.stmtParameter=stmtParemeter;
+    }
 
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -21,6 +29,8 @@ public class GroupByRefactoring extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);        
         ParseTree newParseTree = parser.parse();
    
+        //Preguntar en caso que sea un sql sintacticamente correcto pero sin group by 
+        //Preguntar en caso que sea un sql sintacticamente incorrecto sin group by deberiamos tomarlo como algo que se puede transformar? ya que el getNumberOfSystaxErrors ej: Select name from persona p name; donde faltaria agregar el group by al final de p ?
         
         if (parser.getNumberOfSyntaxErrors()>0) {
             return false;            
@@ -39,13 +49,12 @@ public class GroupByRefactoring extends Refactoring {
 
         String transformedText= visitor.visit(tree);  
         StringBuilder finalTransformed = new StringBuilder();
+        //TODO agregar el stmtParemeter donde necesitemos cambiarlo, por ejemplo dentro del select y en el group by 
         finalTransformed.append(transformedText)
         .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());
         
-        finalTransformed.append(preconditionText+";");
+        finalTransformed.append(preconditionText+" "+this.stmtParameter+";");
         
-        System.out.println("Final transformed");
-        System.out.println(finalTransformed);
         return finalTransformed.toString();
         
     }
@@ -54,6 +63,8 @@ public class GroupByRefactoring extends Refactoring {
     protected boolean checkPostconditions(String text) {
         
         SQLiteParser parser = this.createSQLiteParser(text);        
+        System.out.println("text en post conditions");
+        System.out.println(text);
         ParseTree tree = parser.parse();         
         if (parser.getNumberOfSyntaxErrors() > 0 && parser.select_core().groupByExpr == null) {
             return false;            

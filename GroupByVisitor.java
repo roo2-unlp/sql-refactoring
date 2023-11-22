@@ -12,12 +12,12 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
 
         
-       System.out.println(ctx.SELECT_() == null ? "no se encuentra SELECT" : "Se encontro el SELECT");
-       System.out.print(ctx.result_column().size()==0 ? "no hay expresiones en el selec" : "tiene: ");
-       System.out.println(ctx.result_column().size());
+    //    System.out.println(ctx.SELECT_() == null ? "no se encuentra SELECT" : "Se encontro el SELECT");
+    //    System.out.print(ctx.result_column().size()==0 ? "no hay expresiones en el selec" : "tiene: ");
+    //    System.out.println(ctx.result_column().size());
 
-       System.out.print(ctx.groupByExpr.size()==0 ? "no hay expresiones en el group by " : "tiene: ");
-       System.out.println(ctx.groupByExpr.size());
+    //    System.out.print(ctx.groupByExpr.size()==0 ? "no hay expresiones en el group by " : "tiene: ");
+    //    System.out.println(ctx.groupByExpr.size());
 
         //si no encuentro group by tengo que agregarlo
         if (ctx.groupByExpr == null) {            
