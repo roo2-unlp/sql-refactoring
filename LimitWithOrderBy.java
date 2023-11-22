@@ -1,3 +1,5 @@
+import java.util.List;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
@@ -27,11 +29,21 @@ public class LimitWithOrderBy extends Refactoring{
             preconditionText = null;
             return false;
         }
+         // Verifica si el campo mencionado en ORDER BY es válido
+        if (!isValidField(orderByContext.expr().getText())) {
+            preconditionText = null;
+            return false;
+        }
         
         preconditionText = newParseTree.getText();
         return true;
     }
-
+ 
+    private boolean isValidField(String fieldName) {
+        // Implementa la lógica para verificar si el campo mencionado en ORDER BY es válido
+        
+        return true;  
+    }
     /*
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
