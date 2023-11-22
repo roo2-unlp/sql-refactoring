@@ -12,7 +12,7 @@ public class PostconditionsVisitor extends SQLiteParserBaseVisitor<Boolean> {
         System.out.println("------------PostconditionsVisitor--------------");
         System.out.println(" el contendido de ctx  " + ctx.getText());
         System.out.println("el contenido de ctx.IN_() es " + ctx.IN_());
-        if (ctx.IN_() != null) {
+        if ((ctx.IN_() != null) && (ctx.OR_() == null)) {
             System.out.println("estoy en el if de ctx.IN_()");
             this.cumplePostconditions = true;
             return true; // Devuelve true si encuentra OR

@@ -5,7 +5,8 @@ import sqlitegrammar.*;
 import java.util.*;
 
 public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
-    private String transformacion;
+    private String parteAntesDeWhere;
+    private String contenidoWhere;
     // public String visitParse(SQLiteParser.ParseContext ctx) {
     // return ctx.getText();
     // }
@@ -102,8 +103,19 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
     // queryBuilder.append(" WHERE ");
     // queryBuilder.append(exprContext.getText());
     // }
+    @Override
+    public String visitParse(SQLiteParser.ParseContext ctx) {
+        String consultaSQL = ctx.getText();
+        // Dividir la consulta en dos partes usando la palabra clave WHERE
+        String[] partes = consultaSQL.split("WHERE");
+        // La parte antes de WHERE estará en partes[0]
+        parteAntesDeWhere = partes[0].trim();
+        // Imprimir la parte antes de WHERE
+        System.out.println("Parte antes de WHERE: " + parteAntesDeWhere);
+        return consultaSQL;
+    }
 
-    public String getTransformacion(){
+    public String getTransformacion() {
         return "SELECT * FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
     }
 }
