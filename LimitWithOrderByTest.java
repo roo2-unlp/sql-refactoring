@@ -70,9 +70,6 @@ public class LimitWithOrderByTest {
         assertEquals("SELECT * FROM table_name LIMIT 5;", result);
     }
 
-
-    // Verificar que la columna utilizada en ORDER BY existe en la tabla   
-
     // Verifica si existe o no columna de ordenamiento 
     @Test
     public void limitWithOrderByValidQueryWithOrderByNoColumn() {
