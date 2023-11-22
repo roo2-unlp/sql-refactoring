@@ -1,0 +1,1 @@
+select nombre as n from tabla1

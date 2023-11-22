@@ -13,76 +13,7 @@ public class RenameAlias extends Refactoring {
 
 	public void setAlias(String alias, String newAlias) {
 		this.alias = alias;
-		if (!esPalabraReservada(newAlias)) {
 			this.newAlias = newAlias;
-		} else
-			this.newAlias = alias;
-	}
-
-	private boolean esPalabraReservada(String newAlias) {
-		boolean reservada = true;
-		// Dividir el nuevo alias en palabras
-		String[] palabras = newAlias.split("\\s+");
-
-		// Convertir cada palabra a mayúsculas y verificar si es una palabra reservada
-		for (int i = 0; i < palabras.length; i++) {
-			palabras[i] = palabras[i].toUpperCase();
-			switch (palabras[i]) {
-				case "SELECT":
-				case "FROM":
-				case "WHERE":
-				case "AS":
-				case "JOIN":
-				case "ON":
-				case "AND":
-				case "OR":
-				case "NOT":
-				case "IN":
-				case "LIKE":
-				case "BETWEEN":
-				case "IS":
-				case "NULL":
-				case "ORDER":
-				case "BY":
-				case "GROUP":
-				case "HAVING":
-				case "UNION":
-				case "ALL":
-				case "INTERSECT":
-				case "EXCEPT":
-				case "MINUS":
-				case "ANY":
-				case "SOME":
-				case "EXISTS":
-				case "CASE":
-				case "WHEN":
-				case "THEN":
-				case "ELSE":
-				case "END":
-				case "CREATE":
-				case "TABLE":
-				case "PRIMARY":
-				case "KEY":
-				case "*":
-					reservada = true;
-					break;
-				default:
-					reservada = false;
-					break;
-			}
-		}
-		return reservada;
-	}
-
-	public boolean aliasExist(String query, String alias) {
-		if (query.contains(" " + alias + " ")){
-			return true;
-		}
-		return false;
-	}
-
-	public boolean newAliasNotExist(String query, String alias) {
-		return true;
 	}
 
 	private SQLiteParser createSQLiteParser(String text) {
@@ -99,17 +30,17 @@ public class RenameAlias extends Refactoring {
 		SQLiteParser parser = this.createSQLiteParser(text);
 		// Creo un árbol de análisis sintáctico
 		ParseTree newParseTree = parser.parse();
-
-		// Si hay errores de sintaxis, el método retorna false
-		if (parser.getNumberOfSyntaxErrors() > 0) {
-			preconditionText = null;
-			return false;
-		}
 		
-		// Guardo el texto de la consulta
-		preconditionText = newParseTree.getText();
-	
-		return true;
+		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
+        String checked_query = visitor.visit(newParseTree);
+        
+        if (checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
+        	// Guardo el texto de la consulta
+    		preconditionText = newParseTree.getText();
+        	return true;
+        }
+		preconditionText = null;
+		return false;
 	}
 
 	@Override
@@ -117,7 +48,7 @@ public class RenameAlias extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-		AliasVisitor visitor = new AliasVisitor();
+		TransformAliasVisitor visitor = new TransformAliasVisitor();
         String transformedText = visitor.visit(tree);
         
         return transformedText;
@@ -132,9 +63,14 @@ public class RenameAlias extends Refactoring {
         }
 		//Sino se compara el texto de la consulta antes y después del refactoring
 		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
-		else
-        	return !(preconditionText.equals(text));
+		else {
+        	//return !(preconditionText.equals(text));
 			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
+			if (!(preconditionText.equals(this.transform(text)))){
+				return true;
+			}
+		}	
+			
 	}
-
 }
+
