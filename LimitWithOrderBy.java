@@ -22,15 +22,11 @@ public class LimitWithOrderBy extends Refactoring{
         }
         
         preconditionText = newParseTree.getText();
-        
         return true;
     }
+
+    /*
     protected String transform(String text) {
-        //verificar que el texto tenga el limit
-        //si no lo tiene que lo setee
-        if(!text.contains("LIMIT")){
-            text = text + "LIMIT 5";
-        }
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
@@ -39,6 +35,30 @@ public class LimitWithOrderBy extends Refactoring{
         
         return transformedText;
     }
+    */
+
+    protected String transform(String text) {
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree tree = parser.parse();
+
+        // instancio el visitor
+        LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
+        visitor.visit(tree);
+
+        if (!visitor.hasLimit()) { // Cambié de limitChecker a visitor
+            // La consulta original no tiene LIMIT, así que debemos agregar uno.
+            SQLiteParser.Limit_stmtContext limitContext = parser.limit_stmt();
+            if (limitContext == null) {
+                // Si no hay LIMIT en la consulta original, creamos uno con un valor predeterminado.
+                text = text + " LIMIT 10";
+            }
+        }
+
+        // Obtiene el texto transformado.
+        String transformedText = visitor.getText();
+        return transformedText;
+    }
+
     protected boolean checkPostconditions(String text) {
         if (preconditionText == null) {
             return false;
