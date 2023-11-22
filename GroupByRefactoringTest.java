@@ -43,42 +43,47 @@ public class GroupByRefactoringTest {
         //TODO chequear que el formato del group by sea el correcto
     }
 
-    // @Test
-    // public void testPreConditions() throws RefactoringException{
-    //     String result;
-    //     Refactoring refactoring = new GroupByRefactoring();
-    //     result = refactoring.refactor("SELECT * FROM table_name GROUP BY *;");
-    //     GroupByRefactoring res = res.checkPreconditions(result);
-    //     assertTrue(res); 
-    // }
+    @Test
+    public void testPreConditions() throws RefactoringException{
+        String result;
+        Refactoring refactoring = new GroupByRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name GROUP BY *;");
+        GroupByRefactoring res = res.checkPreconditions(result);
+        assertTrue(res); 
+    }
     
-    // @Test
-    // public void testPostConditions() throws RefactoringException{
-    //     String result;
-    //     Refactoring refactoring = new GroupByRefactoring();
-    //     result = refactoring.refactor("SELECT * FROM table_name GROUP BY *;");
-    //     GroupByRefactoring res = res.checkPostconditions(result);
-    //     assertTrue(res);
-    // }
+    @Test
+    public void testPostConditions() throws RefactoringException{
+        String result;
+        Refactoring refactoring = new GroupByRefactoring();
+        result = refactoring.refactor("SELECT * FROM table_name GROUP BY *;");
+        GroupByRefactoring res = res.checkPostconditions(result);
+        assertTrue(res);
+    }
 
-    // @Test
-    // public void testTransformAddGroupBy() throws RefactoringException{
-    //     Refactoring refactoring = new GroupByRefactoring();
-    //     String result = refactoring.transform("SELECT P.NOMBRE FROM PERSONA P");
-    //     assertEquals(result,"SELECT P.NOMBRE FROM PERSONA P GROUP BY P.NOMBRE");
-    // }
+    @Test
+    public void testTransformAddGroupBy() throws RefactoringException{
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("P.DNI,P.NOMBRE,P.APELLIDO");
+        String result = refactoring.transform("SELECT P.DNI,P.NOMBRE,P.APELLIDO FROM PERSONA P");
+        assertEquals(result,"SELECT P.DNI,P.NOMBRE,P.APELLIDO FROM PERSONA P GROUP BY P.DNI,P.NOMBRE,P.APELLIDO;");
+    }
 
     //@Test
     //public void testTransformDistinct() throws RefactoringException{
     //    Refactoring refactoring = new GroupByRefactoring();
-    //    String result = refactoring.transform("SELECT DISTINCT(P.NOMBRE) FROM PERSONA P");
-    //    assertEquals(result,"SELECT DISTINCT(P.NOMBRE) FROM PERSONA P");
+    //    String result = refactoring.transform("SELECT DISTINCT(P.NOMBRE) FROM PERSONA P;");
+    //    assertEquals(result,"SELECT DISTINCT(P.NOMBRE) FROM PERSONA P;");
     //}
 
-    // @Test
-    // public void testTransforAgregationFunction() throws RefactoringException{
-    //     Refactoring refactoring = new GroupByRefactoring();
-    //     String result = refactoring.transform("SELECT P.NOMBRE,MAX(P.EDAD) FROM PERSONA P");
-    //     assertEquals(result,"SELECT P.NOMBRE,MAX(P.EDAD) FROM PERSONA P GROUP BY P.NOMBRE");
-    // }
+    @Test
+    public void testTransforAgregationFunction() throws RefactoringException{
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("V.PATENTE");
+        String result = refactoring.transform("SELECT V.PATENTE,MAX(V.PESO) FROM VEHICULO V");
+        assertEquals(result,"SELECT V.PATENTE,MAX(V.PESO) FROM VEHICULO V GROUP BY V.PATENTE;");
+    }
+
+
+
 }
