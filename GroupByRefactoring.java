@@ -43,8 +43,7 @@ public class GroupByRefactoring extends Refactoring {
         .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());
         
         finalTransformed.append(preconditionText+";");
-        System.out.println("Capacity");
-        System.out.println(finalTransformed.capacity());
+        
         System.out.println("Final transformed");
         System.out.println(finalTransformed);
         return finalTransformed.toString();
