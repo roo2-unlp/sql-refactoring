@@ -23,7 +23,13 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 	@Override
 	protected String transform(String text) {
 		// TODO Auto-generated method stub
-		return "hola mundo";
+		SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree tree = parser.parse();
+
+        TransformVisitor visitor = new TransformVisitor();
+        visitor.visit(tree);
+        String visitTransform = visitor.getTransformacion();
+        return visitTransform;
 	}
 
 	@Override

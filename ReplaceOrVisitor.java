@@ -8,7 +8,7 @@ public class ReplaceOrVisitor extends SQLiteParserBaseVisitor<Boolean> {
     private boolean visitOr;
 
    @Override
-    public Boolean visitExpr(SQLiteParser.ExprContext ctx) {
+   public Boolean visitExpr(SQLiteParser.ExprContext ctx) {
         // Verificar si la expresión contiene varias comparaciones con OR
         if (ctx.OR_() != null) {
             this.visitOr = true;
@@ -18,10 +18,13 @@ public class ReplaceOrVisitor extends SQLiteParserBaseVisitor<Boolean> {
             return false; // Devuelve false si no encuentra OR
         }
     }
+   
 
     public boolean getVisitOr(){
         return this.visitOr;
     }
+
+
 
 
     
