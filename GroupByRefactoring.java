@@ -32,24 +32,30 @@ public class GroupByRefactoring extends Refactoring {
     protected String transform(String text) {
         // Agregar Visitor aca en caso de detectar cual necesitamos tomar de ejemplo el
         // que esta en NullRefactoring
+        
         SQLiteParser parser = this.createSQLiteParser(text);        
-        ParseTree tree = parser.parse();  
-
+        ParseTree tree = parser.parse(); 
         GroupByVisitor visitor = new GroupByVisitor();
 
         String transformedText= visitor.visit(tree);  
-
+        StringBuilder finalTransformed = new StringBuilder();
+        finalTransformed.append(transformedText)
+        .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());
         
-        return transformedText;
+        finalTransformed.append(preconditionText+";");
+        System.out.println("Capacity");
+        System.out.println(finalTransformed.capacity());
+        System.out.println("Final transformed");
+        System.out.println(finalTransformed);
+        return finalTransformed.toString();
         
     }
 
     @Override
     protected boolean checkPostconditions(String text) {
-        System.out.println(text);
-        SQLiteParser parser = this.createSQLiteParser(text);        
-        ParseTree tree = parser.parse(); 
         
+        SQLiteParser parser = this.createSQLiteParser(text);        
+        ParseTree tree = parser.parse();         
         if (parser.getNumberOfSyntaxErrors() > 0 && parser.select_core().groupByExpr == null) {
             return false;            
         }          
