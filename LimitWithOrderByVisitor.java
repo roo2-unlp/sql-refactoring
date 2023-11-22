@@ -38,4 +38,6 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<Void> {
         // Devuelve el texto transformado
         return transformedText.toString().trim();
     }
+
+    // tendiramos que agregar el visitor que verifica si existe o no la columna o ordenar ?
 }

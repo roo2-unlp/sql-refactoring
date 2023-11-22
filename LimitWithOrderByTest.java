@@ -12,6 +12,7 @@ public class LimitWithOrderByTest {
         assertTrue(result.length() == 27);
     }
 
+    // deberia dar error de sintaxis
     @Test 
     public void limitwithorderbyrefactorABadQuery()  { 
         boolean failure = false;
@@ -21,19 +22,39 @@ public class LimitWithOrderByTest {
         }
         catch(Exception e) { failure = true; }
         assertTrue(failure);
+    } 
+
+    @Test
+    public void testLimitWithOrderByRefactor() throws RefactoringException {
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();
+        
+        // Caso de prueba: Consulta válida con ORDER BY
+        String inputQuery = "SELECT * FROM table_name ORDER BY column_name;";
+        assertTrue(refactoring.checkPreconditions(inputQuery));
+        
+        String result = refactoring.transform(inputQuery);
+        assertEquals("SELECT * FROM table_name ORDER BY column_name LIMIT 10", result);
+        
+        assertTrue(refactoring.checkPostconditions(result));
     }
 
-    // Verifica que la consulta refactorizada tenga una cláusula LIMIT pero no ORDER BY
     @Test
-    public void limitWithOrderByValidQueryWithOrderBy() throws RefactoringException {
-        Refactoring refactoring = new LimitWithOrderBy();
-        String inputQuery = "SELECT * FROM table_name ORDER BY column_name LIMIT 10;";
-        //si no tiene limit hay que agregarlo. llama refactor
-        String result = refactoring.refactor(inputQuery);
-        assertEquals("SELECT * FROM table_name LIMIT 10;", result);
+    public void testLimitWithOrderByInvalidQuery() throws RefactoringException {
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();
+        
+        // Caso de prueba: Consulta inválida sin ORDER BY
+        String inputQuery = "SELECT * FROM table_name;";
+        assertFalse(refactoring.checkPreconditions(inputQuery));
+        
+        // La transformación no debería cambiar la consulta
+        String result = refactoring.transform(inputQuery);
+        assertEquals(inputQuery, result);
+        
+        // No se deben cumplir las postcondiciones
+        assertFalse(refactoring.checkPostconditions(result));
     }
-    
 }
+    
 
 // agregar test para verificar que hacemos si hay una subquery? 
 

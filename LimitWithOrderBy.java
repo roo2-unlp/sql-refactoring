@@ -16,7 +16,14 @@ public class LimitWithOrderBy extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0) {
+        //Revisa que la sintaxis sea exitoso
+        if (parser.getNumberOfSyntaxErrors() > 0) { 
+            preconditionText = null;
+            return false;
+        }
+        // Verifica si la consulta contiene la cláusula ORDER BY
+        SQLiteParser.Ordering_termContext orderByContext = parser.ordering_term();
+        if (orderByContext == null) {
             preconditionText = null;
             return false;
         }
@@ -59,11 +66,17 @@ public class LimitWithOrderBy extends Refactoring{
         return transformedText;
     }
 
+    // verifica que la consulta despues de la transformacion tenga LIMIT
     protected boolean checkPostconditions(String text) {
-        if (preconditionText == null) {
-            return false;
-        }
-
-        return preconditionText.equals(text);
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree tree = parser.parse();
+        LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
+        visitor.visit(tree);
+        return !visitor.visitLimit_stmt(text);
+   
+        //if (preconditionText == null) {
+        //    return false;
+        // }
+        //return preconditionText.equals(text);
     }
 }
