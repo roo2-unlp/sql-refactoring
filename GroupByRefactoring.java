@@ -1,11 +1,13 @@
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
+
+
 import sqlitegrammar.*;
 
 public class GroupByRefactoring extends Refactoring {
 
-    private String preconditionText = "ROBERT";
+    private String preconditionText = "GROUP BY";
 
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -16,15 +18,13 @@ public class GroupByRefactoring extends Refactoring {
 
     @Override
     protected boolean checkPreconditions(String text) {
-        SQLiteParser parser = this.createSQLiteParser(text);
+        SQLiteParser parser = this.createSQLiteParser(text);        
         ParseTree newParseTree = parser.parse();
-
-        if (parser.getNumberOfSyntaxErrors() > 0) {
-            preconditionText = null;
-            return false;
+   
+        //Valido que exista el select exista 
+        if (parser.getNumberOfSyntaxErrors()>0) {
+            return false;            
         }
-        preconditionText = newParseTree.getText();
-
         return true;
     }
 
@@ -32,40 +32,23 @@ public class GroupByRefactoring extends Refactoring {
     protected String transform(String text) {
         // Agregar Visitor aca en caso de detectar cual necesitamos tomar de ejemplo el
         // que esta en NullRefactoring
-        SQLiteParser parser = this.createSQLiteParser(text);
-
-        ParseTree tree = parser.select_core();
-        ParseTree tree2 = parser.column_name();
-        System.out.print("tree : ");
-        System.out.println(tree);
-        System.out.print("tree2 : ");
-        System.out.println(tree2);
-
-        System.out.println("");
-        System.out.print("text : ");
-        System.out.println(text);
+        SQLiteParser parser = this.createSQLiteParser(text);        
+        ParseTree tree = parser.parse();  
 
         GroupByVisitor visitor = new GroupByVisitor();
-        String transformedText = visitor.visit(tree);
 
-        System.out.println("");
-        System.out.print("transformedText: ");
-        System.out.println(transformedText);
+        String transformedText= visitor.visit(tree);  
 
         return transformedText;
-
+        
     }
 
     @Override
     protected boolean checkPostconditions(String text) {
-        if (preconditionText == "GROUP_BY") {
+        if (preconditionText == null) {
             return false;
-        }
-        System.out.println("");
-        System.out.print("preconditionstest: ");
-        System.out.println(preconditionText);
+        }           
 
         return preconditionText.equals(text);
-    }
-
+    }   
 }
