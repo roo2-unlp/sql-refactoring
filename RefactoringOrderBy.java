@@ -30,11 +30,28 @@ public class RefactoringOrderBy extends Refactoring {
 	}
 	
 	public String transform(String text) {
-		
+		SQLiteParser parser = this.createSQLiteParser(text);
+	    ParseTree newParseTree = parser.parse();
+	    VisitorAddOrderBy visitorAddOrder = new VisitorAddOrderBy();
+	    
+	    
+	    
 	}
 
 	public boolean checkPostconditions(String text) {
-	
+		SQLiteParser parser = this.createSQLiteParser(text);
+	    ParseTree newParseTree = parser.parse();
+		
+		//Chequea que no haya error de sintaxis
+		if (parser.getNumberOfSyntaxErrors() > 0) {
+			return false
+		}
+		
+		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
+		visitor.visit(newParseTree);
+		
+		//Verificamos que se haya hecho la transformacion de agregar order by.
+		return visitor.isValid();
 	}
 	
 	

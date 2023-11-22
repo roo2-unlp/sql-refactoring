@@ -12,7 +12,7 @@ public class VisitorExistsOrderBy extends SQLiteParserBaseVisitor<Void>{
 	            hasOrderBy = true; 
 	        } 
 
-	        return super.visitSelect_stmt(ctx);
+	    //return super.visitSelect_stmt(ctx);
 	}
 	
 	public boolean isValid() {
