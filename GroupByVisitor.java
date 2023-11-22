@@ -17,18 +17,18 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
     //    System.out.print(ctx.groupByExpr.size()==0 ? "no hay expresiones en el group by " : "tiene: ");
     //    System.out.println(ctx.groupByExpr.size());
 
-        //si no encuentro group by tengo que agregarlo
+        //Deberia validar aca si no encuentro el groupBY y devolver un boolean? 
         if (ctx.groupByExpr == null) {            
-           return modifiedQuery.append("PEPE").toString();
+           //o Aca deberia hacer el agregado del groupBy?
         }
-        
-        return ctx.getText();
+        //Esto es correcto sobre lo que deberiamos devolver?
+        return ctx.SELECT_().toString()+ ctx.FROM_().toString() + ctx.groupByExpr.toString();
     }
 
 
     @Override
     public String visitParse(SQLiteParser.ParseContext ctx) {
-        
+        //Hay que buscar la forma de parsear sin los espacios
         return ctx.getText();
     }
 
