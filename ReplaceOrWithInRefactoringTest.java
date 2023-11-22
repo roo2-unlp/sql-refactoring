@@ -11,7 +11,7 @@ public class ReplaceOrWithInRefactoringTest{
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
         //assertTrue(refactoring.checkPreconditions("SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado' OR estado_civil = 'Divorciado';"));
         String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
-        String consultaFinal = "SELECT * FROM empleados WHERE IN('Soltero','Casado')";
+        String consultaFinal = "SELECT * FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
         assertTrue(refactoring.refactor(consulta).equals(consultaFinal));
     }
     //SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado';

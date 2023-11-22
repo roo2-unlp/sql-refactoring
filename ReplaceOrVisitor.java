@@ -9,7 +9,9 @@ public class ReplaceOrVisitor extends SQLiteParserBaseVisitor<Boolean> {
 
    @Override
    public Boolean visitExpr(SQLiteParser.ExprContext ctx) {
-        // Verificar si la expresión contiene varias comparaciones con OR
+       System.out.println("------------PreConditionsVisitor--------------");
+       System.out.println("ctx  " + ctx.getText());
+       System.out.println("ctx.OR_()  " + ctx.OR_());
         if (ctx.OR_() != null) {
             this.visitOr = true;
             return true; // Devuelve true si encuentra OR

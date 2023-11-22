@@ -33,9 +33,14 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 	}
 
 	@Override
-	protected boolean checkPostconditions(String text) {
-		// TODO Auto-generated method stub
-		return false;
+    protected boolean checkPostconditions(String text) {
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree newParseTree = parser.parse();
+        PostconditionsVisitor conditionVisitor = new PostconditionsVisitor();
+        conditionVisitor.visit(newParseTree);
+        boolean visitResult = conditionVisitor.getcumplePostconditions();
+        System.out.println("visitResult " + visitResult);
+        return visitResult;
 	}
 
 
