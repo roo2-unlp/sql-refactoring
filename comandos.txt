@@ -29,3 +29,9 @@ Comando q Use
 
 2) cd output
 3)java -cp "C:\JavaLib\antlr-4.13.1-complete.jar;D:\Descargas chrome\oo2-2023-redictado\junit-4.13.2.jar;D:\Descargas chrome\oo2-2023-redictado\hamcrest-all-1.3.jar;" org.junit.runner.JUnitCore NullRefactoringTest
+
+
+//////////////////
+compilar
+javac -cp "C:\JavaLib\antlr-4.13.1-complete.jar;D:\Descargas chrome\oo2-2023-redictado\junit-4.13.2.jar;D:\Descargas chrome\oo2-2023-redictado\hamcrest-all-1.3.jar;.\sqlitegrammar;." -d output .\sqlitegrammar\*.java .\*.java
+

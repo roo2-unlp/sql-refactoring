@@ -18,10 +18,14 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
                                                             //agregue el getText xq sino no entraba cuando se cumplia la condicion y cambie el OR por el equalsIgnoreCase
             //this.executeAction(ctx.getChild(2));
             // return this.executeAction(ctx.getChild(2)) ????
-            System.out.println("entre, tipo de child: "+ ctx.getChild(2).getClass());
+            //System.out.println("entre, tipo de child: "+ ctx.getChild(2).getClass());
+            System.out.println("el hijo derecho es:"+ctx.getChild(2).getText());
             String value = ctx.getChild(2).getText(); // tomo el texto
             String refactoredValue = value.replace("%", ""); // le saco todos los %
-            refactoredValue.concat("%"); // le agrego un unico % al final y se lo devuelvo
+            refactoredValue = refactoredValue.replace("'", ""); // le saco todos los ''
+            refactoredValue= refactoredValue+"%"; // le agrego un unico % al final y se lo devuelvo
+            refactoredValue= "'"+refactoredValue+"'"; // le agrego los ''
+            System.out.println(refactoredValue);
         }
         return visitChildren(ctx);
     }
