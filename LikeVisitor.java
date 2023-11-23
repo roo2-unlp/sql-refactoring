@@ -3,6 +3,8 @@ import org.antlr.v4.runtime.tree.*;
 //import sqlitegrammar.*;
 
 public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
+
+    @Override
     //entro al nodo q me interesa 
     public String visitExpr(SQLiteParser.ExprContext ctx) {
         //System.out.println("Entre a la expresion "+ ctx.LIKE_().getClass() + " , " + ctx.LIKE_().getText());
@@ -18,13 +20,20 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
                 refactoredValue = refactoredValue.replace("'", ""); // le saco todos los ''
                 refactoredValue= refactoredValue+"%"; // le agrego un unico % al final y se lo devuelvo
                 refactoredValue= "'"+refactoredValue+"'"; // le agrego los ''
-                System.out.println(refactoredValue);
-                ctx.sta
+                System.out.println("refactored value " + refactoredValue);
+                //ctx.getChild(2).setState(refactoredValue);
+                //return refactoredValue;?
             }
         }
         return super.visitExpr(ctx);
     }
  
+    //@Override
+    //protected String aggregateResult(T aggregate, T nextResult) {     //hay que poner aca el refactored value?
+	// 	return nextResult;
+	// }
+
+
     // public String executeAction(SQLiteParser.ParseTree ctx){ 
     //     String value = ctx.getText(); // tomo el texto
     //     String refactoredValue = value.replace("%", ""); // le saco todos los %
