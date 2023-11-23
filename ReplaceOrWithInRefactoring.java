@@ -17,7 +17,7 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
         ReplaceOrVisitor conditionVisitor = new ReplaceOrVisitor();
         conditionVisitor.visit(newParseTree);
         boolean visitResult = conditionVisitor.getVisitOr();
-        
+        System.out.println("Tengo que devolver ," + visitResult);
         // ESTO ROMPE POR LOS EQ, DESPUES SE TIENE QUE AGREGAR
         // IgualdadVisitor igualdadVisitor = new IgualdadVisitor();
         // igualdadVisitor.visit(newParseTree);
