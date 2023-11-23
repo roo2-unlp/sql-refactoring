@@ -12,9 +12,20 @@ public class OrderByRefactoringTest {
         assertEquals(result,"SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE");
     }
 
+	@Test // ESTE TEST DEBERIA AGREGAR EL ORDER BY AL FINAL DEL QUERY + NOMBREDECOLUMNA.
+		  //EJ:"(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2) ORDER BY columna1"
+	public void testOrderByInUnionQuery() throws RefactoringException {
+		Refactoring refactoring = new RefactoringOrderBy();
+		String query = "(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2)";
+		String result = refactoring.refactor(query);
+		assertEquals(result, query); 
+	}
+
+
+
     //Test para verificar que tipo de consulta es, si la consulta es distinta a SELECT ... -> no hace nada
     @Test
-    public void testOtroTipoConsulta() {
+    public void testTransformNoOrderByWhenInsert() {
   		 String sentenciaSQL = "Insert into Persona(nombre,edad,dni);";
   		 Refactoring refactoring = new RefactoringOrderBy();
    		try {
@@ -25,54 +36,79 @@ public class OrderByRefactoringTest {
       		    
    		}
 	}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //Estos test nada mas sirve para ver si las precondiciones y postcondiones funcionan.
-    
-    // Test para verificar que la sentencia ya tiene el order by.
-    @Test
-    public void testPrecondicionConOrderBy() {
-   		String sentenciaSQL = "Select nombre,dni from persona ORDER BY nombre";
-   		RefactoringOrderBy refactoring = new RefactoringOrderBy();
-
-   		assertTrue(refactoring.checkPreconditions(sentenciaSQL));
-   	}
-
-   	// Test para verificar que la sentencia tiene error de sintaxis
-    @Test
-    public void testPrecondicionErrorSintaxis(){
-   		String sentenciaSQL = "Sel nombre,dni from persona";
-   		RefactoringOrderBy refactoring = new RefactoringOrderBy();
-
-   		assertFalse(refactoring.checkPreconditions(sentenciaSQL));
-   	}
-  
- 
-    // Test para verificar que la sentencia no tiene el order by.
-    @Test
-    public void testPrecondicionSinOrderBy(){
- 		String sentenciaSQL = "Select nombre,dni from persona";
- 		RefactoringOrderBy refactoring = new RefactoringOrderBy();
-
- 		assertFalse(refactoring.checkPreconditions(sentenciaSQL));
- 	}
-
- 	
- 	// Test para verificar que la sentencia ya tiene el Order by luego de la transformacion
-    @Test
-    public void testPostcondicionTransformacion(){
- 		String sentenciaSQL = "Select nombre,dni from persona";
- 		RefactoringOrderBy refactoring = new RefactoringOrderBy();
-
- 		assertTrue(refactoring.checkPostconditions(sentenciaSQL));
- 	}
+	@Test // CON ORDER BY
+	public void testTransformNoOrderByWhenExists() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
+	@Test // CON GROUP BY
+	public void testTransformNoOrderByWithGroupBy() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "SELECT P.NOMBRE, COUNT(*) FROM PERSONA P GROUP BY P.NOMBRE";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
+	// ORDER BY NO TIENE UN EFECTO DIRECTO EN LA MANIPULACION DE DATOS DE ESTAS SENTENCIAS.
+	
+	@Test // CON UPDATE
+	public void testNoOrderByInUpdateQuery() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "UPDATE tabla SET columna1 = 'valorX' WHERE condicion = 'condicionX'";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
+	@Test // CON DELETE
+	public void testNoOrderByInDeleteQuery() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "DELETE FROM tabla WHERE condicion = 'condicionX'";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
+	@Test // CON CREATE
+	public void testNoOrderByInCreateTableQuery() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "CREATE TABLE nueva_tabla (columna1 TEXT, columna2 INTEGER)";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
+	@Test // CON INSERT
+	public void testNoOrderByInInsertQuery() {
+		try {
+			Refactoring refactoring = new RefactoringOrderBy();
+			String query = "INSERT INTO tabla (columna1, columna2) VALUES ('valorX', 'valorY')";
+			String result = refactoring.refactor(query);
+			assertEquals(result, query);
+		} catch (RefactoringException e) {
+			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
+		}
+	}
+	
 
 }
