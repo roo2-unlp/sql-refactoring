@@ -19,11 +19,18 @@ public class RefactoringOrderBy extends Refactoring {
 			return false;
 		}
 		
-		//Este visitor se fija si la sentencia tiene o no ya el order By.
-		//en caso de que ya lo tengo no tengo que hacer nada.
+		VisitorIsSelect visitorSelect = new VisitorIsSelect();
+		visitorSelect.visit(newParseTree);
 		
+		//Validar que sea una consulta de tipo Select,se valida antes para evitar problemas.
+		if(!visitorSelect.isSelect()){
+			return false;
+		}
+		
+		//Este visitor se fija si la sentencia tiene o no ya el order By.
 		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
 		visitor.visit(newParseTree);
+		
 		
 		return !visitor.isValid();
 
@@ -37,11 +44,15 @@ public class RefactoringOrderBy extends Refactoring {
 		
 	}
 	
+	
+	
+	
+	
 	public String transform(String text) {
 		SQLiteParser parser = this.createSQLiteParser(text);
 	    ParseTree newParseTree = parser.parse();
 	    VisitorAddOrderBy visitorAddOrder = new VisitorAddOrderBy();
-	    visitorAddOrder.visit(newParseTree);
+	  //visitorAddOrder.visit(newParseTree);
 
 		//visitorAddOrder.visitResult_column(text)?
 		//visitorAddOrder.visitResult_column(text)?
