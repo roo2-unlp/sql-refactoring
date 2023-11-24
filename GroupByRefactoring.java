@@ -8,9 +8,7 @@ import sqlitegrammar.*;
 public class GroupByRefactoring extends Refactoring {
 
     private String preconditionText = " GROUP BY ";
-    private String stmtParameter;
-
-    
+    private String stmtParameter;   
    
 
     public void setStmtParameter(String stmtParemeter){
@@ -49,14 +47,19 @@ public class GroupByRefactoring extends Refactoring {
         ParseTree tree = parser.parse(); 
         GroupByVisitor visitor = new GroupByVisitor();
 
-        //Deberiamos cambiar la implementacion del append para que vaya dentro del visitor? 
+        
         String transformedText= visitor.visit(tree);  
         StringBuilder finalTransformed = new StringBuilder();
+        
         //TODO verificar donde agregar el stmtParemeter donde necesitemos cambiarlo, por ejemplo dentro del select y en el group by en este caso quedo luego del transformed
-        finalTransformed.append(transformedText)
-        .delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());//buscando alternativas para formatear bien el string
+        finalTransformed.append(transformedText);
+        //.delete(finalTransformed.indexOf(";<EOF>", 0), finalTransformed.capacity());//buscando alternativas para formatear bien el string
+        
         
         finalTransformed.append(preconditionText+this.stmtParameter+";");
+        System.out.println("_____");
+        System.out.println("Final transformed");
+        System.out.println(transformedText);
         
         return finalTransformed.toString();
         
@@ -65,9 +68,11 @@ public class GroupByRefactoring extends Refactoring {
     @Override
     protected boolean checkPostconditions(String text) {
         
-        SQLiteParser parser = this.createSQLiteParser(text);        
+        SQLiteParser parser = this.createSQLiteParser(text);    
+        System.out.println("_____");    
         System.out.println("text en post conditions");
         System.out.println(text);
+        System.out.println("_____");
         ParseTree tree = parser.parse();         
         if (parser.getNumberOfSyntaxErrors() > 0 && parser.select_core().groupByExpr == null) {
             return false;            
