@@ -12,6 +12,8 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
 
+        //Ver que pasa cuando ya contiene 
+
         if (ctx.SELECT_() != null) {
             newText.append(ctx.SELECT_().toString() + " ");
         }
@@ -19,10 +21,14 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
              columnSize = ctx.result_column().size();            
         }
      
-        // if(ctx.FROM_() != null) {
-        // newText.append(ctx.FROM_().toString());
+        // if(ctx.result_column().size() == resultCounter) {
+        //     System.out.println("FROM AGREGAR");
+        //     System.out.println(newText);
+        //     System.out.println(resultCounter);
+        //     //newText.append(ctx.FROM_().toString());
         // }
         if (ctx.groupByExpr == null) {
+            return null;
             // validar que no hay groupy y agregarlo como el resto
         }
         String result = super.visitSelect_core(ctx);
@@ -40,8 +46,7 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitTable_alias(SQLiteParser.Table_aliasContext ctx){
-       
+    public String visitTable_alias(SQLiteParser.Table_aliasContext ctx){       
         newText.append(" "+ctx.getText());
         return ctx.getText();
     }
@@ -53,8 +58,7 @@ public class GroupByVisitor extends SQLiteParserBaseVisitor<String> {
             newText.append(ctx.getText() + ",");
         }else{
             newText.append(ctx.getText());
-        }
-        
+        }        
         return ctx.getText();
     }
 

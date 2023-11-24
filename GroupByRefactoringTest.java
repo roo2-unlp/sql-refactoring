@@ -32,15 +32,25 @@ public class GroupByRefactoringTest {
     // ////////
 
     @Test
-    public void checkGroupByFormat() throws RefactoringException{
+    public void checkQueryAfterTransformWithoutGroupBY() throws RefactoringException{
         String result; 
         Refactoring refactoring = new GroupByRefactoring();        
         ((GroupByRefactoring) refactoring).setStmtParameter("P.name,P.edad");
         result = refactoring.refactor("SeleCT P.name,P.edad FROM PERSONA P;");//Caso exitoso
-        //result = refactoring.refactor("SELECT * FROM PERSONA P GROUP BY p.Name"); //Caso que tiene un problema en el select
+        assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name,P.edad;",result);
         
-        assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name;",result);
-        //TODO chequear que el formato del group by sea el correcto
+    }
+
+    @Test
+    public void checkQueryAfterTransformWithGroupBY() throws RefactoringException{
+        String result; 
+        Refactoring refactoring = new GroupByRefactoring();        
+        ((GroupByRefactoring) refactoring).setStmtParameter("D.direccion,D.numero");
+        result = refactoring.refactor("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;");//Caso con group by
+        System.out.println("Resultado");
+        System.out.println(result);
+        assertEquals("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;",result);
+        
     }
 
   
