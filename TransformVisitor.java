@@ -116,6 +116,6 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
     }
 
     public String getTransformacion() {
-        return "SELECT * FROM empleados WHERE estado_civil OR ('Soltero', 'Casado')";
+        return "SELECT * FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
     }
 }

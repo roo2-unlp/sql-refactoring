@@ -14,16 +14,9 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
     protected boolean checkPreconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
-        ReplaceOrVisitor conditionVisitor = new ReplaceOrVisitor();
-        conditionVisitor.visit(newParseTree);
-        boolean visitResult = conditionVisitor.getVisitOr();
-        System.out.println("Tengo que devolver ," + visitResult);
-        // ESTO ROMPE POR LOS EQ, DESPUES SE TIENE QUE AGREGAR
-        // IgualdadVisitor igualdadVisitor = new IgualdadVisitor();
-        // igualdadVisitor.visit(newParseTree);
-        // boolean igualdadVisitorResult = igualdadVisitor.getVisitEQ();
-        // System.out.println("--------------    igualdadVisitorResult   -------------- ");
-        // System.out.println("igualdadVisitorResult " + igualdadVisitorResult);
+        PreconditionVisitor preconditionVisitor = new PreconditionVisitor();
+        preconditionVisitor.visit(newParseTree);
+        boolean visitResult = preconditionVisitor.getCumplePrecondicion();
         return visitResult;
     }
 
@@ -32,7 +25,6 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 		// TODO Auto-generated method stub
 		SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
-
         TransformVisitor visitor = new TransformVisitor();
         visitor.visit(tree);
         String visitTransform = visitor.getTransformacion();
@@ -43,10 +35,9 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
     protected boolean checkPostconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
-        PostconditionsVisitor conditionVisitor = new PostconditionsVisitor();
-        conditionVisitor.visit(newParseTree);
-        boolean visitResult = conditionVisitor.getcumplePostconditions();
-        System.out.println("visitResult " + visitResult);
+        PostconditionsVisitor postconditionsVisitor = new PostconditionsVisitor();
+        postconditionsVisitor.visit(newParseTree);
+        boolean visitResult = postconditionsVisitor.getcumplePostconditions();
         return visitResult;
 	}
 
