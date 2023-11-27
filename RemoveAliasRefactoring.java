@@ -11,7 +11,7 @@ public class RemoveAliasRefactoring extends Refactoring{
     private String preconditionText = null;   
     private String alias=null;
     private String aliasReference=null;
-   
+    
 
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -48,7 +48,9 @@ public class RemoveAliasRefactoring extends Refactoring{
         visitor.setAlias(alias);
         visitor.setAliasReference(aliasReference);
         String transformedText = visitor.visit(tree);
+        
         return transformedText;
+        
     }
     protected boolean checkPostconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
@@ -61,6 +63,7 @@ public class RemoveAliasRefactoring extends Refactoring{
         
          // deberia cheakear si el alias fue eliminado
     }
+    
     
     public void setAlias(String alias){
         this.alias=alias;
