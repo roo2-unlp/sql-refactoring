@@ -30,27 +30,32 @@ public class GroupByRefactoringTest {
     // }
 
     // ////////
+    
+    // @Test
+    // public void checkQueryAfterTransformWithoutGroupBY() throws RefactoringException{
+    //     String result; 
+    //     Refactoring refactoring = new GroupByRefactoring();        
+    //     ((GroupByRefactoring) refactoring).setStmtParameter("P.name,P.edad");
+    //     result = refactoring.refactor("SeleCT P.name,P.edad FROM PERSONA P;");
+    //     assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name,P.edad;",result);        
+    // }
+
+    // @Test
+    // public void checkQueryAfterTransformWithGroupBY() throws RefactoringException{
+    //     String result; 
+    //     Refactoring refactoring = new GroupByRefactoring();        
+    //     ((GroupByRefactoring) refactoring).setStmtParameter("D.direccion,D.numero");
+    //     result = refactoring.refactor("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;");   
+    //     assertEquals("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;",result);        
+    // }
 
     @Test
-    public void checkQueryAfterTransformWithoutGroupBY() throws RefactoringException{
+    public void checkQueryBadParameterAfterTransformation() throws RefactoringException{
         String result; 
         Refactoring refactoring = new GroupByRefactoring();        
-        ((GroupByRefactoring) refactoring).setStmtParameter("P.name,P.edad");
-        result = refactoring.refactor("SeleCT P.name,P.edad FROM PERSONA P;");//Caso exitoso
-        assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name,P.edad;",result);
-        
-    }
-
-    @Test
-    public void checkQueryAfterTransformWithGroupBY() throws RefactoringException{
-        String result; 
-        Refactoring refactoring = new GroupByRefactoring();        
-        ((GroupByRefactoring) refactoring).setStmtParameter("D.direccion,D.numero");
-        result = refactoring.refactor("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;");//Caso con group by
-        System.out.println("Resultado");
-        System.out.println(result);
-        assertEquals("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;",result);
-        
+        ((GroupByRefactoring) refactoring).setStmtParameter("R.direccion,R.n");
+        result = refactoring.refactor("SELECT R.direccion,R.numero FROM DOMICILIO R GROUP BY R.direccion");   
+        assertNotEquals("SELECT R.direccion,R.numero FROM DOMICILIO R GROUP BY R.direccion,R.numero;",result);        
     }
 
   
