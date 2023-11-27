@@ -18,7 +18,8 @@ class CountRefactoring extends Refactoring {
         }
         CountFinderVisitor visitor = new CountFinderVisitor();
         visitor.visit(newParseTree);
-        return  visitor.existCountFunctionWithStar();
+
+        return visitor.existCountFunctionWithStar();
     }
 
     protected String transform(String text) {
@@ -26,7 +27,8 @@ class CountRefactoring extends Refactoring {
         ParseTree tree = parser.parse();
         CountVisitor visitor = new CountVisitor(tokens, this.columnName);
         String transformedText = visitor.visit(tree);
-        return transformedText.replace("<EOF>", "");
+      
+        return transformedText;
     }
 
     protected boolean checkPostconditions(String query) {
