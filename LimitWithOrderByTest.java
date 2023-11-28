@@ -33,19 +33,20 @@ public class LimitWithOrderByTest {
     // setea el valor del limit
     @Test
     public void testTransformAddLimitWithOrderByAndCustomLimit() throws RefactoringException {
-        Refactoring refactoring = new RefactoringLimitOrderBy();
-        String query = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
-        String result = refactoring.refactor(query, 5); 
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();
+        String inputQuery = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
+        refactoring.setLimit(5);
+        String result = refactoring.refactor(inputQuery); 
         assertEquals(result, "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE LIMIT 5");
     }
 
     // Agrega limit a consutla
     @Test
     public void testLimitOrderByInUnionQuery() throws RefactoringException {
-        Refactoring refactoring = new RefactoringLimitOrderBy();
-        String query = "(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2 ORDER BY columna1)";
-        String result = refactoring.refactor(query);
-        assertEquals(result, query + " LIMIT 10");
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();
+        String inputQuery = "(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2 ORDER BY columna1)";
+        String result = refactoring.refactor(inputQuery);
+        assertEquals(result, inputQuery+ " LIMIT 10");
     }
 
     // Verifica si existe o no columna de ordenamiento 

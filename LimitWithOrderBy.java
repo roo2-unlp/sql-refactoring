@@ -6,7 +6,12 @@ import sqlitegrammar.*;
 
 public class LimitWithOrderBy extends Refactoring{
     private String preconditionText = null;
+    private int limit=10;
 
+    public void setLimit(int limnit){
+        this.limit = limit;
+    }
+    // queda igual
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
@@ -18,33 +23,18 @@ public class LimitWithOrderBy extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        //Revisa que la sintaxis sea exitoso
+        //Revisa que la sintaxis sea exitosa
         if (parser.getNumberOfSyntaxErrors() > 0) { 
             preconditionText = null;
             return false;
         }
-        // Verifica si la consulta contiene la cláusula ORDER BY
-        SQLiteParser.Ordering_termContext orderByContext = parser.ordering_term();
-        if (orderByContext == null) {
-            preconditionText = null;
-            return false;
-        }
-         // Verifica si el campo mencionado en ORDER BY es válido
-        if (!isValidField(orderByContext.expr().getText())) {
-            preconditionText = null;
-            return false;
-        }
+        // aca crear un visitor para las precondiciones y despues crear un if
+        // donde compruebe todos los metodos, si alguno retorna falso, retorno falso.
         
         preconditionText = newParseTree.getText();
         return true;
     }
  
-    private boolean isValidField(String fieldName) {
-        // Implementa la lógica para verificar si el campo mencionado en ORDER BY es válido
-        
-        return true;  
-    }
-    /*
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
@@ -52,9 +42,9 @@ public class LimitWithOrderBy extends Refactoring{
         LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
         String transformedText = visitor.visit(tree);
         
+        // debo retornar el string transofrmado (+ limit + ;)
         return transformedText;
     }
-    */
 
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
