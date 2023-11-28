@@ -8,72 +8,73 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	private String alias;
 	// nuevo alias
 	private String newAlias;
-	
-    public CheckPreconditionsVisitor(String alias, String newAlias) {
+
+	public CheckPreconditionsVisitor(String alias, String newAlias) {
 		super();
 		this.alias = alias;
 		this.newAlias = newAlias;
 	}
 
 	@Override
-    public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx){
+	public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
 
 		String currentAlias = ctx.IDENTIFIER().getText();
 
-	    // Verificar que el nuevo alias no se repita en la consulta
-	    if (currentAlias.equalsIgnoreCase(newAlias)) {
-	        System.err.println("Error: El nuevo alias ya existe en la consulta.");
-	        return null;
-	    }
+		// Verificar que el nuevo alias no se repita en la consulta
+		if (currentAlias.equalsIgnoreCase(newAlias)) {
+			System.err.println("Error: El nuevo alias ya existe en la consulta.");
+			return null;
+		}
 
-	    if (!esAliasValido(currentAlias)) {
-	        System.err.println("Error: El alias no es válido.");
-	        return null;
-	    }
+		if (!esAliasValido(currentAlias)) {
+			System.err.println("Error: El alias no es válido.");
+			return null;
+		}
 
-	    // Si las verificaciones son exitosas, puedes retornar el texto del contexto
-	    return ctx.getText();
+		// Si las verificaciones son exitosas, puedes retornar el texto del contexto
+		return ctx.getText();
 
-    }
-    
-    public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
+	}
+
+	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
 
 		String currentAlias = ctx.IDENTIFIER().getText();
 
-	    // Verificar que el nuevo alias no se repita en la consulta
-	    if (currentAlias.equalsIgnoreCase(newAlias)) {
-	        //lanzamos excepción o mensaje de error?
-	        System.err.println("Error: El nuevo alias ya existe en la consulta.");
-	        return null; // consultar
-	    }
+		// Verificar que el nuevo alias no se repita en la consulta
+		if (currentAlias.equalsIgnoreCase(newAlias)) {
+			// lanzamos excepción o mensaje de error?
+			System.err.println("Error: El nuevo alias ya existe en la consulta.");
+			return null; // consultar
+		}
 
-	    if (!esAliasValido(currentAlias)) {
-	        System.err.println("Error: El alias no es válido.");
-	        return null; //consultar
-	    }
+		if (!esAliasValido(currentAlias)) {
+			System.err.println("Error: El alias no es válido.");
+			return null; // consultar
+		}
 
-	    // Si las verificaciones son exitosas, puedes retornar el texto del contexto
-	    return ctx.getText();
-    }
-    
-    public String visitAlias(SQLiteParser.AliasContext ctx) {
-    	return ctx.getText();
-    }
-    
-    public boolean aliasExist(String query, String alias) {
-		if (query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")){
+		// Si las verificaciones son exitosas, puedes retornar el texto del contexto
+		return ctx.getText();
+	}
+
+	public String visitAlias(SQLiteParser.AliasContext ctx) {
+
+		return ctx.getText();
+	}
+
+	public boolean aliasExist(String query) {
+		if (query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")) {
 			return true;
 		}
 		return false;
 	}
 
-	public boolean newAliasNotExist(String query, String alias) {
-		if (!query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")){
+	public boolean newAliasNotExist(String query) {
+		if (!query.toUpperCase().contains(" " + newAlias.toUpperCase() + " AS")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private boolean esPalabraReservada(String newAlias) {
 		boolean reservada = true;
 		// Dividir el nuevo alias en palabras
@@ -128,31 +129,29 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		}
 		return reservada;
 	}
-	
+
 	private boolean esAliasValido(String alias) {
 
-		if ((alias.length() >= 1) && (alias.matches("[a-zA-Z_]+")) && this.esPalabraReservada(alias)){
+		if ((alias.length() >= 1) && (alias.matches("[a-zA-Z_]+")) && this.esPalabraReservada(alias)) {
 			return true;
 		}
 		return false;
 	}
 
-    
-    /* 
-     * // Que no exista otro alias igual al que quiero cambiar
-		visitor.visitAliasNotExist(newParseTree);
-
-		// No utilizar palabras reservadas CONSULTAR
-		// se chequea al setear el nuevo alias
-
-		// Que el nuevo alias no exista
-		visitor.visitNewAliasNotExist(newParseTree);
-
-		// Que el nuevo alias no sea igual al nombre de la tabla o de otra columna
-		visitor.visitNewAliasNotEqualTable(newParseTree);
-		visitor.visitNewAliasNotEqualColumn(newParseTree);
-
-		// Que el cambio no genere conflictos en la subquery
-     */
+	/*
+	 * // Que no exista otro alias igual al que quiero cambiar
+	 * visitor.visitAliasNotExist(newParseTree);
+	 * 
+	 * // No utilizar palabras reservadas CONSULTAR
+	 * // se chequea al setear el nuevo alias
+	 * 
+	 * // Que el nuevo alias no exista
+	 * visitor.visitNewAliasNotExist(newParseTree);
+	 * 
+	 * // Que el nuevo alias no sea igual al nombre de la tabla o de otra columna
+	 * visitor.visitNewAliasNotEqualTable(newParseTree);
+	 * visitor.visitNewAliasNotEqualColumn(newParseTree);
+	 * 
+	 * // Que el cambio no genere conflictos en la subquery
+	 */
 }
-    

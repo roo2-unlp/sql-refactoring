@@ -13,7 +13,7 @@ public class RenameAlias extends Refactoring {
 
 	public void setAlias(String alias, String newAlias) {
 		this.alias = alias;
-			this.newAlias = newAlias;
+		this.newAlias = newAlias;
 	}
 
 	private SQLiteParser createSQLiteParser(String text) {
@@ -30,28 +30,28 @@ public class RenameAlias extends Refactoring {
 		SQLiteParser parser = this.createSQLiteParser(text);
 		// Creo un árbol de análisis sintáctico
 		ParseTree newParseTree = parser.parse();
-		
+
 		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
-        String checked_query = visitor.visit(newParseTree);
-        
-        if (checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
-        	// Guardo el texto de la consulta
-    		preconditionText = newParseTree.getText();
-        	return true;
-        }
+		String checked_query = visitor.visit(newParseTree);
+
+		if (checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
+			// Guardo el texto de la consulta
+			preconditionText = newParseTree.getText();
+			return true;
+		}
 		preconditionText = null;
 		return false;
 	}
 
 	@Override
 	protected String transform(String text) {
-        SQLiteParser parser = this.createSQLiteParser(text);
-        ParseTree tree = parser.parse();
+		SQLiteParser parser = this.createSQLiteParser(text);
+		ParseTree tree = parser.parse();
 
 		TransformAliasVisitor visitor = new TransformAliasVisitor();
-        String transformedText = visitor.visit(tree);
-        
-        return transformedText;
+		String transformedText = visitor.visit(tree);
+
+		return transformedText;
 	}
 
 	@Override
@@ -61,16 +61,20 @@ public class RenameAlias extends Refactoring {
 		if (preconditionText == null) {
             return false;
         }
-		//Sino se compara el texto de la consulta antes y después del refactoring
-		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
 		else {
-        	//return !(preconditionText.equals(text));
-			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
-			if (!(preconditionText.equals(this.transform(text)))){
+			// Creo un parser para analizar el texto
+			SQLiteParser parser = this.createSQLiteParser(text);
+			// Creo un árbol de análisis sintáctico
+			ParseTree newParseTree = parser.parse();
+			
+			CheckPostconditionsVisitor visitor = new CheckPostconditionsVisitor(this.newAlias, this.alias);
+			String checked_query = visitor.visit(newParseTree);
+			if (!checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
 				return true;
-			}
+			else 
+				return false;
+		}
 		}	
 			
 	}
 }
-
