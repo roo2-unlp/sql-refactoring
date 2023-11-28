@@ -21,19 +21,18 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		String currentAlias = ctx.IDENTIFIER().getText();
 
 		// Verificar que el nuevo alias no se repita en la consulta
-		if (currentAlias.equalsIgnoreCase(newAlias)) {
+		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
 			System.err.println("Error: El nuevo alias ya existe en la consulta.");
 			return null;
 		}
 
-		if (!esAliasValido(currentAlias)) {
+		if (!esAliasValido(this.newAlias)) {
 			System.err.println("Error: El alias no es válido.");
 			return null;
 		}
 
 		// Si las verificaciones son exitosas, puedes retornar el texto del contexto
 		return ctx.getText();
-
 	}
 
 	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
