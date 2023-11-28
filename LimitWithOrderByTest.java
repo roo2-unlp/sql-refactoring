@@ -3,78 +3,56 @@ import java.beans.Transient;
 import org.junit.Test;
 
 public class LimitWithOrderByTest {
-    
-    @Test 
-    public void limitwithorderbyrefactorAQuery() throws RefactoringException {
-        String result;
-        Refactoring refactoring = new LimitWithOrderBy();
-        result = refactoring.refactor("SELECT * FROM table_name;");  
-        assertTrue(result.length() == 27);
-    }
 
-    // deberia dar error de sintaxis
-    @Test 
-    public void limitwithorderbyrefactorABadQuery()  { 
-        boolean failure = false;
-        Refactoring refactoring = new LimitWithOrderBy();
-        try{
-            refactoring.refactor("FOOBAR * WHERE 1=1;");  
-        }
-        catch(Exception e) { failure = true; }
-        assertTrue(failure);
-    } 
-
+    // Caso de prueba: Consulta válida con ORDER BY pero sin LIMIT
     @Test
     public void testLimitWithOrderByRefactor() throws RefactoringException {
         LimitWithOrderBy refactoring = new LimitWithOrderBy();
-        
-        // Caso de prueba: Consulta válida con ORDER BY
-        String inputQuery = "SELECT * FROM table_name ORDER BY column_name;";
-        assertTrue(refactoring.checkPreconditions(inputQuery));
-        
-        String result = refactoring.transform(inputQuery);
-        assertEquals("SELECT * FROM table_name ORDER BY column_name LIMIT 10", result);
-        
-        assertTrue(refactoring.checkPostconditions(result));
+        String inputQuery = "SELECT * FROM partidos ORDER BY nombre;";        
+        String result = refactoring.refactor(inputQuery);
+        assertEquals("SELECT * FROM partidos ORDER BY nombre LIMIT 10", result);
     }
 
+    // Caso de prueba: Consulta válida con ORDER BY pero con LIMIT
+    @Test
+    public void testLimitWithOrderByRefactor() throws RefactoringException {
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();
+        String inputQuery = "SELECT * FROM partidos ORDER BY nombre LIMIT 10;";        
+        String result = refactoring.refactor(inputQuery);
+        assertEquals("SELECT * FROM partidos ORDER BY nombre LIMIT 10", result);
+    }
+    // Caso de prueba: Consulta inválida sin ORDER BY
     @Test
     public void testLimitWithOrderByInvalidQuery() throws RefactoringException {
-        LimitWithOrderBy refactoring = new LimitWithOrderBy();
-        
-        // Caso de prueba: Consulta inválida sin ORDER BY
-        String inputQuery = "SELECT * FROM table_name;";
-        assertFalse(refactoring.checkPreconditions(inputQuery));
-        
-        // La transformación no debería cambiar la consulta
-        String result = refactoring.transform(inputQuery);
-        assertEquals(inputQuery, result);
-        
-        // No se deben cumplir las postcondiciones
-        assertFalse(refactoring.checkPostconditions(result));
-    }
-}
-    
-
-// agregar test para verificar que hacemos si hay una subquery? 
-
-/* test a revisar - agregar otros si es necesario 
-
-    // Verifica que la consulta refactorizada tenga una cláusula LIMIT pero no ORDER BY
-    @Test
-    public void limitWithOrderByValidQueryWithOrderBy() throws RefactoringException {
-        Refactoring refactoring = new LimitWithOrderBy();
-        String inputQuery = "SELECT * FROM table_name ORDER BY column_name;";
-        //si no tiene limit hay que agregarlo. llama refactor
+        LimitWithOrderBy refactoring = new LimitWithOrderBy();    
+        String inputQuery = "SELECT * FROM partidos;";
         String result = refactoring.refactor(inputQuery);
-        assertEquals("SELECT * FROM table_name LIMIT 5;", result);
+        assertEquals(inputQuery, result);
+    }
+
+    // setea el valor del limit
+    @Test
+    public void testTransformAddLimitWithOrderByAndCustomLimit() throws RefactoringException {
+        Refactoring refactoring = new RefactoringLimitOrderBy();
+        String query = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
+        String result = refactoring.refactor(query, 5); 
+        assertEquals(result, "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE LIMIT 5");
+    }
+
+    // Agrega limit a consutla
+    @Test
+    public void testLimitOrderByInUnionQuery() throws RefactoringException {
+        Refactoring refactoring = new RefactoringLimitOrderBy();
+        String query = "(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2 ORDER BY columna1)";
+        String result = refactoring.refactor(query);
+        assertEquals(result, query + " LIMIT 10");
     }
 
     // Verifica si existe o no columna de ordenamiento 
     @Test
     public void limitWithOrderByValidQueryWithOrderByNoColumn() {
         Refactoring refactoring = new LimitWithOrderBy();
-        String inputQuery = "SELECT * FROM table_name ORDER BY LIMIT 5;"; 
+        String inputQuery = "SELECT * FROM table_name ORDER BY not_column LIMIT 5;"; 
         try {
             refactoring.refactor(inputQuery);
             assertFalse("RefactoringException not thrown for missing ORDER BY column.", true);
@@ -82,4 +60,6 @@ public class LimitWithOrderByTest {
             assertTrue(true);
         }
     }
-*/
+    
+}
+    // agregar test para verificar que hacemos si hay una subquery? 
