@@ -6,62 +6,75 @@ import org.junit.Test;
 
 public class GroupByRefactoringTest {
 
-    //Example from null refactoring test
+    @Test
+    public void checkQueryAfterTransformWithoutGroupBY() throws RefactoringException {
+        String result;
+        Refactoring refactoring = new GroupByRefactoring();
+        String queryToTransform = "SeleCT P.name,P.edad FROM PERSONA P;";
+        ((GroupByRefactoring) refactoring).setStmtParameter("P.name,P.edad");
+        result = refactoring.refactor(queryToTransform);
+        assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name,P.edad;", result);
+    }
+
+    @Test
+    public void checkQueryWithWhereWithoutGroupBy() throws RefactoringException {
+        String result;
+        String queryToTransform = "SELECT R.direccion,R.numero FROM REVOR R WHERE R.numero=22;";
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("R.direccion,R.numero");
+        result = refactoring.refactor(queryToTransform);              
+        assertEquals("SELECT R.direccion,R.numero FROM REVOR R WHERE R.numero=22 GROUP BY R.direccion,R.numero;", result);
+    }
+    @Test
+    public void checkQueryWithGroupBy() throws RefactoringException {
+        String result;
+        String queryToTransform = "SELECT S.NAME FROM SUPRA S WHERE S.EDAD > 18 GROUP BY S.NAME";
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("S.NAME");
+        boolean failure = false;
+        result = refactoring.refactor(queryToTransform);
+        assertEquals(queryToTransform, result);
+    }
+
+     @Test
+    public void checkQueryWithBadSizeParameterWithoutGroupBy() throws RefactoringException {
+        String result;
+        String queryToTransform = "SELECT R.direccion,R.numero FROM REVOR R WHERE R.numero=20";
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("R.direccion");
+        result = refactoring.refactor(queryToTransform);        
+        assertNotEquals("SELECT R.direccion,R.numero FROM REVOR R WHERE R.numero=20 GROUP BY R.direccion,R.numero;", result);
+    }
+
+     @Test
+    public void checkQueryWithoutGroupBy() throws RefactoringException {
+        String result;
+        String queryToTransform = "SELECT R.direccion,R.numero FROM REVOR R WHERE R.direccion='calle 54'";
+        Refactoring refactoring = new GroupByRefactoring();
+        ((GroupByRefactoring) refactoring).setStmtParameter("R.direccion,R.numero");
+        result = refactoring.refactor(queryToTransform);        
+        assertEquals("SELECT R.direccion,R.numero FROM REVOR R WHERE R.direccion='calle 54' GROUP BY R.direccion,R.numero;", result);
+    }
+
+
+    //Seria redundante dejar tb este TEST? 
     // @Test
-    // public void nullrefactorAQuery() throws RefactoringException {
+    // public void checkValidationsOfBadSizeOfParameterAssignToGroupBy() throws RefactoringException {
     //     String result;
-    //     Refactoring refactoring = new NullRefactoring();
-    //     result = refactoring.refactor("SELECT * FROM table_name;");
-    //     assertTrue(result.length() == 27);
-
-    // }
-
-    // @Test
-    // public void nullrefactorABadQuery() {
-
-    //     boolean failure = false;
-    //     Refactoring refactoring = new NullRefactoring();
-    //     try {
-    //         refactoring.refactor("SELECTED * WHERE 1=1;");
-    //     } catch (Exception e) {
-    //         failure = true;
-    //     }
+    //     Refactoring refactoring = new GroupByRefactoring();
+    //     String queryToTransform = "SeleCT P.name,P.edad FROM PERSONA P;";
+    //     ((GroupByRefactoring) refactoring).setStmtParameter("P.name");
+    //     Boolean failure = false;
+    //     try{
+    //         result = refactoring.refactor(queryToTransform);
+    //     }catch(Exception e){
+    //         System.out.println("La excepcion fue: " + e.getMessage());
+    //         failure=true;
+    //     }        
     //     assertTrue(failure);
     // }
 
-    // ////////
+
     
-    // @Test
-    // public void checkQueryAfterTransformWithoutGroupBY() throws RefactoringException{
-    //     String result; 
-    //     Refactoring refactoring = new GroupByRefactoring();        
-    //     ((GroupByRefactoring) refactoring).setStmtParameter("P.name,P.edad");
-    //     result = refactoring.refactor("SeleCT P.name,P.edad FROM PERSONA P;");
-    //     assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name,P.edad;",result);        
-    // }
-
-    // @Test
-    // public void checkQueryAfterTransformWithGroupBY() throws RefactoringException{
-    //     String result; 
-    //     Refactoring refactoring = new GroupByRefactoring();        
-    //     ((GroupByRefactoring) refactoring).setStmtParameter("D.direccion,D.numero");
-    //     result = refactoring.refactor("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;");   
-    //     assertEquals("SELECT D.direccion,D.numero FROM DOMICILIO D GROUP BY D.direccion,D.numero;",result);        
-    // }
-
-    @Test
-    public void checkQueryBadParameterAfterTransformation() throws RefactoringException{
-        String result; 
-        Refactoring refactoring = new GroupByRefactoring();        
-        ((GroupByRefactoring) refactoring).setStmtParameter("R.direccion,R.n");
-        result = refactoring.refactor("SELECT R.direccion,R.numero FROM DOMICILIO R GROUP BY R.direccion");   
-        assertNotEquals("SELECT R.direccion,R.numero FROM DOMICILIO R GROUP BY R.direccion,R.numero;",result);        
-    }
-
-  
-
- 
-
-
 
 }
