@@ -11,9 +11,10 @@ public class GroupByRefactoringTest {
         String result;
         Refactoring refactoring = new GroupByRefactoring();
         //result = refactoring.refactor("SELECT products FROM table_name;");  
-        assertTrue(refactoring.checkPreconditions("SELECT DISTINCT nombre FROM clientes;"));
- 
+        //assertTrue(refactoring.checkPreconditions("SELECT * FROM clientes WHERE cliente_id IN (SELECT distinct cliente_id FROM pedidos);;"));
+        assertTrue(refactoring.checkPreconditions("SELECT DISTINCT producto, SUM(cantidad) as total_ventas FROM ventas"));
     }
+    
 
     // @Test 
     // public void nullrefactorABadQuery()  {

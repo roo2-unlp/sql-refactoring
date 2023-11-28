@@ -12,17 +12,8 @@ public class GroupByRefactoring extends Refactoring{
         return new SQLiteParser(tokens);
     }
 
-    // private boolean checkIncludedSelect(ParseTree tree) {
-    //     // Check if the text includes a the worid "DISTINCT"
-    //     SelectDistinctVisitor visitor = new SelectDistinctVisitor();
-    //     return visitor.visit(tree);
-        
-    // }
-
-    private boolean checkDistinctAfterSelect(String text) {
-        // Check if the text includes a the worid "DISTINCT"
-        return text.contains("SELECT DISTINCT");
-        
+    protected Boolean containsAgragetionFunc(String result) {
+        return (result.contains("COUNT(") || result.contains("SUM(") || result.contains("AVG(") || result.contains("MIN(") || result.contains("MAX(")); 
     }
 
     protected boolean checkPreconditions(String text) {
@@ -30,23 +21,28 @@ public class GroupByRefactoring extends Refactoring{
         ParseTree newParseTree = parser.parse();
         SelectDistinctVisitor visitor = new SelectDistinctVisitor();
 
-        /*if (parser.getNumberOfSyntaxErrors() == 0 && checkDistinctAfterSelect(text)) {
+        String result = visitor.visit(newParseTree).toUpperCase();
+
+        if (parser.getNumberOfSyntaxErrors() > 0) {
             preconditionText = newParseTree.getText();
-            return true;
-        }*/
-        
-        String transformedText = visitor.visit(newParseTree);
-        System.out.println("Print del Refactoring: transformedText");
-        System.out.println(transformedText);
-        if (transformedText.contains("SELECT DISTINCT")) {
-            //preconditionText = newParseTree.getText();
-            System.out.println("entre a la condicion");
-            return true;
+            return false;
+        }
+        if (!result.contains("SELECTDISTINCT")) {
+            preconditionText = newParseTree.getText();
+            return false;
+        }
+        if (containsAgragetionFunc(result)) {
+            preconditionText = newParseTree.getText();
+            return false;
+        }
+        if (result.contains("GROUPBY")) {
+            preconditionText = newParseTree.getText();
+            return false;
         }
 
         preconditionText = null;
         
-        return false;
+        return true;
     }
     protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
