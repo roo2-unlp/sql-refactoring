@@ -16,7 +16,10 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
                 this.refactoredValue = value.replace("%", ""); // le saco todos los %
                 this.refactoredValue = this.refactoredValue.replace("'", ""); // le saco todos los ''
                 this.refactoredValue= this.refactoredValue+"%"; // le agrego un unico % al final y se lo devuelvo
-                this.refactoredValue= "'"+this.refactoredValue+"'"; // le agrego los ''
+                System.out.println("refactored value seria: "+ctx.getChild(0).getText()+" "+ctx.getChild(1).getText()+" "+"'"+this.refactoredValue+"'");
+                this.refactoredValue= ctx.getChild(0).getText()+" "+ctx.getChild(1).getText()+" "+"'"+this.refactoredValue+"'"; // le agrego los ''
+                //puede haber mas de 3 hijos? (habria q hacer un for q agregue cada hijo con ' ' en medio de cada uno)
+                //cumpliria en todos los casos de los test? o solo en los quje son consultas sql correctas?
             }
         }
         return this.refactoredValue;
@@ -26,6 +29,7 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
         System.out.println("texto del agregate es: "+aggregate);
         System.out.println("texto del nextResult es: "+nextResult);
         if (this.refactoredValue != null){
+            System.out.println("texto del refactoredValue es: "+this.refactoredValue);
             return this.refactoredValue;
         }else
         return null;
@@ -50,10 +54,10 @@ public class LikeVisitor extends SQLiteParserBaseVisitor<String> {
 	}
 
     protected boolean shouldVisitNextChild(SQLiteParser.ExprContext node, String currentResult) {
-        if (node.LIKE_().getText().equalsIgnoreCase("LIKE")){
-		    return false;
+        if (node.LIKE_().getText().equalsIgnoreCase("LIKE")){   //creo q habria q poner el valor en una variable priv y cuando entra al nodo like q se setee en falso
+		    return false;   //y aca devolver el vaor de la variable
         }else
-            return true;
+            return true;    //y aca devolver el vaor de la variable
 	} */
 
 }
