@@ -12,7 +12,7 @@ import codAnt.SQLiteParser.*;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-public interface SQLiteParserVisitor<T> extends ParseTreeVisitor<T> {
+public interface SQLiteParserVisitor2<T> extends ParseTreeVisitor<T> {
 	/**
 	 * Visit a parse tree produced by {@link SQLiteParser#parse}.
 	 * @param ctx the parse tree
