@@ -1,0 +1,3 @@
+javac -d output .\sqlitegrammar\*.java .\*.java
+cd .\output\
+java org.junit.runner.JUnitCore GroupByRefactoringTest
