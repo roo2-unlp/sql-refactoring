@@ -29,7 +29,6 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
          // System.out.println("----------------------------");//nodo terminal  
             if(ctx.table_name().any_name().IDENTIFIER().toString().equals(alias)) {
                this.aliasEncontrado();
-              return super.visitExpr(ctx);
             } 
       }
          
@@ -43,7 +42,7 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
            if( ctx.table_alias().any_name().IDENTIFIER().toString().equals(alias)) {
            // System.out.println(this.getAliasEncontrado());
                this.aliasEncontrado();
-               this.setAliasReference(ctx.table_name().any_name().IDENTIFIER().toString() +  " ");
+               this.setAliasReference(ctx.table_name().any_name().IDENTIFIER().toString());
                return super.visitTable_or_subquery(ctx);
             }
            
@@ -59,7 +58,7 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
          if(ctx.expr().column_name()  != null){
            if(ctx.expr().column_name().any_name().IDENTIFIER().toString().equals(alias)){
                this.aliasEncontrado();
-               this.setAliasReference(ctx.expr().table_name().any_name().IDENTIFIER().toString() +  " ");
+               this.setAliasReference(ctx.expr().table_name().any_name().IDENTIFIER().toString());
                return super.visitJoin_constraint(ctx);
             }
       }

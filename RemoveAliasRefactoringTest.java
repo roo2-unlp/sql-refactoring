@@ -23,14 +23,14 @@ public class RemoveAliasRefactoringTest {
 
     // }
 
-    @Test 
-    public void refactorAliasWithAs() throws RefactoringException {
-        refactoring = new RemoveAliasRefactoring();
-        refactoring.setAlias("tnm");
-        expected = "SELECT colum FROM table_name";
-        assertEquals(expected, refactoring.refactor("SELECT colum FROM table_name as tnm"));  
+    // @Test 
+    // public void refactorAliasWithAs() throws RefactoringException {
+    //     refactoring = new RemoveAliasRefactoring();
+    //     refactoring.setAlias("tnm");
+    //     expected = "SELECT colum FROM table_name";
+    //     assertEquals(expected, refactoring.refactor("SELECT colum FROM table1 as tnm"));  
  
-    } //El refactoring de un query simple(sea con AS o () o /n) el refactor se aplica igual. En este caso la query es con AS y debera devolver el expected.
+    // } //El refactoring de un query simple(sea con AS o () o /n) el refactor se aplica igual. En este caso la query es con AS y debera devolver el expected.
 
   //   @Test 
   //   public void EqualsQuery() throws RefactoringException {
@@ -43,14 +43,14 @@ public class RemoveAliasRefactoringTest {
     
 
    
-  //   @Test 
-  //   public void refactorAliasWithAsAndRef() throws RefactoringException {
-  //       refactoring = new RemoveAliasRefactoring();
-  //       refactoring.setAlias("tnm");
-  //       assertEquals("SELECT * FROM tabla_name where table_name.codigo=123", refactoring.refactor("SELECT * FROM table_name as tnm where tnm.codigo=123"));
-      
- 
-  //   } //Aca tendra que devolver la query sin el alias y cambiar la referencia a tnm.codigo por table_name.codigo
+      @Test 
+      public void refactorAliasWithAsAndRef() throws RefactoringException {
+          refactoring = new RemoveAliasRefactoring();
+          refactoring.setAlias("tnm");
+          assertEquals("SELECT * FROM tabla_name WHERE table_name.codigo=123", 
+          refactoring.refactor("SELECT * FROM table_name as tnm WHERE tnm.codigo=123"));
+  
+      } //Aca tendra que devolver la query sin el alias y cambiar la referencia a tnm.codigo por table_name.codigo
     
 
   //   @Test 
@@ -65,14 +65,14 @@ public class RemoveAliasRefactoringTest {
 
 
 
-  //  @Test 
-  //   public void refactorAliasWithJoin() throws RefactoringException {
-  //     refactoring = new RemoveAliasRefactoring();
-  //     refactoring.setAlias("c");
-  //     assertEquals("SELECT[c.codigo,p.nombreFROMproductosaspjoinclienteasconc.codigo=p.codigo<EOF> ", refactoring.refactor("SELECT c.codigo,p.nombre FROM productos as p join cliente as c on c.codigo=p.codigo"));
-    
- 
-  //   } //Aca tendra que quitar el alias elegido y cambiarle la ref de la  tabla que se cruzan ej: si es el alias c
+    // @Test 
+    //  public void refactorAliasWithJoin() throws RefactoringException {
+    //    refactoring = new RemoveAliasRefactoring();
+    //    refactoring.setAlias("c");
+    //    assertEquals("SELECT cliente.codigo,p.nombre FROM productos as p join cliente  on cliente.codigo=p.codigo",
+    //     refactoring.refactor("SELECT c.codigo,p.nombre FROM productos as p join cliente as c on c.codigo=p.codigo"));
+
+    //  } //Aca tendra que quitar el alias elegido y cambiarle la ref de la  tabla que se cruzan ej: si es el alias c
     
 
     

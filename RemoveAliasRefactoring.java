@@ -31,7 +31,7 @@ public class RemoveAliasRefactoring extends Refactoring{
         }
         visitorCheck.setAlias(getAlias());
         visitorCheck.visit(newParseTree);
-        System.out.println(visitorCheck.getAliasEncontrado());
+        
         if(visitorCheck.getAliasEncontrado()){  // verifica que el alias existe y retorna true o false
             // aca me tengo que quedar con el nombre de la tabla o columna si el alias existe 
             preconditionText = newParseTree.getText();
@@ -48,7 +48,6 @@ public class RemoveAliasRefactoring extends Refactoring{
         visitor.setAlias(alias);
         visitor.setAliasReference(aliasReference);
         String transformedText = visitor.visit(tree);
-        
         return transformedText;
         
     }
