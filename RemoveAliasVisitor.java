@@ -1,4 +1,3 @@
-
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -10,9 +9,6 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
       private String alias=null;
       private String aliasReference=null;
       private StringBuilder queryBuilder = new StringBuilder();
-      private int resultCounter, columnSize = 0;
-      private boolean selectVisited = false;
-      private boolean whereIs,groupIs,fromIs,havingIs,selectIs = false;
 
       public void setAlias(String alias){
          this.alias=alias;
