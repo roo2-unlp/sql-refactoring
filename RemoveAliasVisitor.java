@@ -60,6 +60,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
       public String  visitExpr(SQLiteParser.ExprContext ctx) {
          String izq = "";
          String der = "";
+         if(ctx.expr(0) != null || ctx.expr(1) != null){
          if (ctx.expr(0).table_name() != null){ 
             if(ctx.expr(0).table_name().any_name().IDENTIFIER().toString().equals(alias)) {
                System.out.println(sourceTextForContext(ctx).replace(alias,this.getAliasReference()));   
@@ -72,6 +73,14 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                der =  sourceTextForContext(ctx).replace(ctx.expr(1).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
             }
          }
+      }
+      else{
+         if(ctx.table_name() != null){
+            if(ctx.table_name().any_name().IDENTIFIER().toString().equals(alias)){
+               return " GROUP BY " +sourceTextForContext(ctx).replace(ctx.table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+            }
+         }
+      }
          return " WHERE " + izq + der;
        }
        
@@ -82,16 +91,27 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                String ctxAs = sourceTextForContext(ctx).replace(ctx.AS_().toString(), "");
                return  " FROM " +  ctxAs.replace(ctx.table_alias().any_name().IDENTIFIER().toString(), "");
             }       
-         }       
+         }
+         System.out.println("SSSSSSSSSSSSSSSSSSSS");
+         System.out.println(ctx.join_clause());
+         if(ctx.join_clause() != null){
+            return " JOIN " +sourceTextForContext(ctx) + " ON ";
+         }
+         
+
          return " FROM " + sourceTextForContext(ctx);
        }
 
       @Override 
          public String visitResult_column(SQLiteParser.Result_columnContext ctx) { 
-            System.out.println(sourceTextForContext(ctx));     
+               
             if(ctx.table_name() != null){
+               System.out.println("WACHOOOOOOOOOOO");
+               System.out.println(ctx.table_name().any_name().IDENTIFIER().toString());
             if(ctx.table_name().any_name().IDENTIFIER().toString().equals(alias)){
-                  return " SELECT " +sourceTextForContext(ctx).replace(ctx.table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+                  System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+                  System.out.print(ctx.table_name().any_name().IDENTIFIER().toString());
+                  return sourceTextForContext(ctx).replace(ctx.table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
                   
             } 
          }
@@ -99,11 +119,13 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                if(ctx.column_alias() !=null) {
                   if( ctx.column_alias().IDENTIFIER().toString().equals(alias)){
                      System.out.println(ctx.column_alias().IDENTIFIER().toString());
-                     String ctxAs = sourceTextForContext(ctx).replace(ctx.AS_().toString(),"");
-                     return "," + ctxAs.replace(ctx.column_alias().IDENTIFIER().toString(),"") ;
+                     String ctxAs = sourceTextForContext(ctx).replace(ctx.AS_().toString(),"").trim();
+                     return "," + ctxAs.replace(ctx.column_alias().IDENTIFIER().toString(),"").trim() ;
                   }
                } 
-            }      
+            } 
+            System.out.println("paco cocaine");
+            System.out.println(" SELECT " + sourceTextForContext(ctx)); 
          return " SELECT " + sourceTextForContext(ctx);
       }
      
@@ -118,11 +140,39 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
 //  }      
 //        return sourceTextForContext(ctx);
 //   }
-//       // @Override 
-//       // public String  visitJoin_clause(SQLiteParser.Join_clauseContext ctx) { 
-//       //       if(ctx.table_or_subquery() != null){
-//       //          ctx.table_or_subquery().table_alias().getText().remove();
-//       //       }   
+//  @Override 
+//  public String  visitJoin_clause(SQLiteParser.Join_clauseContext ctx) { 
+      
+//       if(ctx.table_or_subquery(0) != null){
+//          System.out.println("sssssssssssssssssssss");
+//          System.out.println(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString());
+//           if(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
+//                System.out.println("no pasa");
+//                String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(0).AS_().toString(),"").trim();
+//                return ctxJoin.replace(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString(),"").trim();
+//           }
+//        }
+//        if(ctx.table_or_subquery(1) != null){
+//          System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+//          System.out.println(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString());
+//           if(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
+//                System.out.println(sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),""));
+//                String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).AS_().toString(),"").trim();
+//                return ctxJoin.replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),"").trim();
+//           }
+//        }   
+//        if(ctx.join_constraint(0) != null){
+//          if(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
+//             return sourceTextForContext(ctx).replace(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+//          }
+//        }
+//        if(ctx.join_constraint(1) != null){
+//          if(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
+//             return sourceTextForContext(ctx).replace(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+//          }
+//        }
+//        return sourceTextForContext(ctx);
+//       }
 //   @Override 
 //   public String visitOrdering_term(SQLiteParser.Ordering_termContext ctx) { 
 //      if(ctx.expr().table_name() != null){

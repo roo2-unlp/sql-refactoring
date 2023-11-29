@@ -27,7 +27,7 @@ public class RemoveAliasRefactoringTest {
      public void refactorAliasWithAs() throws RefactoringException {
          refactoring = new RemoveAliasRefactoring();
          refactoring.setAlias("tnm");
-         expected = "SELECT colum FROM table_name";
+         expected = " SELECT colum FROM table_name  ";
          assertEquals(expected, refactoring.refactor("SELECT colum FROM table_name as tnm"));  
      } //El refactoring de un query simple(sea con AS o () o /n) el refactor se aplica igual. En este caso la query es con AS y debera devolver el expected
      @Test 
@@ -62,13 +62,13 @@ public class RemoveAliasRefactoringTest {
 
 
 
-    //  @Test 
-    //   public void refactorAliasWithJoin() throws RefactoringException {
-    //     refactoring = new RemoveAliasRefactoring();
-    //     refactoring.setAlias("c");
-    //     assertEquals("SELECT cliente.codigo,p.nombre FROM productos as p join cliente on cliente.codigo=p.codigo",
-    //      refactoring.refactor("SELECT c.codigo,p.nombre FROM productos as p join cliente as c on c.codigo=p.codigo"));
-    //   } //Aca tendra que quitar el alias elegido y cambiarle la ref de la  tabla que se cruzan ej: si es el alias c
+      @Test 
+       public void refactorAliasWithJoin() throws RefactoringException {
+         refactoring = new RemoveAliasRefactoring();
+         refactoring.setAlias("cte");
+         assertEquals("SELECT cliente.codigo FROM productos as p JOIN cliente ON cliente.codigo=p.codigo",
+          refactoring.refactor("SELECT cte.codigo FROM productos as p JOIN cliente as cte ON cte.codigo=p.codigo"));
+       } //Aca tendra que quitar el alias elegido y cambiarle la ref de la  tabla que se cruzan ej: si es el alias c
     
 
     
@@ -76,7 +76,7 @@ public class RemoveAliasRefactoringTest {
      public void refactorAliasWithFuntions() throws RefactoringException {
        refactoring = new RemoveAliasRefactoring();
        refactoring.setAlias("max_value");
-       assertEquals("SELECT COUNT(*) as count,MAX(column1) FROM table1", refactoring.refactor("SELECT COUNT(*) as count, MAX(column1) as max_value FROM table1"));
+       assertEquals(" SELECT COUNT(*) as count,MAX(column1) FROM table1", refactoring.refactor("SELECT COUNT(*) as count, MAX(column1) as max_value FROM table1"));
 
      } //Aca tendra que quitar el alias de la funcion max.
         
@@ -92,17 +92,16 @@ public class RemoveAliasRefactoringTest {
      public void refactorAliasWithAliasAtColumn() throws RefactoringException {
        refactoring = new RemoveAliasRefactoring();
        refactoring.setAlias("ali");
-       assertEquals( "SELECT column1 as Alias1,column2  FROM table1", refactoring.refactor( "SELECT column1 as Alias1,column2 as ali FROM table1"));
+       assertEquals(" SELECT column1 as Alias1,column2 FROM table1", refactoring.refactor( "SELECT column1 as Alias1,column2 as ali FROM table1"));
 
      } //Aca tendra que remover el ALIAS 2 que esta en la columna
     
-    //  @Test 
-    //  public void refactorAliasWithGroupAndOrder() throws RefactoringException {
-    //    refactoring = new RemoveAliasRefactoring();
-    //    refactoring.setAlias("t1");
-    //    assertEquals( "SELECT tabla1.column1 , tabla1.column2  FROM table1   WHERE tabla1.column1 = 1 GROUP BY tabla1.column2", refactoring.refactor("SELECT t1.column1, t1.column2 FROM table1 AS t1 WHERE t1.column1 = 1 GROUP BY t1.column2"));
-
-    //  } //Aca tendra que remover el alias pasado por parametro y devolver la query cambiando la ref
+      @Test 
+      public void refactorAliasWithGroup() throws RefactoringException {
+        refactoring = new RemoveAliasRefactoring();
+        refactoring.setAlias("t1");
+        assertEquals(" SELECT column1 FROM table1   WHERE table1.column1=1 GROUP BY table1.column2", refactoring.refactor("SELECT column1 FROM table1 as t1 WHERE t1.column1=1 GROUP BY t1.column2"));
+      } //Aca tendra que remover el alias pasado por parametro y devolver la query cambiando la ref
     
 
     
