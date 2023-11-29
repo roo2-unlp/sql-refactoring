@@ -70,7 +70,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
            return cs.getText(new Interval(startIndex, stopIndex));
        
          }
-         return " ";
+         return "";
       }
       
        @Override   
@@ -79,40 +79,40 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
            if(ctx.expr(0).table_name().any_name().IDENTIFIER().toString().equals(alias)) {
              //queryBuilder.append(this.getAliasReference() + ctx.getText());
              System.out.println(sourceTextForContext(ctx).replace(alias,this.getAliasReference()));   
-             return sourceTextForContext(ctx).replace(alias,this.getAliasReference());
+             return " WHERE " + sourceTextForContext(ctx).replace(ctx.expr(0).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
           }
         } 
         
         // verifica que el alias donde esta parado sea igual al input de alias dado y la idea es cambiarlo por el nombre de la tabla
-         return sourceTextForContext(ctx);
+         return " WHERE " + sourceTextForContext(ctx);
        }
        
        @Override
        public String  visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
           if (ctx.table_alias() != null){
             if(ctx.table_alias().any_name().IDENTIFIER().toString().equals(alias)) {
-               String ctxAs =sourceTextForContext(ctx).replace(ctx.AS_().toString(), " ");
-               return ctxAs.replace(ctx.table_alias().any_name().IDENTIFIER().toString(), " ");
+               String ctxAs = sourceTextForContext(ctx).replace(ctx.AS_().toString(), "");
+               return  " FROM " +  ctxAs.replace(ctx.table_alias().any_name().IDENTIFIER().toString(), "");
                 
                 // eliminar un nodo
           }       
        }       
-          return sourceTextForContext(ctx);
+          return " FROM " + sourceTextForContext(ctx);
         // este se para en el from y revisa si existe algun alias en esa columna
        }
 
      
     
-        @Override 
-        public String  visitJoin_constraint(SQLiteParser.Join_constraintContext ctx) {       
-          if(ctx.expr().expr(1).table_name() != null){
-            if(ctx.expr().expr(1).table_name().any_name().IDENTIFIER().toString().equals(alias)){               
-                return sourceTextForContext(ctx).replace(alias,this.getAliasReference());
+      //   @Override 
+      //   public String  visitJoin_constraint(SQLiteParser.Join_constraintContext ctx) {       
+      //     if(ctx.expr().expr(1).table_name() != null){
+      //       if(ctx.expr().expr(1).table_name().any_name().IDENTIFIER().toString().equals(alias)){               
+      //           return sourceTextForContext(ctx).replace(alias,this.getAliasReference());
                              
-          }
-       }      
-             return sourceTextForContext(ctx);
-        }
+      //     }
+      //  }      
+      //        return sourceTextForContext(ctx);
+      //   }
 //       // @Override 
 //       // public String  visitJoin_clause(SQLiteParser.Join_clauseContext ctx) { 
 //       //       if(ctx.table_or_subquery() != null){
@@ -122,34 +122,36 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
 //       //    } CREO QUE NO HACE FALTA ESTA
 
        @Override 
-       public String visitResult_column(SQLiteParser.Result_columnContext ctx) {      
+       public String visitResult_column(SQLiteParser.Result_columnContext ctx) { 
+         System.out.println(sourceTextForContext(ctx));     
            if(ctx.table_name() != null){
            if(ctx.table_name().any_name().IDENTIFIER().toString().equals(alias)){
-               return sourceTextForContext(ctx).replace(alias,this.getAliasReference());
+               return " SELECT " +sourceTextForContext(ctx).replace(ctx.table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
                
           } 
        }
           else{
              if(ctx.column_alias() !=null) {
                 if( ctx.column_alias().IDENTIFIER().toString().equals(alias)){
-                   queryBuilder.append(" ");
-                   return " ";
+                  System.out.println(ctx.column_alias().IDENTIFIER().toString());
+                   String ctxAs = sourceTextForContext(ctx).replace(ctx.AS_().toString(),"");
+                   return "," + ctxAs.replace(ctx.column_alias().IDENTIFIER().toString(),"") ;
                 }
              } 
           }      
-          return sourceTextForContext(ctx);
+          return " SELECT " + sourceTextForContext(ctx);
           }
       
-//       @Override 
-//       public String visitOrdering_term(SQLiteParser.Ordering_termContext ctx) { 
-//          if(ctx.expr().table_name() != null){
-//           if (ctx.expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
-//               //queryBuilder.append(" ORDER BY " + this.getAliasReference() + ctx.getText());
-//               return " ORDER BY " + this.getAliasReference();
-//          }
-//       }
-//          return sourceTextForContext(ctx);
-//       }
+      //   @Override 
+      //   public String visitOrdering_term(SQLiteParser.Ordering_termContext ctx) { 
+      //      if(ctx.expr().table_name() != null){
+      //       if (ctx.expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
+      //           //queryBuilder.append(" ORDER BY " + this.getAliasReference() + ctx.getText());
+      //           return " ORDER BY " + sourceTextForContext(ctx).replace(ctx.expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+      //      }
+      //   }
+      //      return " ORDER BY " + sourceTextForContext(ctx);
+      //   }
     
    
 //       //  public String getTextWithSpaces(SQLiteParser.ParseContext ctx) {
@@ -171,7 +173,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                return aggregate;
             }
             StringBuilder sb = new StringBuilder(aggregate);
-            sb.append(" ");
+            sb.append("");
             sb.append(nextResult);         
             return sb.toString();
          }
