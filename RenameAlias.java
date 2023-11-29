@@ -48,7 +48,7 @@ public class RenameAlias extends Refactoring {
 		SQLiteParser parser = this.createSQLiteParser(text);
 		ParseTree tree = parser.parse();
 
-		TransformAliasVisitor visitor = new TransformAliasVisitor();
+		TransformAliasVisitor visitor = new TransformAliasVisitor(newAlias);
 		String transformedText = visitor.visit(tree);
 
 		return transformedText;
