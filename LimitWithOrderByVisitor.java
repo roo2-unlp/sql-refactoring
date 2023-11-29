@@ -3,40 +3,26 @@ import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<Void> {
+public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder transformedText = new StringBuilder();
-    private boolean hasLimit = false;
+    private String result;
 
     @Override
-    public Void visitLimit_stmt(SQLiteParser.Limit_stmtContext ctx) {
-        // La sentencia tiene el LIMIT
-        hasLimit = true;
-        return super.visitLimit_stmt(ctx);
-    }
-
-    @Override
-    public Void visitOrder_by_stmt(SQLiteParser.Order_by_stmtContext ctx) {
-        // La sentencia tiene el ORDER BY
-        hasLimit = true;  // Si hay ORDER BY, también consideramos que tiene LIMIT
-        return super.visitOrder_by_stmt(ctx);
+    public String visitLimit_stmt(SQLiteParser.Limit_stmtContext ctx) {
+        if(ctx.LIMIT != null){
+            return ctx
+        }
+        return result.append(ctx.SELECT_().toString() + "LIMIT 10;");
     }
 
     @Override
-    public Void visitOrdering_term(SQLiteParser.Ordering_termContext ctx) {
-        // para modificar el texto como queramos
-        transformedText.append(ctx.getText()).append(" ");
-        return super.visitOrdering_term(ctx);
-    }
-
-    public boolean hasLimit() {
-        // Devuelve true si la consulta tiene LIMIT
-        return hasLimit;
-    }
-
-    public String getText() {
-        // Devuelve el texto transformado
-        return transformedText.toString().trim();
+    public String visitOrder_by_stmt(SQLiteParser.Order_by_stmtContext ctx) {
+        if(ctx.ORDER() != null){
+            return result.append(ctx.SELECT_().toString() + ";");
+            //preguntar como hacer para que nos devuelva la consulta entera 
+        }
+        return ctx;    
     }
 
     // tendiramos que agregar el visitor que verifica si existe o no la columna o ordenar ?
