@@ -58,19 +58,21 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
       
       @Override   
       public String  visitExpr(SQLiteParser.ExprContext ctx) {
+         String izq = "";
+         String der = "";
          if (ctx.expr(0).table_name() != null){ 
             if(ctx.expr(0).table_name().any_name().IDENTIFIER().toString().equals(alias)) {
                System.out.println(sourceTextForContext(ctx).replace(alias,this.getAliasReference()));   
-               return " WHERE " + sourceTextForContext(ctx).replace(ctx.expr(0).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+               izq = sourceTextForContext(ctx).replace(ctx.expr(0).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
             }
          }
          if (ctx.expr(1).table_name() != null){ 
             if(ctx.expr(1).table_name().any_name().IDENTIFIER().toString().equals(alias)) {
                System.out.println(sourceTextForContext(ctx).replace(alias,this.getAliasReference()));   
-               return " WHERE " + sourceTextForContext(ctx).replace(ctx.expr(1).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+               der =  sourceTextForContext(ctx).replace(ctx.expr(1).table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
             }
          }
-         return " WHERE " + sourceTextForContext(ctx);
+         return " WHERE " + izq + der;
        }
        
        @Override
