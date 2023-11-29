@@ -36,7 +36,6 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
             return aggregate;
          }
          StringBuilder sb = new StringBuilder(aggregate);
-         sb.append("");
          sb.append(nextResult);         
          return sb.toString();
       }
