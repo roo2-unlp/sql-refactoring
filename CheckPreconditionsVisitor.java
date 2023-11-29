@@ -11,8 +11,8 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	private String alias;
 	// nuevo alias
 	private String newAlias;
-	
-    public CheckPreconditionsVisitor(String alias, String newAlias) {
+
+	public CheckPreconditionsVisitor(String alias, String newAlias) {
 		super();
 		this.alias = alias;
 		this.newAlias = newAlias;
@@ -71,29 +71,27 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		return false;
 	}
 
-	public boolean newAliasNotExist(String query, String alias) {
-		if (!query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")){
+	public boolean newAliasNotExist(String query) {
+		if (!query.toUpperCase().contains(" " + newAlias.toUpperCase() + " AS")) {
 			return true;
 		}
 		return false;
 	}
 
-    
-    /* 
-     * // Que no exista otro alias igual al que quiero cambiar
-		visitor.visitAliasNotExist(newParseTree);
-
-		// No utilizar palabras reservadas CONSULTAR
-		// se chequea al setear el nuevo alias
-
-		// Que el nuevo alias no exista
-		visitor.visitNewAliasNotExist(newParseTree);
-
-		// Que el nuevo alias no sea igual al nombre de la tabla o de otra columna
-		visitor.visitNewAliasNotEqualTable(newParseTree);
-		visitor.visitNewAliasNotEqualColumn(newParseTree);
-
-		// Que el cambio no genere conflictos en la subquery
-     */
+	/*
+	 * // Que no exista otro alias igual al que quiero cambiar
+	 * visitor.visitAliasNotExist(newParseTree);
+	 * 
+	 * // No utilizar palabras reservadas CONSULTAR
+	 * // se chequea al setear el nuevo alias
+	 * 
+	 * // Que el nuevo alias no exista
+	 * visitor.visitNewAliasNotExist(newParseTree);
+	 * 
+	 * // Que el nuevo alias no sea igual al nombre de la tabla o de otra columna
+	 * visitor.visitNewAliasNotEqualTable(newParseTree);
+	 * visitor.visitNewAliasNotEqualColumn(newParseTree);
+	 * 
+	 * // Que el cambio no genere conflictos en la subquery
+	 */
 }
-    
