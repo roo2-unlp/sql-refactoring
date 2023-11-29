@@ -36,79 +36,58 @@ public class OrderByRefactoringTest {
       		    
    		}
 	}
-	@Test // CON ORDER BY
-	public void testTransformNoOrderByWhenExists() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
-	@Test // CON GROUP BY
-	public void testTransformNoOrderByWithGroupBy() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "SELECT P.NOMBRE, COUNT(*) FROM PERSONA P GROUP BY P.NOMBRE";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
-	// ORDER BY NO TIENE UN EFECTO DIRECTO EN LA MANIPULACION DE DATOS DE ESTAS SENTENCIAS.
-	
-	@Test // CON UPDATE
-	public void testNoOrderByInUpdateQuery() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "UPDATE tabla SET columna1 = 'valorX' WHERE condicion = 'condicionX'";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
-	@Test // CON DELETE
-	public void testNoOrderByInDeleteQuery() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "DELETE FROM tabla WHERE condicion = 'condicionX'";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
-	@Test // CON CREATE
-	public void testNoOrderByInCreateTableQuery() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "CREATE TABLE nueva_tabla (columna1 TEXT, columna2 INTEGER)";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
-	@Test // CON INSERT
-	public void testNoOrderByInInsertQuery() {
-		try {
-			Refactoring refactoring = new RefactoringOrderBy();
-			String query = "INSERT INTO tabla (columna1, columna2) VALUES ('valorX', 'valorY')";
-			String result = refactoring.refactor(query);
-			assertEquals(result, query);
-		} catch (RefactoringException e) {
-			System.out.println("Se produjo una RefactoringException: " + e.getMessage());
-		}
-	}
-	
 
+	@Test // CON ORDER BY
+    public void testTransformNoOrderByWhenExists() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
+
+    @Test // CON GROUP BY
+    public void testTransformNoOrderByWithGroupBy() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "SELECT P.NOMBRE, COUNT(*) FROM PERSONA P GROUP BY P.NOMBRE";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
+
+    @Test // CON UPDATE
+    public void testNoOrderByInUpdateQuery() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "UPDATE tabla SET columna1 = 'valorX' WHERE condicion = 'condicionX'";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
+
+    @Test // CON DELETE
+    public void testNoOrderByInDeleteQuery() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "DELETE FROM tabla WHERE condicion = 'condicionX'";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
+
+    @Test // CON CREATE
+    public void testNoOrderByInCreateTableQuery() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "CREATE TABLE nueva_tabla (columna1 TEXT, columna2 INTEGER)";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
+
+    @Test // CON INSERT
+    public void testNoOrderByInInsertQuery() {
+        Refactoring refactoring = new RefactoringOrderBy();
+        String query = "INSERT INTO tabla (columna1, columna2) VALUES ('valorX', 'valorY')";
+        assertThrows(RefactoringException.class, () -> {
+            String result = refactoring.refactor(query);
+        });
+    }
 }
