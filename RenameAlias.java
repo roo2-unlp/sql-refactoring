@@ -56,25 +56,29 @@ public class RenameAlias extends Refactoring {
 
 	@Override
 	protected boolean checkPostconditions(String text) {
-		//Si la precondición es null directamente no pasó las precondiciones
-		//y por ende las postcondiciones tampoco
+		// Si la precondición es null directamente no pasó las precondiciones
+		// y por ende las postcondiciones tampoco
 		if (preconditionText == null) {
-            return false;
-        }
-		else {
+			return false;
+		} else {
 			// Creo un parser para analizar el texto
 			SQLiteParser parser = this.createSQLiteParser(text);
 			// Creo un árbol de análisis sintáctico
 			ParseTree newParseTree = parser.parse();
-			
+
 			CheckPostconditionsVisitor visitor = new CheckPostconditionsVisitor(this.newAlias, this.alias);
 			String checked_query = visitor.visit(newParseTree);
-			if (!checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
+			if (!checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0))
 				return true;
-			else 
+			else
 				return false;
 		}
-		}	
-			
 	}
+
+	public static void main(String[] args) {
+		RenameAlias refactoring = new RenameAlias();
+		refactoring.setAlias("paises", "p");
+		System.out.println(refactoring.checkPreconditions("SELECT * FROM paises WHERE paises.nombre = 'Argentina'"));
+	}
+
 }
