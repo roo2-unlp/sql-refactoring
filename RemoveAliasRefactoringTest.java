@@ -33,9 +33,8 @@ public class RemoveAliasRefactoringTest {
      @Test 
      public void EqualsQuery() throws RefactoringException {
          refactoring = new RemoveAliasRefactoring(); 
-         expected = "SELECT * FROM table_name";
          refactoring.setAlias("tnm");
-        assertEquals(expected, refactoring.refactor("SELECT * FROM table_name"));
+        assertThrows(RefactoringException.class,() -> refactoring.refactor("SELECT * FROM table_name"));
      } //No tiene que pasar las precondiciones
 
 
@@ -84,7 +83,7 @@ public class RemoveAliasRefactoringTest {
      public void refactorEmptyQuery() throws RefactoringException {
        refactoring = new RemoveAliasRefactoring();
        refactoring.setAlias("c");
-       assertEquals(" ", refactoring.refactor(" "));
+       assertThrows(RefactoringException.class,()-> refactoring.refactor(" "));
 
      } //Casdo de consulta vacia    
 

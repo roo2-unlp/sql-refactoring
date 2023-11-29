@@ -48,6 +48,8 @@ public class RemoveAliasRefactoring extends Refactoring{
         visitor.setAlias(alias);
         visitor.setAliasReference(aliasReference);
         String transformedText = visitor.visit(tree);
+        System.out.println();
+        System.out.println(transformedText);
         return transformedText;
         
     }

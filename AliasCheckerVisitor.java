@@ -38,7 +38,9 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
       @Override
       public String visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
         // System.out.println(ctx.table_name().any_name().IDENTIFIER().toString());
-         if (ctx.table_alias() != null){
+        System.out.println("scaloni no te vayas");
+        System.out.println(ctx.getText());
+        if (ctx.table_alias() != null){
            if( ctx.table_alias().any_name().IDENTIFIER().toString().equals(alias)) {
            // System.out.println(this.getAliasEncontrado());
                this.aliasEncontrado();

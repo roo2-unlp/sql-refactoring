@@ -140,39 +140,40 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
 //  }      
 //        return sourceTextForContext(ctx);
 //   }
-//  @Override 
-//  public String  visitJoin_clause(SQLiteParser.Join_clauseContext ctx) { 
-      
-//       if(ctx.table_or_subquery(0) != null){
-//          System.out.println("sssssssssssssssssssss");
-//          System.out.println(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString());
-//           if(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
-//                System.out.println("no pasa");
-//                String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(0).AS_().toString(),"").trim();
-//                return ctxJoin.replace(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString(),"").trim();
-//           }
-//        }
-//        if(ctx.table_or_subquery(1) != null){
-//          System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
-//          System.out.println(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString());
-//           if(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
-//                System.out.println(sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),""));
-//                String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).AS_().toString(),"").trim();
-//                return ctxJoin.replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),"").trim();
-//           }
-//        }   
-//        if(ctx.join_constraint(0) != null){
-//          if(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
-//             return sourceTextForContext(ctx).replace(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
-//          }
-//        }
-//        if(ctx.join_constraint(1) != null){
-//          if(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
-//             return sourceTextForContext(ctx).replace(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
-//          }
-//        }
-//        return sourceTextForContext(ctx);
-//       }
+//   @Override 
+   // public String  visitJoin_clause(SQLiteParser.Join_clauseContext ctx) {     
+   //      if(ctx.table_or_subquery(0) != null){
+   //         //System.out.println("sssssssssssssssssssss");
+   //         //System.out.println(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString());
+   //         System.out.println("dale noka");
+   //         System.out.println(sourceTextForContext(ctx)); 
+   //         if(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
+   //               System.out.println("no pasa");
+   //               String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(0).AS_().toString(),"").trim();
+   //               return " FROM "+ctxJoin.replace(ctx.table_or_subquery(0).table_alias().any_name().IDENTIFIER().toString(),"").trim();
+   //          }
+   //       }
+   //       if(ctx.table_or_subquery(1) != null){
+   //         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
+   //         System.out.println(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString());
+   //          if(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString().equals(alias)){
+   //               System.out.println(sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),""));
+   //               String ctxJoin= sourceTextForContext(ctx).replace(ctx.table_or_subquery(1).AS_().toString(),"").trim();
+   //               return " FROM "+ctxJoin.replace(ctx.table_or_subquery(1).table_alias().any_name().IDENTIFIER().toString(),"").trim();
+   //          }
+   //       }   
+   //       if(ctx.join_constraint(0) != null){
+   //         if(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
+   //            return " ON "+ sourceTextForContext(ctx).replace(ctx.join_constraint(0).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+   //         }
+   //       }
+   //       if(ctx.join_constraint(1) != null){
+   //         if(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
+   //            return " ON "+sourceTextForContext(ctx).replace(ctx.join_constraint(1).expr().table_name().any_name().IDENTIFIER().toString(),this.getAliasReference());
+   //         }
+   //       }      
+   //       return sourceTextForContext(ctx);
+   //      }
 //   @Override 
 //   public String visitOrdering_term(SQLiteParser.Ordering_termContext ctx) { 
 //      if(ctx.expr().table_name() != null){
