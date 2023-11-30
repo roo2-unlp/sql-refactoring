@@ -41,7 +41,7 @@ public class ReplaceOrWithInRefactoringTest {
         System.out.println("----------------------------");  
         System.out.println("Realizando TestRefactorFallidoComparacionIncorrectaWhere");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        String consulta = "SELECT * FROM empleados WHERE edad > 18 or edad < 65";
+        String consulta = "SELECT * FROM empleados WHERE edad > 18 or edad = 65";
         try {
             refactoring.refactor(consulta);
             // Si no se lanzó una excepción, la prueba falla
