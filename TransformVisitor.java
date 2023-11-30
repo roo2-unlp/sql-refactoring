@@ -5,115 +5,76 @@ import sqlitegrammar.*;
 import java.util.*;
 
 public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
-    private String parteAntesDeWhere;
-    private String contenidoWhere;
-    // public String visitParse(SQLiteParser.ParseContext ctx) {
-    // return ctx.getText();
-    // }
-    // @Override
-    // public String visitExpr(SQLiteParser.ExprContext ctx) {
-    // //System.out.println("ctx.getChildCount() " + ctx.getChildCount());
-    // //System.out.println("ctx.getChild(1).getText().equals(OR) " +
-    // ctx.getChild(1).getText().equals("OR"));
-    // if (ctx.getChildCount() >= 3 && ctx.getChild(1).getText().equals("OR")) {
-    // // Identify OR expression
-    // String fieldName = ctx.getChild(0).getText();
 
-    // List<String> values = new ArrayList<>();
+    private StringBuilder contenidoSelect = new StringBuilder();
+    private StringBuilder contenidoFrom = new StringBuilder();
+    private StringBuilder contenidoWhere = new StringBuilder();
+    private Set<String> columnasWhere = new HashSet<String>();
 
-    // for (int i = 2; i < ctx.getChildCount(); i++) {
-    // values.add(ctx.getChild(i).getText());
-    // }
-
-    // // Construct IN expression
-    // String inExpression = fieldName + " IN (" + String.join(", ", values) + ")";
-    // this.transformacion = inExpression;
-    // // Replace OR expression with IN expression
-    // return inExpression;
-    // } else {
-    // // Recursively visit child nodes
-    // return super.visitExpr(ctx);
-    // }
-    // }
-
-    // public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
-    // @Override
-    // public String visitParse(SQLiteParser.ParseContext ctx) {
-    // String whereClause = "SELECT * FROM empleados WHERE ";
-    // String inExpression = visitSql_stmt_list(ctx.sql_stmt_list(0)); // Suponiendo
-    // una única consulta SQL
-
-    // // Combinar la parte fija de la consulta con la transformación del WHERE
-    // return whereClause + inExpression;
-    // }
-
-    // @Override
-    // public String visitSql_stmt_list(SQLiteParser.Sql_stmt_listContext ctx) {
-    // return visitChildren(ctx);
-    // }
-
-    // @Override
-    // public String visitExpr(SQLiteParser.ExprContext ctx) {
-    // if (ctx.getChildCount() >= 3 && ctx.getChild(1).getText().equals("OR")) {
-    // // Identificar la expresión OR
-    // String fieldName = ctx.getChild(0).getText();
-
-    // List<String> values = new ArrayList<>();
-    // for (int i = 2; i < ctx.getChildCount(); i++) {
-    // values.add(ctx.getChild(i).getText());
-    // }
-
-    // // Construir la expresión IN
-    // String inExpression = fieldName + " IN ('" + String.join("', '", values) +
-    // "')";
-    // this.transformacion = inExpression;
-    // // Devolver la expresión IN
-    // return inExpression;
-    // } else {
-    // // Visitar nodos hijos recursivamente
-    // return super.visitExpr(ctx);
-    // }
-    // }
-
+    //SELECT y su contenido
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
-        String selectClause = ctx.SELECT_().getText(); // Obtiene la cláusula SELECT
-        // String fromClause = ctx.FROM_().getText(); // Obtiene la cláusula FROM
-        // System.out.println(" selectClause " + ctx.result_column().get(0).getText() );
-        // // esto para obtener los campos del select falta iterar la
-        for (SQLiteParser.Result_columnContext resultColumnContext : ctx.result_column()) {
-            System.out.println("Campo del SELECT: " + resultColumnContext.getText());
-            // Aquí puedes trabajar con cada campo del SELECT según necesites
+        // String selectClause = ctx.SELECT_().getText(); // Obtiene la cláusula SELECT
+        // System.out.println("Que imprime: " + selectClause);
+        // for (SQLiteParser.Result_columnContext resultColumnContext : ctx.result_column()) {
+        //     System.out.println("Campo del SELECT: " + resultColumnContext.getText());
+        // }
+        contenidoSelect.append("SELECT ");
+        List<SQLiteParser.Result_columnContext> resultColumns = ctx.result_column();
+        for (int i = 0; i < resultColumns.size(); i++) {
+            contenidoSelect.append(resultColumns.get(i).getText());
+            if (i < resultColumns.size() - 1) {
+                contenidoSelect.append(",");
+            }
         }
-        // System.out.println(" fromClause " + fromClause );
-
-        return "String";
+        contenidoSelect.append(" FROM ");
+        return super.visitSelect_core(ctx);
     }
 
-    // // Agregar la parte FROM (suponiendo que table_name es un contexto)
-    // SQLiteParser.Table_nameContext tableNameContext =
-    // ctx.getRuleContext(SQLiteParser.Table_nameContext.class, 0);
-    // queryBuilder.append(" FROM ");
-    // queryBuilder.append(tableNameContext.getText());
 
-    // // Agregar la parte WHERE si existe
-    // SQLiteParser.ExprContext exprContext =
-    // ctx.getRuleContext(SQLiteParser.ExprContext.class, 0);
-    // if (exprContext != null) {
-    // queryBuilder.append(" WHERE ");
-    // queryBuilder.append(exprContext.getText());
-    // }
-    @Override
-    public String visitParse(SQLiteParser.ParseContext ctx) {
-        String consultaSQL = ctx.getText();
-        // Dividir la consulta en dos partes usando la palabra clave WHERE
-        String[] partes = consultaSQL.split("WHERE");
-        // La parte antes de WHERE estará en partes[0]
-        parteAntesDeWhere = partes[0].trim();
-        // Imprimir la parte antes de WHERE
-        System.out.println("Parte antes de WHERE: " + parteAntesDeWhere);
-        return consultaSQL;
+    //ESTA EL CONTENIDO DE WHERE
+     @Override   
+      public String  visitExpr(SQLiteParser.ExprContext ctx) {
+        //System.out.println("--------VisitExpr--------");
+        //System.out.println("ctx" + ctx.getText());
+        if(ctx.column_name() != null){
+          System.out.println("columnas " + ctx.column_name().getText());
+          contenidoWhere.append(ctx.column_name().getText());
+          contenidoWhere.append(" IN");
+          contenidoWhere.append("(");
+            //System.out.println("column_name" + ctx.column_name().getText());
+        }
+        if(ctx.literal_value() != null){
+          if (contenidoWhere.length() > 0) {
+                contenidoWhere.append(", ");
+            }
+          contenidoWhere.append(ctx.literal_value().getText());
+            //System.out.println("literal_value" + ctx.literal_value().getText());
+        }
+        contenidoWhere.append(")");
+        return super.visitExpr(ctx);
+        
+      }
+
+      //TABLAS DEL FROM
+      @Override
+      public String  visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
+        //System.out.println("ctx.table_Table_or_subquery() " + ctx.table_name().getText());
+        contenidoFrom.append(ctx.table_name().getText());
+        return super.visitTable_or_subquery(ctx);
+      }
+
+    public String transformacion() {
+        StringBuilder consulta = new StringBuilder();
+        consulta.append(contenidoSelect).append(contenidoFrom);
+        if (contenidoWhere.length() > 0) {
+            consulta.append(" WHERE ").append(contenidoWhere);
+        }
+        System.out.println(consulta.toString());
+        return consulta.toString();
     }
+
+
 
     public String getTransformacion() {
         return "SELECT * FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";

@@ -28,6 +28,7 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
         TransformVisitor visitor = new TransformVisitor();
         visitor.visit(tree);
         String visitTransform = visitor.getTransformacion();
+        visitor.transformacion();
         return visitTransform;
 	}
 
