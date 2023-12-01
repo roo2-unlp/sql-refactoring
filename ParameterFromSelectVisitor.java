@@ -8,8 +8,6 @@ public class ParameterFromSelectVisitor extends SQLiteParserBaseVisitor<String> 
     private StringBuilder resultColumn = new StringBuilder() ;
     private int resultCounter, columnSize = 0;
 
-
-    //Validar si es un parametro correcto lo que se envia
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
         if (!ctx.result_column().isEmpty()) {
@@ -19,10 +17,8 @@ public class ParameterFromSelectVisitor extends SQLiteParserBaseVisitor<String> 
         return result;
     }
 
-
     @Override
-    public String visitResult_column(SQLiteParser.Result_columnContext ctx) {                
-        
+    public String visitResult_column(SQLiteParser.Result_columnContext ctx) {        
         resultCounter++;       
         if (resultCounter < columnSize) {
             resultColumn.append(ctx.getText() + ",");
