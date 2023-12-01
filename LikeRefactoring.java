@@ -4,11 +4,12 @@ import org.antlr.v4.runtime.tree.*;
 
 public class LikeRefactoring extends Refactoring {
     private String preconditionText = null;
+    private CommonTokenStream tokens;
 
     private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        this.tokens = new CommonTokenStream(lexer);
         return new SQLiteParser(tokens);
     }
 
@@ -41,7 +42,7 @@ public class LikeRefactoring extends Refactoring {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-        LikeVisitor visitor = new LikeVisitor(); 
+        LikeVisitor visitor = new LikeVisitor(this.tokens); 
         String transformedText = visitor.visit(tree);
 
         return transformedText;
