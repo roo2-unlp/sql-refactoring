@@ -17,11 +17,10 @@ public class LikeRefactoring extends Refactoring {
         ParseTree newParseTree = parser.parse();
 
         if (parser.getNumberOfSyntaxErrors() > 0) {
-            preconditionText = null;
             return false;
         }
         // el % es exclusivo de la clausula LIKE. https://www.sqlite.org/lang_expr.html
-        //con visitor que chequea precond
+        //con visitor que chequea precondiciones
         CheckPreCondVisitor PreCondVisitor = new CheckPreCondVisitor();
         PreCondVisitor.visit(newParseTree);
         return PreCondVisitor.PreConditionsAreMet();
@@ -33,15 +32,10 @@ public class LikeRefactoring extends Refactoring {
 
         LikeVisitor visitor = new LikeVisitor(this.tokens); 
         String transformedText = visitor.visit(tree);
-
         return transformedText;
     }
 
     protected boolean checkPostconditions(String text) {
-        // if (preconditionText == null) { //la consulta pasada tiene errores
-        //     return false;
-        // }
-        //con visitor que chequea postcond
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
         CheckPostCondVisitor PostCondVisitor = new CheckPostCondVisitor();

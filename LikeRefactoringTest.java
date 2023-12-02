@@ -22,7 +22,7 @@ public class LikeRefactoringTest {
         assertTrue(result.equals("SELECT * FROM table_name WHERE nombre like 'ar%';"));
     }
 
-    @Test //este nose porque no funciona, devuelve bien
+    @Test
     public void LikeRefactoringInMiddle() throws RefactoringException {
         this.refactoring = new LikeRefactoring();
         this.result = refactoring.refactor("SELECT * FROM table_name WHERE nombre Like 'a%r';");
