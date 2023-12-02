@@ -13,18 +13,23 @@ public class CheckPreCondVisitor extends SQLiteParserBaseVisitor<Void> {
         }
         return super.visitExpr(ctx);
     }
-    
+
+
     protected boolean isValidPreConditionExpr(SQLiteParser.ExprContext ctx){
-        //chequeo que estoy en el nodo del like y que la expr contiene %
-        if ((ctx.LIKE_().getText().equalsIgnoreCase("LIKE")) && (ctx.getChild(2).getText().contains("%"))){
-            //si la expr cntiene el % al final devuelvo false
-            System.out.println("string de expr: -1:" + ctx.getChild(2).getText().charAt(-1) + " , -2: " + ctx.getChild(2).getText().charAt(-2));
-            int count = Math.toIntExact(ctx.getChild(2).getText().chars().filter(ch -> ch == '%').count());//cuenta cant de % en el string
-            
-            if ((count == 1) && (ctx.getChild(2).getText().charAt(-1) == '%')){ //si cuenta la "" del string de expr creo que va -2 en luygar de -1
-                return false;
-            }else{return true;}//caso contrario, hay que refactorizar y devuelvo true
-        }else{return false;}//en el caso de no encontarnos en el nodo like o que la expr del like no contenga %, devuelvo false
+        if (ctx.LIKE_() != null){   //chqueamos que haya nodo like
+            //if ((ctx.LIKE_().getText().equalsIgnoreCase("LIKE"))){ //chqueamos que haya nodo like, creo q este if es redundante
+                String expr = ctx.getChild(2).getText(); //guardamos texto de la expresion del like en un string
+                if (expr.contains("%")){ //chqueamos que la expr contenga % si existe
+                    int count = Math.toIntExact(expr.chars().filter(ch -> ch == '%').count()); //contamos cant de % en la expresion
+                    //System.out.println("count: " + count + ", expr: " + expr + ", expr.lenght: " + expr.charAt(expr.length()-2));
+
+                    if ((count == 1) && (expr.charAt(expr.length()-2) == '%')){
+                        return false;   //la expr se encuantra en forma valida 'ar%' enotnces no hace falta refactorizar este caso
+                    }else{ return true;}
+
+                }else{ return false;}
+            //}else { return false;}
+        }else { return false;}
     }
 
     public boolean PreConditionsAreMet(){
