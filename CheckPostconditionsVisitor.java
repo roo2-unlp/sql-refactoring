@@ -1,7 +1,3 @@
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
-import sqlitegrammar.*;
-
 public class CheckPostconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 
     // alias que se cambió
@@ -15,7 +11,8 @@ public class CheckPostconditionsVisitor extends SQLiteParserBaseVisitor<String> 
         this.oldAlias = oldAlias;
     }
 
-    public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
+    @Override
+	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
 
         String currentAlias = ctx.getText();
 

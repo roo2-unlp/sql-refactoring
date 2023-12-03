@@ -1,7 +1,8 @@
 
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
-import sqlitegrammar.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class NullRefactoring extends Refactoring{
     private String preconditionText = null;
@@ -13,7 +14,8 @@ public class NullRefactoring extends Refactoring{
         return new SQLiteParser(tokens);
     }
 
-    protected boolean checkPreconditions(String text) {
+    @Override
+	protected boolean checkPreconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
@@ -21,21 +23,23 @@ public class NullRefactoring extends Refactoring{
             preconditionText = null;
             return false;
         }
-        
+
         preconditionText = newParseTree.getText();
-        
+
         return true;
     }
-    protected String transform(String text) {
+    @Override
+	protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
         NullVisitor visitor = new NullVisitor();
         String transformedText = visitor.visit(tree);
-        
+
         return transformedText;
     }
-    protected boolean checkPostconditions(String text) {
+    @Override
+	protected boolean checkPostconditions(String text) {
         if (preconditionText == null) {
             return false;
         }

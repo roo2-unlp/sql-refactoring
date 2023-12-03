@@ -1,3 +1,5 @@
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+
 public class AbstractParseTreeVisitor<T> implements ParseTreeVisitor<T> {
 
     @Override

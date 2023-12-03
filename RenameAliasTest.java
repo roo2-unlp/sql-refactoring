@@ -1,6 +1,4 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,7 @@ public class RenameAliasTest {
 	public void setUp() throws Exception {
 
 		refactoring = new RenameAlias();
-		
+
 		//query with alias
 		queryWithAlias = "SELECT nombre_ciudad, cities.nom_pais, p.continente"
 		        + " FROM ("
@@ -79,6 +77,7 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
+			System.out.print("holaaa");
 			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias));
 			//rename alias de una tabla
 			refactoring.setAlias("cities", "c");

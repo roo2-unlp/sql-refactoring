@@ -1,5 +1,6 @@
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 import sqlitegrammar.*;
 
 public class RenameAlias extends Refactoring {
@@ -16,71 +17,124 @@ public class RenameAlias extends Refactoring {
 		this.newAlias = newAlias;
 	}
 
-	private SQLiteParser createSQLiteParser(String text) {
-		// creación de un SQLiteParser para analizar un texto dado
-		CharStream charStream = CharStreams.fromString(text);
-		SQLiteLexer lexer = new SQLiteLexer(charStream);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		return new SQLiteParser(tokens);
-	}
+	private SQLiteParser createSQLiteParser (String text) {
+        CharStream charStream = CharStreams.fromString(text);
+        SQLiteLexer lexer = new SQLiteLexer(charStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        return new SQLiteParser(tokens);
+    }
 
-	@Override
-	protected boolean checkPreconditions(String text) {
-		// Creo un parser para analizar el texto
-		SQLiteParser parser = this.createSQLiteParser(text);
-		// Creo un árbol de análisis sintáctico
-		ParseTree newParseTree = parser.parse();
+    protected boolean checkPreconditions(String text) {
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree newParseTree = parser.parse();
 
-		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
-		String checked_query = visitor.visit(newParseTree);
+        CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
+        String checkedQuery = visitor.visit(newParseTree);
 
-		if (checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0)) {
-			// Guardo el texto de la consulta
-			preconditionText = newParseTree.getText();
-			return true;
-		}
+		System.out.println("chepreconditions se está ejecutando");
+
+        if (this.esAliasValido(this.alias) && this.esAliasValido(this.newAlias ) && 
+        		(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido()) ){
+        	// Guardo el texto de la consulta
+    		System.out.println("chepreconditions se está ejecutando el if");
+    		preconditionText = newParseTree.getText();
+        	return true;
+        }
 		preconditionText = null;
 		return false;
 	}
 
 	@Override
 	protected String transform(String text) {
-		SQLiteParser parser = this.createSQLiteParser(text);
-		ParseTree tree = parser.parse();
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree tree = parser.parse();
 
-		TransformAliasVisitor visitor = new TransformAliasVisitor();
-		String transformedText = visitor.visit(tree);
-
-		return transformedText;
+		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
+        String transformedText = visitor.visit(tree);
+        
+        return transformedText;
 	}
 
 	@Override
 	protected boolean checkPostconditions(String text) {
-		// Si la precondición es null directamente no pasó las precondiciones
-		// y por ende las postcondiciones tampoco
+		//Si la precondición es null directamente no pasó las precondiciones
+		//y por ende las postcondiciones tampoco
 		if (preconditionText == null) {
-			return false;
-		} else {
-			// Creo un parser para analizar el texto
-			SQLiteParser parser = this.createSQLiteParser(text);
-			// Creo un árbol de análisis sintáctico
-			ParseTree newParseTree = parser.parse();
-
-			CheckPostconditionsVisitor visitor = new CheckPostconditionsVisitor(this.newAlias, this.alias);
-			String checked_query = visitor.visit(newParseTree);
-			if (!checked_query.equals(text) && (parser.getNumberOfSyntaxErrors() == 0))
+            return false;
+        }
+		//Sino se compara el texto de la consulta antes y después del refactoring
+		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
+		else {
+        	//return !(preconditionText.equals(text));
+			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
+			if (!(preconditionText.equals(this.transform(text)))){
 				return true;
-			else
-				return false;
+			}
 		}
+		return false;	
+			
 	}
-	/*
-	 * public static void main(String[] args) {
-	 * RenameAlias refactoring = new RenameAlias();
-	 * refactoring.setAlias("paises", "p");
-	 * System.out.println(refactoring.
-	 * checkPreconditions("SELECT * FROM paises WHERE paises.nombre = 'Argentina'"))
-	 * ;
-	 * }
-	 */
+	
+	
+	private boolean esPalabraReservada(String newAlias) {
+		boolean reservada = true;
+		// Dividir el nuevo alias en palabras
+		String[] palabras = newAlias.split("\\s+");
+
+		// Convertir cada palabra a mayúsculas y verificar si es una palabra reservada
+		for (int i = 0; i < palabras.length; i++) {
+			palabras[i] = palabras[i].toUpperCase();
+			switch (palabras[i]) {
+				case "SELECT":
+				case "FROM":
+				case "WHERE":
+				case "AS":
+				case "JOIN":
+				case "ON":
+				case "AND":
+				case "OR":
+				case "NOT":
+				case "IN":
+				case "LIKE":
+				case "BETWEEN":
+				case "IS":
+				case "NULL":
+				case "ORDER":
+				case "BY":
+				case "GROUP":
+				case "HAVING":
+				case "UNION":
+				case "ALL":
+				case "INTERSECT":
+				case "EXCEPT":
+				case "MINUS":
+				case "ANY":
+				case "SOME":
+				case "EXISTS":
+				case "CASE":
+				case "WHEN":
+				case "THEN":
+				case "ELSE":
+				case "END":
+				case "CREATE":
+				case "TABLE":
+				case "PRIMARY":
+				case "KEY":
+				case "*":
+					reservada = true;
+					break;
+				default:
+					reservada = false;
+					break;
+			}
+		}
+		return reservada;
+	}
+	
+	private boolean esAliasValido(String alias) {
+		if ((alias.length() >= 1) && (alias.matches("[a-zA-Z_]+")) && !this.esPalabraReservada(alias)){
+			return true;
+		}
+		return false;
+	}
 }
