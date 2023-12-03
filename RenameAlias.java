@@ -51,7 +51,7 @@ public class RenameAlias extends Refactoring {
 
 		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
 		String transformedText = visitor.visit(tree);
-
+		System.out.println("transform se está ejecutando");
 		return transformedText;
 	}
 
@@ -70,6 +70,7 @@ public class RenameAlias extends Refactoring {
 			if (!(preconditionText.equals(this.transform(text)))) {
 				return true;
 			}
+			System.out.println("checkpostconditions se está ejecutando");
 		}
 		return false;
 
