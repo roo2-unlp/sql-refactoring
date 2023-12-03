@@ -73,4 +73,15 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
         } */
         return super.visitAlias(ctx);
     }
+    
+     @Override
+    protected String defaultResult() {
+        return "";
+    }
+
+    @Override
+    protected String aggregateResult(String aggregate, String nextResult) {
+        return nextResult + aggregate;
+    }
+    
 }
