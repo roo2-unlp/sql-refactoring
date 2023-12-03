@@ -17,65 +17,64 @@ public class RenameAlias extends Refactoring {
 		this.newAlias = newAlias;
 	}
 
-	private SQLiteParser createSQLiteParser (String text) {
-        CharStream charStream = CharStreams.fromString(text);
-        SQLiteLexer lexer = new SQLiteLexer(charStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new SQLiteParser(tokens);
-    }
+	private SQLiteParser createSQLiteParser(String text) {
+		CharStream charStream = CharStreams.fromString(text);
+		SQLiteLexer lexer = new SQLiteLexer(charStream);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		return new SQLiteParser(tokens);
+	}
 
-    protected boolean checkPreconditions(String text) {
-        SQLiteParser parser = this.createSQLiteParser(text);
-        ParseTree newParseTree = parser.parse();
+	protected boolean checkPreconditions(String text) {
+		SQLiteParser parser = this.createSQLiteParser(text);
+		ParseTree newParseTree = parser.parse();
 
-        CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
-        String checkedQuery = visitor.visit(newParseTree);
+		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
+		String checkedQuery = visitor.visit(newParseTree);
 
 		System.out.println("chepreconditions se está ejecutando");
 
-        if (this.esAliasValido(this.alias) && this.esAliasValido(this.newAlias ) && 
-        		(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido()) ){
-        	// Guardo el texto de la consulta
-    		System.out.println("chepreconditions se está ejecutando el if");
-    		preconditionText = newParseTree.getText();
-        	return true;
-        }
+		if (this.esAliasValido(this.alias) && this.esAliasValido(this.newAlias) &&
+				(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido())) {
+			// Guardo el texto de la consulta
+			System.out.println("chepreconditions se está ejecutando el if");
+			preconditionText = newParseTree.getText();
+			return true;
+		}
 		preconditionText = null;
 		return false;
 	}
 
 	@Override
 	protected String transform(String text) {
-        SQLiteParser parser = this.createSQLiteParser(text);
-        ParseTree tree = parser.parse();
+		SQLiteParser parser = this.createSQLiteParser(text);
+		ParseTree tree = parser.parse();
 
 		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
-        String transformedText = visitor.visit(tree);
-        
-        return transformedText;
+		String transformedText = visitor.visit(tree);
+
+		return transformedText;
 	}
 
 	@Override
 	protected boolean checkPostconditions(String text) {
-		//Si la precondición es null directamente no pasó las precondiciones
-		//y por ende las postcondiciones tampoco
+		// Si la precondición es null directamente no pasó las precondiciones
+		// y por ende las postcondiciones tampoco
 		if (preconditionText == null) {
-            return false;
-        }
-		//Sino se compara el texto de la consulta antes y después del refactoring
+			return false;
+		}
+		// Sino se compara el texto de la consulta antes y después del refactoring
 		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
 		else {
-        	//return !(preconditionText.equals(text));
+			// return !(preconditionText.equals(text));
 			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
-			if (!(preconditionText.equals(this.transform(text)))){
+			if (!(preconditionText.equals(this.transform(text)))) {
 				return true;
 			}
 		}
-		return false;	
-			
+		return false;
+
 	}
-	
-	
+
 	private boolean esPalabraReservada(String newAlias) {
 		boolean reservada = true;
 		// Dividir el nuevo alias en palabras
@@ -130,9 +129,9 @@ public class RenameAlias extends Refactoring {
 		}
 		return reservada;
 	}
-	
+
 	private boolean esAliasValido(String alias) {
-		if ((alias.length() >= 1) && (alias.matches("[a-zA-Z_]+")) && !this.esPalabraReservada(alias)){
+		if ((alias.length() >= 1) && (alias.matches("[a-zA-Z_]+")) && !this.esPalabraReservada(alias)) {
 			return true;
 		}
 		return false;
