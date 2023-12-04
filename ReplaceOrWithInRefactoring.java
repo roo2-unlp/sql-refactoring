@@ -27,8 +27,7 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
         ParseTree tree = parser.parse();
         TransformVisitor visitor = new TransformVisitor();
         visitor.visit(tree);
-        String visitTransform = visitor.getTransformacion();
-        visitor.transformacion();
+        String visitTransform = visitor.transformacion();
         return visitTransform;
 	}
 

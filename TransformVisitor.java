@@ -8,50 +8,32 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder contenidoSelect = new StringBuilder();
     private StringBuilder contenidoFrom = new StringBuilder();
-    private StringBuilder contenidoWhere = new StringBuilder();
-    private Set<String> columnasWhere = new HashSet<String>();
+    private List<String> literalValues = new ArrayList<String>();
+    private String campoWhere; 
 
-    //SELECT y su contenido
+    //SELECT y NOMBRE COLUMNA USADA EN EL WHERE
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
-        // String selectClause = ctx.SELECT_().getText(); // Obtiene la cláusula SELECT
-        // System.out.println("Que imprime: " + selectClause);
-        // for (SQLiteParser.Result_columnContext resultColumnContext : ctx.result_column()) {
-        //     System.out.println("Campo del SELECT: " + resultColumnContext.getText());
-        // }
+        this.campoWhere = ctx.whereExpr.expr().get(1).getChild(0).getText();
         contenidoSelect.append("SELECT ");
         List<SQLiteParser.Result_columnContext> resultColumns = ctx.result_column();
+        
         for (int i = 0; i < resultColumns.size(); i++) {
             contenidoSelect.append(resultColumns.get(i).getText());
             if (i < resultColumns.size() - 1) {
                 contenidoSelect.append(",");
             }
         }
-        contenidoSelect.append(" FROM ");
+
         return super.visitSelect_core(ctx);
     }
 
-
-    //ESTA EL CONTENIDO DE WHERE
+    //ESTA EL CONTENIDO DE LOS LITERAL VALUE DEL WHERE
      @Override   
       public String  visitExpr(SQLiteParser.ExprContext ctx) {
-        //System.out.println("--------VisitExpr--------");
-        //System.out.println("ctx" + ctx.getText());
-        if(ctx.column_name() != null){
-          System.out.println("columnas " + ctx.column_name().getText());
-          contenidoWhere.append(ctx.column_name().getText());
-          contenidoWhere.append(" IN");
-          contenidoWhere.append("(");
-            //System.out.println("column_name" + ctx.column_name().getText());
-        }
         if(ctx.literal_value() != null){
-          if (contenidoWhere.length() > 0) {
-                contenidoWhere.append(", ");
-            }
-          contenidoWhere.append(ctx.literal_value().getText());
-            //System.out.println("literal_value" + ctx.literal_value().getText());
+            this.literalValues.add(ctx.literal_value().getText());
         }
-        contenidoWhere.append(")");
         return super.visitExpr(ctx);
         
       }
@@ -59,7 +41,7 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
       //TABLAS DEL FROM
       @Override
       public String  visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
-        //System.out.println("ctx.table_Table_or_subquery() " + ctx.table_name().getText());
+        contenidoFrom.append(" FROM ");
         contenidoFrom.append(ctx.table_name().getText());
         return super.visitTable_or_subquery(ctx);
       }
@@ -67,16 +49,19 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
     public String transformacion() {
         StringBuilder consulta = new StringBuilder();
         consulta.append(contenidoSelect).append(contenidoFrom);
-        if (contenidoWhere.length() > 0) {
-            consulta.append(" WHERE ").append(contenidoWhere);
+        consulta.append(" WHERE ")
+                .append(this.campoWhere)
+                .append(" IN")
+                .append("(");
+        int contador = this.literalValues.size();
+        for (int i = 0; i < this.literalValues.size(); i++){
+            consulta.append(this.literalValues.get(i));
+            if( i < contador-1){
+                consulta.append(",");
+            }
         }
-        System.out.println(consulta.toString());
+        consulta.append(")");
         return consulta.toString();
     }
 
-
-
-    public String getTransformacion() {
-        return "SELECT * FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
-    }
 }

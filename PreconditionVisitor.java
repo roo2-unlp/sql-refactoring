@@ -12,12 +12,12 @@ public class PreconditionVisitor extends SQLiteParserBaseVisitor<Boolean> {
     public Boolean visitExpr(SQLiteParser.ExprContext exprContext) {
         if (exprContext.OR_() != null) {
             this.cumplePrecondicion = true;
-            for (ParserRuleContext child : exprContext.children()) {
-                if (child instanceof TerminalNode && child.symbol() == SQLiteParser.EQ) {
-                    // Hay un = en la expresion
-                    return true;
-                }
-            }
+            // for (ParserRuleContext child : exprContext.children()) {
+            //     if (child instanceof TerminalNode && child.symbol() == SQLiteParser.EQ) {
+            //         // Hay un = en la expresion
+            //         return true;
+            //     }
+            // }
 
             // List<SQLiteParser.ExprContext> comparisons = exprContext.expr();
             // for (SQLiteParser.ExprContext comparison : comparisons) {             
