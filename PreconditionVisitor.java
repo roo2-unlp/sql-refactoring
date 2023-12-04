@@ -8,27 +8,23 @@ public class PreconditionVisitor extends SQLiteParserBaseVisitor<Boolean> {
 
     private boolean cumplePrecondicion;
 
-    @Override
-    public Boolean visitExpr(SQLiteParser.ExprContext exprContext) {
-        if (exprContext.OR_() != null) {
-            this.cumplePrecondicion = true;
-            // for (ParserRuleContext child : exprContext.children()) {
-            //     if (child instanceof TerminalNode && child.symbol() == SQLiteParser.EQ) {
-            //         // Hay un = en la expresion
-            //         return true;
-            //     }
-            // }
 
-            // List<SQLiteParser.ExprContext> comparisons = exprContext.expr();
-            // for (SQLiteParser.ExprContext comparison : comparisons) {             
-            //     System.out.println("comparison.getText() = " + comparison.getText());
-            //     System.out.println("exprContext.EQ() = " + comparison.EQ());
-            // }
-            return true; // Devuelve true si encuentra OR
-        } else {
-            this.cumplePrecondicion = false;
-            return false; // Devuelve false si no encuentra OR
+    @Override
+    public Boolean visitExpr(SQLiteParser.ExprContext exprContext) { 
+        //Precondicon - Debe existir la clausula OR y no tiene que existir el and
+        if ((exprContext.OR_() != null) && (exprContext.AND_() ==null) ){   
+             
+            this.cumplePrecondicion = true;         
+            List<SQLiteParser.ExprContext> hijos = exprContext.expr();
+            for (SQLiteParser.ExprContext hijo : hijos) {
+                //Precondicon - La conversion solo se hara si se compara con igualdad         
+                if (hijo.ASSIGN() == null){
+                    this.cumplePrecondicion = false;
+                }    
+            }
         }
+        System.out.println("mi visitExpr devuelve : " +  cumplePrecondicion);
+        return cumplePrecondicion;
     }
 
     public boolean getCumplePrecondicion() {

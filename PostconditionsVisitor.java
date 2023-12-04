@@ -9,7 +9,7 @@ public class PostconditionsVisitor extends SQLiteParserBaseVisitor<Boolean> {
     @Override
     public Boolean visitExpr(SQLiteParser.ExprContext ctx) {
         // Verificar si la expresión contiene varias comparaciones con OR
-        if ((ctx.IN_() != null) && (ctx.OR_() == null)) {
+        if ((ctx.IN_() != null) && (ctx.OR_() == null) && (ctx.AND_() == null)) {
             this.cumplePostconditions = true;
             return true; // Devuelve true si encuentra OR
         } else {
