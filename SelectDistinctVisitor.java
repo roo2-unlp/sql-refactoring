@@ -2,22 +2,18 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class SelectDistinctVisitor extends SQLiteParserBaseVisitor<String>{
-    @Override
-    protected String defaultResult() {
-		return "";
-	}
+public class SelectDistinctVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
-    protected String aggregateResult(String aggregate, String nextResult) {
-		return nextResult + aggregate;
-	}
-    // override visitselect_core
-    @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
-       
-        //System.out.println("Print del visitor: ctx.getText()");
-        //System.out.println(ctx.getText());
-        return ctx.getText();
+        // Este método se llamará cuando el visitor se encuentre en un nodo 'Select_coreContext'
+        if (ctx.getChild(1).getText().equalsIgnoreCase("DISTINCT")) {
+            // Realiza acciones específicas para el nodo DISTINCT
+            System.out.println("Visitando un nodo DISTINCT");
+        }
+
+        // Puedes realizar otras acciones específicas para el nodo 'Select_coreContext' en general
+
+        return null;
     }
 }

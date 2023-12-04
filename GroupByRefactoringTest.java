@@ -9,7 +9,6 @@ public class GroupByRefactoringTest {
     
     @Test 
     public void thatDistinctExistsTest() throws RefactoringException {
-        String result;
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunta si no exite el Distinct en una consulta normal */
         assertFalse(refactoring.checkPreconditions("SELECT products FROM table_name;"));
@@ -20,7 +19,6 @@ public class GroupByRefactoringTest {
     
     @Test 
     public void containsAggregationFunctionTest() throws RefactoringException {
-        String result;
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunta si tiene una funcion de agregacion */
         assertFalse(refactoring.checkPreconditions("SELECT DISTINCT producto, SUM(cantidad) as total_ventas FROM ventas"));
@@ -28,10 +26,17 @@ public class GroupByRefactoringTest {
 
     @Test 
     public void containsGroupByTest() throws RefactoringException {
-        String result;
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunta si contiene GroupBy */
         assertFalse(refactoring.checkPreconditions("SELECT DISTINCT producto, SUM(cantidad) as total_ventas FROM ventas GROUP BY producto;"));
+    }
+
+    @Test 
+    public void invalidQueryTest()  throws RefactoringException {
+        Refactoring refactoring = new GroupByRefactoring();
+        /** Pregunto si la consulta es invalida */
+        assertFalse(refactoring.checkPreconditions("FOOBAR * WHERE 1=1;"));
+            
     }
 
 }

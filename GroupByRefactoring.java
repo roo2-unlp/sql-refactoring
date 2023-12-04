@@ -21,8 +21,9 @@ public class GroupByRefactoring extends Refactoring{
         ParseTree newParseTree = parser.parse();
         SelectDistinctVisitor visitor = new SelectDistinctVisitor();
 
-        String result = visitor.visit(newParseTree).toUpperCase();
+        String result = visitor.visit(newParseTree);
 
+        /** 
         if (parser.getNumberOfSyntaxErrors() > 0) {
             preconditionText = newParseTree.getText();
             return false;
@@ -42,6 +43,7 @@ public class GroupByRefactoring extends Refactoring{
 
         preconditionText = null;
         
+        */
         return true;
     }
     protected String transform(String text) {
