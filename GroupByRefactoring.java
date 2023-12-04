@@ -89,13 +89,7 @@ public class GroupByRefactoring extends Refactoring {
     }
 
     private Boolean isSetterContentValidation(String[] parametersSplitted, String[] visitorResultSplitted) {
-        for (String parameter : parametersSplitted) {
-            for (String visitorParameter : visitorResultSplitted) {
-                if (visitorParameter.equals(parameter)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Arrays.stream(parametersSplitted)
+            .anyMatch(parameter -> Arrays.stream(visitorResultSplitted).anyMatch(visitorParameter -> visitorParameter.equals(parameter)));
     }
 }
