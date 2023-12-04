@@ -18,7 +18,7 @@ public class GroupByRefactoring extends Refactoring {
 
     public void setStmtParameter(String stmtParemeter) {
         this.stmtParameter = stmtParemeter;
-    }   
+    }
 
     @Override
     protected boolean checkPreconditions(String text) {
@@ -44,10 +44,10 @@ public class GroupByRefactoring extends Refactoring {
         GroupByVisitor groupByVisitor = new GroupByVisitor();
 
         Boolean isExistsOrderby = orderByVisitor.visit(tree);
-        String transformedText = groupByVisitor.visit(tree);
+        String queryTransformed = groupByVisitor.visit(tree);
         StringBuilder queryWithGroupByAdded = new StringBuilder();
 
-        return orderByStatementCheck(tree, isExistsOrderby, transformedText, queryWithGroupByAdded);
+        return orderByStatementCheck(tree, isExistsOrderby, queryTransformed, queryWithGroupByAdded);
 
     }
 
@@ -75,14 +75,15 @@ public class GroupByRefactoring extends Refactoring {
 
     private String orderByStatementCheck(ParseTree tree, Boolean isExistsOrderby, String transformedText,
             StringBuilder queryWithGroupbyAdded) {
+                
+        queryWithGroupbyAdded.append(transformedText);
+        queryWithGroupbyAdded.append(this.stmtParameter);
+
         if (isExistsOrderby) {
-            queryWithGroupbyAdded.append(transformedText);
-            queryWithGroupbyAdded.append(this.stmtParameter);
             String orderByClause = getOrderByVisitor.visit(tree);
             queryWithGroupbyAdded.append(orderByClause + ";");
         } else {
-            queryWithGroupbyAdded.append(transformedText);
-            queryWithGroupbyAdded.append(this.stmtParameter + ";");
+            queryWithGroupbyAdded.append(";");
         }
         return queryWithGroupbyAdded.toString();
     }
