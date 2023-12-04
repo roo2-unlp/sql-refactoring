@@ -12,8 +12,8 @@ public class ReplaceOrWithInRefactoringTest {
         System.out.println("----------------------------");
         System.out.println("Realizando TestRefactorCorrecto");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        String consulta = "SELECT dni,nombre FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
-        String consultaFinal = "SELECT dni,nombre FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
+        String consulta = "SELECT nombre, apellido FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
+        String consultaFinal = "SELECT nombre, apellido FROM empleados WHERE estado_civil IN ('Soltero', 'Casado')";
         assertTrue(refactoring.refactor(consulta).equals(consultaFinal));
         
     }
@@ -35,9 +35,8 @@ public class ReplaceOrWithInRefactoringTest {
     //     }
     // }
 
-    // @Test
-    // public void TestRefactorFallidoComparacionIncorrectaWhere() {      
-        
+    @Test
+    public void TestRefactorFallidoComparacionIncorrectaWhere() {      
         System.out.println("----------------------------");  
         System.out.println("Realizando TestRefactorFallidoComparacionIncorrectaWhere");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
