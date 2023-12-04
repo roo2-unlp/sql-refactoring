@@ -27,8 +27,8 @@ public class GroupByRefactoring extends Refactoring {
         this.isExistsGroupBy = existsGroupByVisitor.visit(tree);
         this.parametersFromSelect = paramaterFromSelectVisitor.visit(tree);
 
-        this.isParameterContent = isSetterContentValidation(this.parametersFromSelect.split(","),
-                this.stmtParameter.split(","));
+        this.isParameterContent = !this.parametersFromSelect.isEmpty() && !this.stmtParameter.isEmpty() ?  isSetterContentValidation(this.parametersFromSelect.split(","),
+                this.stmtParameter.split(",")) : false;
 
         if (parser.getNumberOfSyntaxErrors() > 0 || this.isExistsGroupBy || !this.isParameterContent) {
             return false;
