@@ -12,10 +12,27 @@ public class ReplaceOrWithInRefactoringTest {
         System.out.println("----------------------------");
         System.out.println("Realizando TestRefactorCorrecto");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        String consulta = "SELECT nombre, apellido FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
-        String consultaFinal = "SELECT nombre, apellido FROM empleados WHERE estado_civil IN('Soltero','Casado')";
+        String consulta = "SELECT nombre,apellido FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
+        String consultaFinal = "SELECT nombre,apellido FROM empleados WHERE estado_civil IN('Soltero','Casado')";
         assertTrue(refactoring.refactor(consulta).equals(consultaFinal));
         
+    }
+
+    @Test
+    public void TestRefactorFallidoDistintosCampos() {        
+        
+        System.out.println("----------------------------");
+        System.out.println("Realizando TestRefactorFallidoDistintosCampos");
+        Refactoring refactoring = new ReplaceOrWithInRefactoring();
+        String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estadocivil = 'Casado'";
+        try {
+            refactoring.refactor(consulta);
+            // Si no se lanzó una excepción, la prueba falla
+            assertFalse("Se esperaba una excepción, pero no se lanzó.", true);
+        } catch (RefactoringException e) {
+            // Se lanzó una excepción, puedes hacer afirmaciones adicionales aquí
+            assertEquals("Preconditions not met.", e.getMessage());
+        }
     }
 
     @Test
@@ -25,6 +42,23 @@ public class ReplaceOrWithInRefactoringTest {
         System.out.println("Realizando TestRefactorFallidoFaltaOr");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
         String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero'";
+        try {
+            refactoring.refactor(consulta);
+            // Si no se lanzó una excepción, la prueba falla
+            assertFalse("Se esperaba una excepción, pero no se lanzó.", true);
+        } catch (RefactoringException e) {
+            // Se lanzó una excepción, puedes hacer afirmaciones adicionales aquí
+            assertEquals("Preconditions not met.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void TestRefactorFallidoSintacticamente() {        
+        
+        System.out.println("----------------------------");
+        System.out.println("Realizando TestRefactorFallidoSintacticamente");
+        Refactoring refactoring = new ReplaceOrWithInRefactoring();
+        String consulta = "SELEC * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
         try {
             refactoring.refactor(consulta);
             // Si no se lanzó una excepción, la prueba falla
@@ -51,17 +85,50 @@ public class ReplaceOrWithInRefactoringTest {
         }
     }
 
-    @Test
-    public void TestRefactorFalloTrasformacion() {
+     @Test
+    public void TestRefactorFallidoTieneAnd() {        
+        
+        System.out.println("----------------------------");
+        System.out.println("Realizando TestRefactorFallidoTieneAnd");
         Refactoring refactoring = new ReplaceOrWithInRefactoring();
-        String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
+        String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero' AND edad = 20";
         try {
             refactoring.refactor(consulta);
             // Si no se lanzó una excepción, la prueba falla
             assertFalse("Se esperaba una excepción, pero no se lanzó.", true);
         } catch (RefactoringException e) {
             // Se lanzó una excepción, puedes hacer afirmaciones adicionales aquí
-            assertEquals("Postconditions not met.", e.getMessage());
+            assertEquals("Preconditions not met.", e.getMessage());
         }
     }
+    
+
+
+    // @Test
+    // public void TestRefactorFalloTrasformacion() {
+    //     Refactoring refactoring = new ReplaceOrWithInRefactoring();
+    //     String consulta = "SELECT nombre,apellido FROM empleados WHERE edad = 20 OR edad = 27";
+    //     try {
+    //         refactoring.refactor(consulta);
+    //         // Si no se lanzó una excepción, la prueba falla
+    //         assertFalse("Se esperaba una excepción, pero no se lanzó.", true);
+    //     } catch (RefactoringException e) {
+    //         // Se lanzó una excepción, puedes hacer afirmaciones adicionales aquí
+    //         assertEquals("Postconditions not met.", e.getMessage());
+    //     }
+    // }
+
+    // @Test
+    // public void TestRefactorFalloTrasformacion() {
+    //     Refactoring refactoring = new ReplaceOrWithInRefactoring();
+    //     String consulta = "SELECT * FROM empleados WHERE estado_civil = 'Soltero' OR estado_civil = 'Casado'";
+    //     try {
+    //         refactoring.refactor(consulta);
+    //         // Si no se lanzó una excepción, la prueba falla
+    //         assertFalse("Se esperaba una excepción, pero no se lanzó.", true);
+    //     } catch (RefactoringException e) {
+    //         // Se lanzó una excepción, puedes hacer afirmaciones adicionales aquí
+    //         assertEquals("Postconditions not met.", e.getMessage());
+    //     }
+    // }
 }

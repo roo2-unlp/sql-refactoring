@@ -46,7 +46,9 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
         return super.visitTable_or_subquery(ctx);
       }
 
-    public String transformacion() {
+
+    @Override
+    protected String defaultResult() {
         StringBuilder consulta = new StringBuilder();
         consulta.append(contenidoSelect).append(contenidoFrom);
         consulta.append(" WHERE ")
@@ -62,6 +64,6 @@ public class TransformVisitor extends SQLiteParserBaseVisitor<String> {
         }
         consulta.append(")");
         return consulta.toString();
-    }
 
+    }
 }

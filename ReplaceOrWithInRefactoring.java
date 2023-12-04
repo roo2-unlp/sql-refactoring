@@ -13,10 +13,13 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
     @Override
     protected boolean checkPreconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
+        if (parser.getNumberOfSyntaxErrors() > 0){
+            return false;
+        }
         ParseTree newParseTree = parser.parse();
         PreconditionVisitor preconditionVisitor = new PreconditionVisitor();
-        preconditionVisitor.visit(newParseTree);
-        boolean visitResult = preconditionVisitor.getCumplePrecondicion();
+        boolean visitResult=preconditionVisitor.visit(newParseTree);
+        
         return visitResult;
     }
 
@@ -26,8 +29,7 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
 		SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
         TransformVisitor visitor = new TransformVisitor();
-        visitor.visit(tree);
-        String visitTransform = visitor.transformacion();
+        String visitTransform = visitor.visit(tree);
         return visitTransform;
 	}
 
@@ -36,8 +38,7 @@ public class ReplaceOrWithInRefactoring extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
         PostconditionsVisitor postconditionsVisitor = new PostconditionsVisitor();
-        postconditionsVisitor.visit(newParseTree);
-        boolean visitResult = postconditionsVisitor.getcumplePostconditions();
+        boolean visitResult =postconditionsVisitor.visit(newParseTree);
         return visitResult;
 	}
 

@@ -18,7 +18,9 @@ public class PostconditionsVisitor extends SQLiteParserBaseVisitor<Boolean> {
         }
     }
 
-    public boolean getcumplePostconditions() {
+    @Override
+    protected Boolean defaultResult() {
         return this.cumplePostconditions;
+
     }
 }
