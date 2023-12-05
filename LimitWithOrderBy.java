@@ -25,7 +25,7 @@ public class LimitWithOrderBy extends Refactoring{
 
         CheckPreVistor checkPreVistor = new CheckPreVistor();
         Boolean isExistOrderBy = CheckPreVistor.visit(newParseTree);
-        //esta ok este chequeo o deberiamos llmar explicitamente al metodo? 
+        //esta ok este chequeo o deberiamos llamar explicitamente al metodo? 
         if (parser.getNumberOfSyntaxErrors() > 0 || !isExistOrderBy ) {
             return false;
         }
@@ -36,13 +36,16 @@ public class LimitWithOrderBy extends Refactoring{
  
     @Override
     protected String transform(String text) {
+        System.out.println("Texto antes de la transformación: " + text);
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
+       
         LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
-
         String transformedText = visitor.visit(tree);
+        System.out.println("Texto después de la transformación: " + transformedText);
+        System.out.println("transform se está ejecutando");
 
-        return transformedText.split(" ").length;   
+        return transformedText; 
     }
 
     // verifica que la consulta despues de la transformacion tenga LIMIT

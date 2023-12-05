@@ -7,22 +7,28 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder transformedText = new StringBuilder();
     private String result;
+    private int limit = 10;
 
     @Override
     public String visitLimit_stmt(SQLiteParser.Limit_stmtContext ctx) {
-        if(ctx.LIMIT != null){
+        if(ctx.LIMIT_() != null){
             return ctx
         }
-        return result.append(ctx.SELECT_().toString() + "LIMIT 10;");
+        return result.append(ctx.SELECT_().toString() + "LIMIT " + limit + ";");
     }
 
     @Override
-    public String visitOrder_by_stmt(SQLiteParser.Order_by_stmtContext ctx) {
-        if(ctx.ORDER() != null){
-            return result.append(ctx.SELECT_().toString() + ";");
-            //preguntar como hacer para que nos devuelva la consulta entera 
-        }
-        return ctx;    
+    protected String defaultResult() {
+        return "";
+    }
+
+    @Override
+    protected String aggregateResult(String aggregate, String nextResult) {
+        return nextResult + aggregate;
+    }
+
+    public int setLimit(int l){
+        this.limit = l;
     }
 
     // tendiramos que agregar el visitor que verifica si existe o no la columna o ordenar ?
