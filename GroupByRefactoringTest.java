@@ -10,11 +10,16 @@ public class GroupByRefactoringTest {
     @Test 
     public void thatDistinctExistsTest() throws RefactoringException {
         Refactoring refactoring = new GroupByRefactoring();
-        /** Pregunta si no exite el Distinct en una consulta normal */
+        // Pregunta si no exite el Distinct en una consulta normal
         assertFalse(refactoring.checkPreconditions("SELECT products FROM table_name;"));
-        /** Pregunta si exite el Distinct en una subconsulta */
+        // Pregunta si exite el Distinct en una subconsulta
         assertTrue(refactoring.checkPreconditions("SELECT * FROM clientes WHERE cliente_id IN (SELECT distinct cliente_id FROM pedidos);;"));
+    }
 
+    @Test
+    public void transformedTest() throws RuntimeException{
+        Refactoring refactoring = new GroupByRefactoring();
+        System.out.println(refactoring.transform("SELECT DISTINCT producto FROM ventas;"));
     }
     
     @Test 
