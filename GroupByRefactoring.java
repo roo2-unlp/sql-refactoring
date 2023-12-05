@@ -41,7 +41,7 @@ public class GroupByRefactoring extends Refactoring{
             return false;
         }
         
-        if (preConditionsVisitor.getContainsGroup()) {
+        if (preConditionsVisitor.getContainsGroupBy()) {
             preconditionText = newParseTree.getText();
             return false;
         }

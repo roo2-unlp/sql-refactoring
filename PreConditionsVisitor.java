@@ -6,11 +6,13 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	private boolean containsGroup;
+	private boolean containsBy;
 	private boolean containsAggregateFunction;
 	private boolean containsDistinct;
 	
 	public PreConditionsVisitor() {
 		containsGroup = false;
+		containsBy = false;
 		containsAggregateFunction = false;
 		containsDistinct = false;
 	}
@@ -23,6 +25,9 @@ public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
             	if (nodoTerminal.getSymbol().getType() == SQLiteParser.GROUP_) {
             		containsGroup = true;
             	} 
+				if (nodoTerminal.getSymbol().getType() == SQLiteParser.BY_) {
+            		containsBy = true;
+            	}
             	if (nodoTerminal.getSymbol().getType() == SQLiteParser.DISTINCT_) {
             		containsDistinct = true;
             	}   
@@ -42,6 +47,14 @@ public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	public boolean getContainsGroup() {
 		return this.containsGroup;
 	}
+
+	public boolean getContainsBy() {
+		return this.containsBy;
+	}
+
+	public boolean getContainsGroupBy() {
+		return this.containsGroup && this.containsBy;
+	}
 	
 	public boolean getContainsAggregateFunction() {
 		return this.containsAggregateFunction;
@@ -52,10 +65,10 @@ public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	}
 	
 	public boolean getPrecondicion() {
-		return this.getContainsGroup() && !this.getContainsAggregateFunction() && !this.getContainsDistinct();
+		return !this.getContainsGroupBy() && !this.getContainsAggregateFunction() && this.getContainsDistinct();
 	}
 	
 	public boolean getPostcondicion() {
-		return !this.getContainsGroup() && !this.getContainsAggregateFunction() && this.getContainsDistinct();
+		return this.getContainsGroup() && !this.getContainsAggregateFunction() && !this.getContainsDistinct();
 	}
 }
