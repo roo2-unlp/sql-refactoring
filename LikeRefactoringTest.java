@@ -47,7 +47,7 @@ public class LikeRefactoringTest {
         }
     }
 
-    @Test //no lo pasa porque tiene q no realizarse ya q no cumple con las precondiciones (no tiene %)
+    @Test //no cumple con las precondiciones (no tiene %)
     public void NoneLikeRefactoring() throws RefactoringException {
         this.refactoring = new LikeRefactoring();
         try{
@@ -58,7 +58,7 @@ public class LikeRefactoringTest {
         }
     }
 
-    @Test //no lo pasa porque tiene q no realizarse ya q no cumple con las precondiciones (consulta no valida)
+    @Test //no cumple con las precondiciones (consulta no valida)
     public void NoneRefactoringRandomString() throws RefactoringException {
         this.refactoring = new LikeRefactoring();
         try{
@@ -69,7 +69,7 @@ public class LikeRefactoringTest {
         }
     }
 
-    @Test //no lo pasa porque tiene q no realizarse ya q no cumple con las precondiciones (no tiene %)
+    @Test //no cumple con las precondiciones (no tiene LIKE)
     public void NoneRefactoringNonExistingLike() throws RefactoringException {
         this.refactoring = new LikeRefactoring();
         try{
@@ -80,7 +80,7 @@ public class LikeRefactoringTest {
         }
     }
 
-    @Test //no lo pasa porque tiene q no realizarse ya q no cumple con las precondiciones (no es consulta valida)
+    @Test //no cumple con las precondiciones (no es consulta valida)
     public void NoneRefactoringWildcardNotInLike() throws RefactoringException {
         this.refactoring = new LikeRefactoring();
         try{

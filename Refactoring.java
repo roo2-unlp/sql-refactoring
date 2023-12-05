@@ -4,7 +4,7 @@ public abstract class Refactoring {
             throw new RefactoringException("Preconditions not met.");
         }
         String refactoredText = this.transform(text);
-        System.out.println("--------text: " + text + "refactored text: " + refactoredText);
+        //System.out.println("--------text: " + text + "refactored text: " + refactoredText);
         if (!this.checkPostconditions(refactoredText)) {
             throw new RefactoringException("Postconditions not met.");
         }
