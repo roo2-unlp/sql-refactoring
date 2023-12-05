@@ -6,7 +6,10 @@ public class CountFinderVisitor extends SQLiteParserBaseVisitor<Void> {
 
     @Override
     public Void visitExpr(SQLiteParser.ExprContext ctx) {
-        // Hay que considerar un posible HAVING COUNT(*)
+        HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors(); // Consideramos un posible HAVING COUNT(*)
+        if (analizer.existOperatorFromContexts(ctx)) {
+            return null;
+        }
         if (this.isValidCountExpr(ctx)){
             this.countNode = ctx;       // Capturamos (el nodo completo), una vez dentro de la función count.
         }

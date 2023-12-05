@@ -22,6 +22,10 @@ public class CountVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitExpr(SQLiteParser.ExprContext ctx) {
+        HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors();
+        if (analizer.existOperatorFromContexts(ctx)) {
+            return "";
+        }
         if (ctx.function_name() == null) { 
             return visitChildren(ctx); 
         }

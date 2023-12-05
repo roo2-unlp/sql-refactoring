@@ -40,6 +40,24 @@ public class CountRefactoringTest {
             );
     }
 
+    @Test
+    public void checkPreConditionsWithCountOnlyInHaving() {
+        refactoring = new CountRefactoring("apellido");
+        boolean needCountInSelect = false;
+        try{
+            refactoring.refactor(
+                    "SELECT dni, apellido, nombre " +
+                    "FROM Alumnos a INNER JOIN Examenes e on a.dni = e.dni " +
+                    "GROUP BY dni, apellido, nombre " +
+                    "HAVING (COUNT(*) >= 5);"
+            );      //No matter this operation
+        }
+        catch(Exception e) {
+            if (e.getMessage().equals("Preconditions not met."))
+                needCountInSelect = true;
+        }
+        assertTrue(needCountInSelect);
+    }
 
     @Test
     public void preConditionsCheck()  {
