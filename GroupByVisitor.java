@@ -2,8 +2,8 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class SelectDistinctVisitor extends SQLiteParserBaseVisitor<String>{
-    private Boolean containsDistinct = false;
+public class GroupByVisitor extends SQLiteParserBaseVisitor<String>{
+    private Boolean containsGroupBy = false;
     
     @Override
     protected String defaultResult() {
@@ -22,14 +22,15 @@ public class SelectDistinctVisitor extends SQLiteParserBaseVisitor<String>{
         // if (ctx.getChild(1).getText().toUpperCase().equals("DISTINCT")) {
         //     containsDistinct = true;
         // }
-        if (ctx.getText().toUpperCase().contains("SELECTDISTINCT")) {
-            containsDistinct = true;
+        if (ctx.getText().toUpperCase().contains("GROUPBY")) {
+            containsGroupBy = true;
         }
         return ctx.getText();
     }
 
 
-    public Boolean getContainsDistinct() {
-        return containsDistinct;
+    public Boolean getContainsGroupBy() {
+        return containsGroupBy;
     }
 }
+
