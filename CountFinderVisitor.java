@@ -4,11 +4,11 @@ import sqlitegrammar.*;
 public class CountFinderVisitor extends SQLiteParserBaseVisitor<Void> {
 
     private ParserRuleContext countNode = null;
-    private HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors(); // Consideramos un posible HAVING COUNT(*)
+    private HavingAnalyzerForVisitors analyzer = new HavingAnalyzerForVisitors(); // Consideramos un posible HAVING COUNT(*)
 
     @Override
     public Void visitExpr(SQLiteParser.ExprContext ctx) {
-        if (analizer.existOperatorFromContexts(ctx)) {
+        if (analyzer.existOperatorFromContexts(ctx)) {
             return null;
         }
         if (this.isValidCountExpr(ctx)){

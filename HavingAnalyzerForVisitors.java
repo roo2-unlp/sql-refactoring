@@ -1,6 +1,6 @@
-import sqlitegrammar.SQLiteParser;
+import sqlitegrammar.*;
 
-public class HavingAnalizerForVisitors {
+public class HavingAnalyzerForVisitors {
 
     public boolean existOperatorFromContexts(SQLiteParser.ExprContext ctx){
         if (existOperatorForCompare(ctx)){

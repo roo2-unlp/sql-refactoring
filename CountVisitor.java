@@ -7,7 +7,7 @@ public class CountVisitor extends SQLiteParserBaseVisitor<String> {
 
     private String columnName;
     private TokenStreamRewriter rewriter;
-    private HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors();
+    private HavingAnalyzerForVisitors analyzer = new HavingAnalyzerForVisitors();
 
     public CountVisitor(CommonTokenStream tokens, String columnName) {
         super();
@@ -23,7 +23,7 @@ public class CountVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitExpr(SQLiteParser.ExprContext ctx) {
-        if (analizer.existOperatorFromContexts(ctx)) {
+        if (analyzer.existOperatorFromContexts(ctx)) {
             return "";
         }
         if (ctx.function_name() == null) { 
