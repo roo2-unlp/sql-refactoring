@@ -105,6 +105,6 @@ Fuente: Instalacion de ANTLR4 en Windows.pdf (provisto por la cátedra de OO2)
 
 `java -cp "jars/antlr-4.13.1-complete.jar:jars/hamcrest-core-1.3.jar:jars/junit-4.13.2.jar:output/" org.junit.runner.JUnitCore GroupByRefactoringTest`
 
-3 Deberiamos ver el resultado de los como muestra en la imagen
+3 Deberiamos ver el resultado de los test como muestra en la imagen final
 
 ![App Screenshot](https://github.com/roo2-unlp/sql-refactoring/blob/AddGroupBy/img/compile_running.png?raw=true)
