@@ -78,12 +78,13 @@ public class RenameAliasTest {
 		// rename alias de una columna
 		try {
 			refactoring.setAlias("nom_pais", "pais");
-			System.out.print("holaaa");
+			// System.out.print("holaaa");
 			valor = "columna";
 			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias));
 			// rename alias de una tabla
-			//refactoring.setAlias("cities", "c");
-			//assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
+			refactoring.setAlias("cities", "c");
+			valor = "tabla";
+			assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
 			System.out.println("Vamoos ejecutó testAliasExist" + valor);
 		} catch (RefactoringException e) {
 			System.out.println("Falló EL testAliasExist" + valor);
@@ -97,6 +98,7 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
+
 			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
 			// rename alias de una tabla
 			refactoring.setAlias("ciu", "c");
