@@ -1,3 +1,6 @@
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
+
 public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 
 	// alias que se quiere cambiar
@@ -14,59 +17,66 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	
 	@Override
     protected String defaultResult() {
-        return "";
+        return " ";
     }
 
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
-        return nextResult + aggregate;
+        if (aggregate == null) {
+            return aggregate;  // Si el resultado acumulado es null, simplemente devuelve el resultado del nodo hijo
+        } else {
+            return aggregate + nextResult;  // Concatena los resultados
+        }
     }
 
     @Override
     public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
+        System.err.println("VISIT COLUMN ALIAS");
         String currentAlias = ctx.IDENTIFIER().getText();
         // Verificar que el nuevo alias no se repita en la consulta
         if (currentAlias.equalsIgnoreCase(this.newAlias)) {
             System.err.println("Error: El nuevo alias ya existe en la consulta.");
+            return ctx.getText();
         }
         this.esValido = true;
 
         // Retornar el texto del contexto si las verificaciones son exitosas
-        return super.visitColumn_alias(ctx);
+        return ctx.getText();
     }
 
     @Override
     public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
+    	System.err.println("VISIT TABLE ALIAS");
         String currentAlias = ctx.any_name().getChild(0).getText();
 
         // Verificar que el nuevo alias no se repita en la consulta
         if (currentAlias.equalsIgnoreCase(this.newAlias)) {
             System.err.println("Error: El nuevo alias ya existe en la consulta.");
-            return null;
+            return ctx.getText();
         }
         this.esValido = true;
 
         // Retornar el texto del contexto si las verificaciones son exitosas
-        return super.visitTable_alias(ctx);
+        return ctx.getText();
     }
 
     @Override
 	public String visitAlias(SQLiteParser.AliasContext ctx) {
-
+    	System.err.println("VISIT ALIAS");
     	String originalAlias = ctx.getText();
 
     	//verifica que el alias de la consulta sea el mismo que el que se quiere cambiar
     	if (!originalAlias.equals(this.alias)) {
-            return null;
+    		return ctx.getText();
     	}
 
     	// Verificar que el nuevo alias no se repita en la consulta
         if  (newAlias.equalsIgnoreCase(this.newAlias)) {
             System.err.println("Error: El nuevo alias ya existe en la consulta.");
-            return null;
+            return ctx.getText();
         }
-
-    	return super.visitAlias(ctx);
+        this.esValido = true;
+    	return ctx.getText();
     }
 
     public boolean aliasExist(String query, String alias) {
@@ -83,6 +93,24 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		return false;
 	}
 
+	@Override
+	public String visitChildren(RuleNode node) {
+		String result = node.getText() + this.defaultResult();
+		int n = node.getChildCount();
+		for (int i=0; i<n; i++) {
+			if (!shouldVisitNextChild(node, result)) {
+				break;
+			}
+
+			ParseTree c = node.getChild(i);
+			String childResult = c.accept(this);
+			result = aggregateResult(result, childResult);
+		}
+
+		return result;
+	}
+	
+	
 	public String getAlias() {
 		return alias;
 	}
