@@ -30,13 +30,12 @@ public class GroupByRefactoringTest {
     }
 
     @Test
-    public void checkQueryWithOrderByWithoutGroupBy_ThenGroupByAdded() throws RefactoringException {
-        String result;
+    public void checkQueryWithOrderByWithoutGroupBy_ThenGroupByAdded() throws RefactoringException {        
         Refactoring refactoring = new GroupByRefactoring();
         String queryToTransform = "SeleCT P.name,P.edad FROM PERSONA P ORDER BY P.edad,P.name;";
         ((GroupByRefactoring) refactoring).setStmtParameter("P.name");
 
-        result = refactoring.refactor(queryToTransform);
+        String result = refactoring.refactor(queryToTransform);
         assertEquals("SeleCT P.name,P.edad FROM PERSONA P GROUP BY P.name ORDER BY P.edad,P.name;", result);
     }
 
