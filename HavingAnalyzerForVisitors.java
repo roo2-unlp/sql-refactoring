@@ -2,8 +2,6 @@ import sqlitegrammar.SQLiteParser;
 
 public class HavingAnalizerForVisitors {
 
-    private boolean hasACountInHaving = false;
-
     public boolean existOperatorFromContexts(SQLiteParser.ExprContext ctx){
         if (existOperatorForCompare(ctx)){
             return true;
@@ -12,7 +10,7 @@ public class HavingAnalizerForVisitors {
     }
 
     private boolean existOperatorForCompare(SQLiteParser.ExprContext ctx){
-        return getByGreaterComparator(ctx) || getByLetterComparator(ctx) || ctx.EQ() != null;
+        return getByGreaterComparator(ctx) || getByLetterComparator(ctx) || getByDistinctComparator(ctx);
     }
 
     private boolean getByLetterComparator(SQLiteParser.ExprContext ctx) {
@@ -21,5 +19,9 @@ public class HavingAnalizerForVisitors {
 
     private boolean getByGreaterComparator(SQLiteParser.ExprContext ctx) {
         return ctx.GT() != null || ctx.GT2() != null || ctx.GT_EQ() != null;
+    }
+     
+    private boolean getByDistinctComparator(SQLiteParser.ExprContext ctx) {
+        return ctx.EQ() != null || ctx.NOT_EQ1() != null || ctx.NOT_EQ2() != null;
     }
 }

@@ -2,11 +2,12 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import sqlitegrammar.*;
 
 public class CountFinderVisitor extends SQLiteParserBaseVisitor<Void> {
+
     private ParserRuleContext countNode = null;
+    private HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors(); // Consideramos un posible HAVING COUNT(*)
 
     @Override
     public Void visitExpr(SQLiteParser.ExprContext ctx) {
-        HavingAnalizerForVisitors analizer = new HavingAnalizerForVisitors(); // Consideramos un posible HAVING COUNT(*)
         if (analizer.existOperatorFromContexts(ctx)) {
             return null;
         }
