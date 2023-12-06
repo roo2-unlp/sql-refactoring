@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class GroupByRefactoring extends Refactoring{
     private String preconditionText = null;
-
+    
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
@@ -23,7 +23,7 @@ public class GroupByRefactoring extends Refactoring{
         ParseTree newParseTree = parser.parse();
 
         
-        PreConditionsVisitor preConditionsVisitor = new PreConditionsVisitor();
+        PrePostConditionsVisitor preConditionsVisitor = new PrePostConditionsVisitor();
         
         preConditionsVisitor.visit(newParseTree);
         if (parser.getNumberOfSyntaxErrors() > 0) {
@@ -58,8 +58,8 @@ public class GroupByRefactoring extends Refactoring{
 
         TextVisitor visitorText = new TextVisitor();
         String transformedText = arreglarString(visitorText.visit(tree));
-    
-        System.out.println(transformedText);
+        System.out.println("REFACTORING WITH SPACES PRINT: "+visitorText.getTransformedText());
+        System.out.println("RefactoringTransform PRINT: "+transformedText);
         return transformedText;
     }
     private String arreglarString(String conEspacios) {

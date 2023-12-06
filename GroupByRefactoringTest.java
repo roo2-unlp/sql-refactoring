@@ -19,7 +19,7 @@ public class GroupByRefactoringTest {
     @Test
     public void transformedTest() throws RuntimeException{
         Refactoring refactoring = new GroupByRefactoring();
-        System.out.println(refactoring.transform("SELECT DISTINCT producto FROM ventas;"));
+        System.out.println("TEST PRINT: "+refactoring.transform("SELECT DISTINCT producto FROM ventas;"));
     }
     
     @Test 
@@ -27,21 +27,22 @@ public class GroupByRefactoringTest {
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunta si tiene una funcion de agregacion */
         assertFalse(refactoring.checkPreconditions("SELECT DISTINCT producto, SUM(cantidad) as total_ventas FROM ventas"));
+        assertTrue(refactoring.checkPreconditions("SELECT DISTINCT producto FROM ventas"));
     }
 
     @Test 
     public void containsGroupByTest() throws RefactoringException {
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunta si contiene GroupBy */
-        assertFalse(refactoring.checkPreconditions("SELECT DISTINCT producto, SUM(cantidad) as total_ventas FROM ventas GROUP BY producto;"));
+        assertFalse(refactoring.checkPreconditions("SELECT DISTINCT producto FROM ventas GROUP BY producto;"));
+        assertTrue(refactoring.checkPreconditions("SELECT DISTINCT producto FROM ventas;"));
     }
 
     @Test 
     public void invalidQueryTest()  throws RefactoringException {
         Refactoring refactoring = new GroupByRefactoring();
         /** Pregunto si la consulta es invalida */
-        assertFalse(refactoring.checkPreconditions("FOOBAR * WHERE 1=1;"));
-            
+        assertFalse(refactoring.checkPreconditions("FOOBAR * WHERE 1=1;"));  
     }
 
 }

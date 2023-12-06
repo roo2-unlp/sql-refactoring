@@ -1,16 +1,13 @@
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-//import sqlitegrammar.SQLiteParser;
-//import sqlitegrammar.SQLiteParserBaseVisitor;
-
-public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
+public class PrePostConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	private boolean containsGroup;
 	private boolean containsBy;
 	private boolean containsAggregateFunction;
 	private boolean containsDistinct;
 	
-	public PreConditionsVisitor() {
+	public PrePostConditionsVisitor() {
 		containsGroup = false;
 		containsBy = false;
 		containsAggregateFunction = false;
@@ -64,11 +61,4 @@ public class PreConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 		return this.containsDistinct;
 	}
 	
-	public boolean getPrecondicion() {
-		return !this.getContainsGroupBy() && !this.getContainsAggregateFunction() && this.getContainsDistinct();
-	}
-	
-	public boolean getPostcondicion() {
-		return this.getContainsGroup() && !this.getContainsAggregateFunction() && !this.getContainsDistinct();
-	}
 }
