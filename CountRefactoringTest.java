@@ -23,7 +23,7 @@ public class CountRefactoringTest {
     }
 
     @Test
-    // El refactoring tambien cambia el COUNT en el HAVING, mirar condicional en CountFinderVisitor (referencia query5) *Analizar
+    // (Referencia query5)
     public void testCountRefactoringWithQueryHAVINGClause() throws RefactoringException {
         refactoring = new CountRefactoring("apellido");
         String result = refactoring.refactor(
