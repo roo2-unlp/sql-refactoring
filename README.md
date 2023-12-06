@@ -91,3 +91,20 @@ Para comprobar el funcionamiento, abrir el CMD y ejecutar el comando antlr4. Deb
 ![App Screenshot](https://github.com/roo2-unlp/sql-refactoring/blob/AddGroupBy/img/checkAntlr4.png?raw=true)
 
 Fuente: Instalacion de ANTLR4 en Windows.pdf (provisto por la cátedra de OO2)
+
+# Compilacion y Corrida por linea de comandos
+
+`Path`
+
+1 Para poder compilar los archivos primero tenemos que ubicarnos en la carpeta raiz, en nuestro caso sql-refactoring como se ve en la imagen
+ y corremos el comando:
+ 
+ `javac -cp "jars/antlr-4.13.1-complete.jar:jars/hamcrest-core-1.3.jar:jars/junit-4.13.2.jar:" -d output ./sqlitegrammar/*.java ./*.java`
+
+2 Luego para correr el programa, en este caso los test que tenemos dentro de GroupByRefactoringTest.java utilizamos el comando:
+
+`java -cp "jars/antlr-4.13.1-complete.jar:jars/hamcrest-core-1.3.jar:jars/junit-4.13.2.jar:output/" org.junit.runner.JUnitCore GroupByRefactoringTest`
+
+3 Deberiamos ver el resultado de los como muestra en la imagen
+
+![App Screenshot](https://github.com/roo2-unlp/sql-refactoring/blob/AddGroupBy/img/compile_running.png?raw=true)
