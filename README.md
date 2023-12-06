@@ -15,7 +15,8 @@ Este proyecto es un trabajo para la materia Orientación a Objetos 2 de la UNLP,
 
 Para correr el proyecto a través de línea de comandos, debemos agregar algunas variables para que nuestro sistema interprete y compile el código.
 
-Aclaración: Para este ejemplo usamos la ruta: "$HOME/Desktop/antlr/repo/sql-refactoring/" para clonar el repositorio ustedes pueden tener rutas diferentes pero tengan en cuenta que les va a afectar directamente donde alojen el repo y sus nombres con respecto a las variables y configuracions, solo tienen que cambiar por las que usaron y deberia funcionarles isn problema
+`Aclaración`
+ Para este ejemplo usamos la ruta: "$HOME/Desktop/antlr/repo/sql-refactoring/" para clonar el repositorio ustedes pueden tener rutas diferentes pero tengan en cuenta que les va a afectar directamente donde alojen el repo y sus nombres con respecto a las variables y configuracions, solo tienen que cambiar por las que usaron y deberia funcionarles isn problema
 
 # Guia para crear perfil bash y dejar permanente las variables de entorno
 - Creamos un archivo .bash_profile dentro de nuestro HOME y luego agregamos las variables que se situan en la siguiente seccion y deberia quedarnos asi:
