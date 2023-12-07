@@ -108,4 +108,3 @@ Fuente: Instalacion de ANTLR4 en Windows.pdf (provisto por la cátedra de OO2)
 3 Deberiamos ver el resultado de los test como muestra en la imagen final.
 
 ![App Screenshot](https://github.com/roo2-unlp/sql-refactoring/blob/AddGroupBy/img/compile_running.png?raw=true)
-
