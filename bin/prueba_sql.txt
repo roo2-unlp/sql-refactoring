@@ -1,0 +1,19 @@
+SELECT
+    nombre_ciudad,
+    cities.nom_pais,
+    p.continente
+FROM
+    (
+        SELECT
+            nombre_ciudad,
+            nombre_pais AS nom_pais
+        FROM
+            ciudades
+        WHERE
+            nombre_pais IN (
+                SELECT nombre_pais
+                FROM paises
+                WHERE continente = 'América'
+            )
+    ) AS cities
+JOIN paises AS p ON cities.nom_pais = p.nombre_pais;
