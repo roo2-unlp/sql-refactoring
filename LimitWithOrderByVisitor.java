@@ -24,7 +24,7 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
-        return nextResult + aggregate;
+        return aggregate + " " + nextResult;
     }
 
     public int setLimit(int l){

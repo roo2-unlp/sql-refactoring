@@ -8,11 +8,8 @@ public class CheckPostVistor extends SQLiteParserBaseVisitor<Boolean> {
     private Boolean existsLimit = false;
 
     //quien llama a este metodo? 
-    public Boolean isValidPost(SQLiteParser.Order_by_stmtContext ctx){
-        if(this.visitLimit_stmt(ctx)){
-            return true
-        }
-        return false
+    public Boolean isValidPost(){
+        return existsLimit;
     }
 
     @Override

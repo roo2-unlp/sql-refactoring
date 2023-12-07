@@ -27,6 +27,7 @@ public class LimitWithOrderByTest {
         LimitWithOrderBy refactoring = new LimitWithOrderBy();    
         String inputQuery = "SELECT * FROM partidos;";
         String result = refactoring.refactor(inputQuery);
+        //manejar la excepcion try y catch 
         assertEquals(inputQuery, result);
     }
 
@@ -48,19 +49,6 @@ public class LimitWithOrderByTest {
         String result = refactoring.refactor(inputQuery);
         assertEquals(result, inputQuery+ " LIMIT 10");
     }
-
-    // Verifica si existe o no columna de ordenamiento 
-    //@Test
-    //public void limitWithOrderByValidQueryWithOrderByNoColumn() {
-        //Refactoring refactoring = new LimitWithOrderBy();
-        //String inputQuery = "SELECT * FROM table_name ORDER BY not_column LIMIT 5;"; 
-        //try {
-            //refactoring.refactor(inputQuery);
-            //assertFalse("RefactoringException not thrown for missing ORDER BY column.", true);
-        //} catch (RefactoringException e) {
-            //assertTrue(true);
-        //}
-    //}
     
 }
     // agregar test para verificar que hacemos si hay una subquery? 
