@@ -27,7 +27,7 @@ public class RenameAlias extends Refactoring {
 	protected boolean checkPreconditions(String text) {
 		SQLiteParser parser = this.createSQLiteParser(text);
 		ParseTree newParseTree = parser.parse();
-
+		
 		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
 		String checkedQuery = visitor.visit(newParseTree);
 		System.out.println("Imprimiendo checked query:" + checkedQuery);
@@ -51,10 +51,10 @@ public class RenameAlias extends Refactoring {
 		ParseTree tree = parser.parse();
 
 		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
-		// String transformedText = visitor.visit(tree);
+		String transformedText = visitor.visit(tree);
 		System.out.println("transform se está ejecutando");
-		// System.out.println(transformedText);
-		return "transform se está ejecutando";
+		System.out.println(transformedText);
+		return transformedText;
 	}
 
 	@Override

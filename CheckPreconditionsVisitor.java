@@ -36,6 +36,7 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
         // Verificar que el nuevo alias no se repita en la consulta
         if (currentAlias.equalsIgnoreCase(this.newAlias)) {
             System.err.println("Error: El nuevo alias ya existe en la consulta.");
+            this.esValido = false;
             return ctx.getText();
         }
         this.esValido = true;
@@ -52,31 +53,13 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
         // Verificar que el nuevo alias no se repita en la consulta
         if (currentAlias.equalsIgnoreCase(this.newAlias)) {
             System.err.println("Error: El nuevo alias ya existe en la consulta.");
+            this.esValido = false;
             return ctx.getText();
         }
         this.esValido = true;
 
         // Retornar el texto del contexto si las verificaciones son exitosas
         return ctx.getText();
-    }
-
-    @Override
-	public String visitAlias(SQLiteParser.AliasContext ctx) {
-    	System.err.println("VISIT ALIAS");
-    	String originalAlias = ctx.getText();
-
-    	//verifica que el alias de la consulta sea el mismo que el que se quiere cambiar
-    	if (!originalAlias.equals(this.alias)) {
-    		return ctx.getText();
-    	}
-
-    	// Verificar que el nuevo alias no se repita en la consulta
-        if  (newAlias.equalsIgnoreCase(this.newAlias)) {
-            System.err.println("Error: El nuevo alias ya existe en la consulta.");
-            return ctx.getText();
-        }
-        this.esValido = true;
-    	return ctx.getText();
     }
 
     public boolean aliasExist(String query, String alias) {
