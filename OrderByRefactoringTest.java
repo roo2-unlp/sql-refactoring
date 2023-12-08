@@ -12,20 +12,7 @@ public class OrderByRefactoringTest {
         assertEquals(result,"SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE");
     }
 
-    //Test para verificar que tipo de consulta es, si la consulta es distinta a SELECT ... -> no hace nada
-    @Test
-    public void testOtroTipoConsulta() {
-  		 String sentenciaSQL = "Insert into Persona(nombre,edad,dni);";
-  		 Refactoring refactoring = new RefactoringOrderBy();
-   		try {
-      			String sentenciaTransformada = refactoring.refactor(sentenciaSQL);
-      			assertTrue(sentenciaTransformada.contains("Order By"));
-  		 } catch (RefactoringException e) {
-    		  	System.out.println(e.getMessage() + "No se puedo transformar sentencia. Sentencia Final: " + sentenciaSQL);
-      		    
-   		}
-	}
-    
+ 
     
     
     

@@ -47,7 +47,6 @@ public class RefactoringOrderBy extends Refactoring {
 	
 	
 	
-	
 	public String transform(String text) {
 		SQLiteParser parser = this.createSQLiteParser(text);
 	    ParseTree newParseTree = parser.parse();
@@ -72,6 +71,7 @@ public class RefactoringOrderBy extends Refactoring {
 		
 		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
 		visitor.visit(newParseTree);
+		
 		
 		//Verificamos que se haya hecho la transformacion de agregar order by.
 		return visitor.isValid();
