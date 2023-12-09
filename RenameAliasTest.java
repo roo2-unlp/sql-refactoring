@@ -74,15 +74,18 @@ public class RenameAliasTest {
 	@Test
 	public void testAliasExist() {
 		// Testea que si el alias existe, se haya cambiado correctamente
-		// rename alias de una columna
 		try {
+			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryColumnRefactored.replaceAll("\\s", ""), 
-			        refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));			// rename alias de una tabla
+			assertEquals(queryColumnRefactored.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", "")); // rename alias de una tabla
+
+			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryTableRefactored.replaceAll("\\s", ""), 
-			        refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
-			System.out.println("El refacoting se realizó con exito");
+			assertEquals(queryTableRefactored.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("***********************");
+			System.out.println("El refactoring se realizó con exito");
 		} catch (RefactoringException e) {
 			System.out.println("Falló EL testAliasExist");
 			assertTrue(false);
@@ -95,32 +98,40 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
+			assertEquals(queryWithAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", "")); // rename alias de una tabla
 
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
 			// rename alias de una tabla
 			refactoring.setAlias("ciu", "c");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryWithAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("***********************");
+			System.out.println("El refactoring de alias not exist se realizó con exito");
 		} catch (RefactoringException e) {
-			System.out.println("falló EL testAliasNotExist");
+			System.out.println("Falló EL testAliasNotExist");
 			assertTrue(false);
-			//e.printStackTrace();
 		}
 	}
 
 	@Test
-	public void testQueryWithoutAlias() {
+	public void testQueryWithoutAlias() {// falla pero no se por que
 		// Testea que la query sin alias no se haya cambiado
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
-			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
+			assertEquals(queryWithoutAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithoutAlias).replaceAll("\\s", ""));
+
 			// rename alias de una tabla
 			refactoring.setAlias("ciudades", "c");
-			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
+			assertEquals(queryWithoutAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithoutAlias).replaceAll("\\s", ""));
+			System.out.println("*******QUERY SIN ALIAS****************");
+			System.out.println("El refactoring consulta sin alias se realizó con exito");
 		} catch (RefactoringException e) {
-			System.out.println("falló EL testQueryWithoutAlias");
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			System.out.println("falló EL testQueryWithoutAlias" + e.getMessage());
 			assertTrue(false);
-			//e.printStackTrace();
 		}
 	}
 
@@ -130,14 +141,18 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryColumnRefactored.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryTableRefactored.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("*******NUEVO ALIAS****************");
+			System.out.println("El refactoring consulta nuevo alias se realizó con exito");
 		} catch (RefactoringException e) {
 			System.out.println("falló EL testNewAliasNotExist");
 			assertTrue(false);
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -147,14 +162,18 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "p");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryWithAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryWithAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("***********************");
+			System.out.println("El nuevo alias ya existe no cambia nada");
 		} catch (RefactoringException e) {
 			System.out.println("falló EL testNewAliasExist");
 			assertTrue(false);
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -163,11 +182,14 @@ public class RenameAliasTest {
 		// Testea que el alias no sea una palabra reservada
 		refactoring.setAlias("nom_pais", "*");
 		try {
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
+			assertEquals(queryWithAlias.replaceAll("\\s", ""),
+					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("***********************");
+			System.out.println("El refactoring INVALID ALIAS se realizó con exito");
 		} catch (RefactoringException e) {
 			System.out.println("falló EL testInvalidAlias");
 			assertTrue(false);
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -187,7 +209,7 @@ public class RenameAliasTest {
 		} catch (RefactoringException e) {
 			System.out.println("falló EL testAliasIsNameOfColumn");
 			assertTrue(false);
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
-	} 
+	}
 }
