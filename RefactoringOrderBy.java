@@ -51,7 +51,7 @@ public class RefactoringOrderBy extends Refactoring {
 		SQLiteParser parser = this.createSQLiteParser(text);
 	    ParseTree newParseTree = parser.parse();
 	    VisitorAddOrderBy visitorAddOrder = new VisitorAddOrderBy();
-	  //visitorAddOrder.visit(newParseTree);
+	    visitorAddOrder.visit(newParseTree);
 
 		//visitorAddOrder.visitResult_column(text)?
 		//visitorAddOrder.visitResult_column(text)?
@@ -66,7 +66,7 @@ public class RefactoringOrderBy extends Refactoring {
 		
 		//Chequea que no haya error de sintaxis
 		if (parser.getNumberOfSyntaxErrors() > 0) {
-			return false
+			return false;
 		}
 		
 		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
