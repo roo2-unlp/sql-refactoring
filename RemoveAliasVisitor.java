@@ -14,7 +14,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
       private String alias=" ";
       private String aliasReference="";
       private StringBuilder querySeparate=new StringBuilder();
-      private final Set<String> specialCharacters = new HashSet<>(Arrays.asList(".", "(", ")", ",", "="));
+      private final Set<String> specialCharacters = new HashSet<>(Arrays.asList(".", "(",")", ",", "="));
 
       public void setAlias(String alias){
          this.alias=alias;
@@ -48,9 +48,6 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
            sb.append(nextResult);         
            return sb.toString();
         }
-       
-   
-         
       
          
    
@@ -58,7 +55,6 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
             public String  visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
              if(ctx.table_alias() != null){ 
               if(ctx.table_alias().any_name().IDENTIFIER().toString().equals(alias)) {
-      
                  visit(ctx.getChild(0));
                  return " ";       
                }
@@ -89,19 +85,23 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                      if (!specialCharacters.contains(text) && !querySeparate.toString().isEmpty() && !specialCharacters.contains(querySeparate.substring(querySeparate.length() - 1))) {
                         querySeparate.append(" ");
                      }
+                     if (!specialCharacters.contains(text) && !querySeparate.toString().isEmpty()) {
+                        String lastText = querySeparate.toString();
+                        char lastCharacter = lastText.charAt(lastText.length() - 1);
+                        if (lastCharacter == ')' && !text.equals(" ")) {
+                            querySeparate.append(" ");
+                        }
+                    }
                      if (text.equals(this.getAlias())) {
                         querySeparate.append(this.getAliasReference());
                      } else {
                         querySeparate.append(text);
-                     }
+
+                     }          
                   }
                   return text;
                } 
-
                    
-
-
-                 
    }
              
      
