@@ -9,8 +9,8 @@ import org.antlr.v4.runtime.tree.*;
 
 public class RemoveAliasRefactoring extends Refactoring{
     private String preconditionText = null;   
-    private String alias=null;
-    private String aliasReference=null;
+    private String alias="";
+    private String aliasReference="";
     
 
     private SQLiteParser createSQLiteParser (String text) {
@@ -41,15 +41,22 @@ public class RemoveAliasRefactoring extends Refactoring{
         else
             {return false;}
     }
-    protected String transform(String text) {
+    protected String transform(String text) {  
         SQLiteParser parser = this.createSQLiteParser(text);
-        ParseTree tree = parser.parse();
+        ParseTree tree = parser.parse();      
         RemoveAliasVisitor visitor = new RemoveAliasVisitor();
         visitor.setAlias(alias);
-        visitor.setAliasReference(aliasReference);
-        String transformedText = visitor.visit(tree);
+        visitor.setAliasReference(aliasReference);   
+        visitor.visit(tree);     
+        String transformedText = visitor.getQuerySeparete();
+        System.out.println(); 
+        System.out.println("TEXTO ORIGINAL");
+        System.out.println(text);
         System.out.println();
+        System.out.println(); 
+        System.out.println("TEXTO MODIFICADO");
         System.out.println(transformedText);
+        System.out.println();
         return transformedText;
         
     }
@@ -78,5 +85,24 @@ public class RemoveAliasRefactoring extends Refactoring{
     public String getAliasReference(){
         return this.aliasReference;
     }
+
+
+
+    public void printParseTree(ParseTree tree, int indent) {
+        if (tree != null) {
+            for (int i = 0; i < indent; i++) {
+                System.out.print("  "); // Espacios para la indentación
+            }
+            System.out.println(tree.getText()); // Imprimir el texto del nodo
+            
+            // Recorrer los hijos del árbol
+            // for (int i = 0; i < tree.getChildCount(); i++) {
+            //     printParseTree(tree.getChild(i), indent + 1); // Llamar recursivamente a cada hijo
+            // }
+        }
+    }
+    
+
+
 }
 

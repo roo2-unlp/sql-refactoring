@@ -38,14 +38,11 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
       @Override
       public String visitTable_or_subquery(SQLiteParser.Table_or_subqueryContext ctx) {
         // System.out.println(ctx.table_name().any_name().IDENTIFIER().toString());
-        System.out.println("scaloni no te vayas");
-        System.out.println(ctx.getText());
         if (ctx.table_alias() != null){
            if( ctx.table_alias().any_name().IDENTIFIER().toString().equals(alias)) {
            // System.out.println(this.getAliasEncontrado());
                this.aliasEncontrado();
                this.setAliasReference(ctx.table_name().any_name().IDENTIFIER().toString());
-               return super.visitTable_or_subquery(ctx);
             }
            
       }  
@@ -61,7 +58,6 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
            if(ctx.expr().column_name().any_name().IDENTIFIER().toString().equals(alias)){
                this.aliasEncontrado();
                this.setAliasReference(ctx.expr().table_name().any_name().IDENTIFIER().toString());
-               return super.visitJoin_constraint(ctx);
             }
       }
          
@@ -82,14 +78,12 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
             if(ctx.table_name() != null){
               if( ctx.table_name().any_name().IDENTIFIER().toString().equals(alias)){
                   this.aliasEncontrado();
-                  return super.visitResult_column(ctx);
                }
             }
             if(ctx.column_alias() != null ){
                if(ctx.column_alias().IDENTIFIER().toString().equals(alias)){
                   //this.setAliasReference(ctx.table_name().any_name().IDENTIFIER().toString());
                   this.aliasEncontrado();
-                  return super.visitResult_column(ctx);
             }
          } 
             
@@ -103,7 +97,6 @@ public class AliasCheckerVisitor  extends SQLiteParserBaseVisitor<String>{
          if(ctx.expr().table_name() != null){
            if(ctx.expr().table_name().any_name().IDENTIFIER().toString().equals(alias)){
                this.aliasEncontrado(); 
-               return super.visitOrdering_term(ctx);
             }
       }
          
