@@ -14,14 +14,6 @@ public class RemoveAliasRefactoringTest {
     RemoveAliasRefactoring refactoring;
     String expected;
 
-    // @BeforeEach
-    // void setUp() throws Exception {
-    //     refactoring = new RemoveAliasRefactoring();
-    //     refactoring.setAlias("tnm");
-    //     expected = "SELECT * FROM table_name";
-
-
-    // }
 
      @Test 
      public void refactorAliasWithAs() throws RefactoringException {

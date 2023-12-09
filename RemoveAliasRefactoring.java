@@ -12,6 +12,19 @@ public class RemoveAliasRefactoring extends Refactoring{
     private String alias="";
     private String aliasReference="";
     
+    public void setAlias(String alias){
+        this.alias=alias;
+    }
+    public String getAlias(){
+        return this.alias;
+    }
+    public void setAliasReference(String aliasReference){
+        this.aliasReference=aliasReference;
+    }
+    public String getAliasReference(){
+        return this.aliasReference;
+    }
+
 
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -21,7 +34,6 @@ public class RemoveAliasRefactoring extends Refactoring{
     }
 
     protected boolean checkPreconditions(String text) {//el text que representa la query
-        //this.setAlias("tnm");
         SQLiteParser  parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
         AliasCheckerVisitor visitorCheck= new AliasCheckerVisitor();
@@ -73,34 +85,10 @@ public class RemoveAliasRefactoring extends Refactoring{
     }
     
     
-    public void setAlias(String alias){
-        this.alias=alias;
-    }
-    public String getAlias(){
-        return this.alias;
-    }
-    public void setAliasReference(String aliasReference){
-        this.aliasReference=aliasReference;
-    }
-    public String getAliasReference(){
-        return this.aliasReference;
-    }
+   
 
 
-
-    public void printParseTree(ParseTree tree, int indent) {
-        if (tree != null) {
-            for (int i = 0; i < indent; i++) {
-                System.out.print("  "); // Espacios para la indentación
-            }
-            System.out.println(tree.getText()); // Imprimir el texto del nodo
-            
-            // Recorrer los hijos del árbol
-            // for (int i = 0; i < tree.getChildCount(); i++) {
-            //     printParseTree(tree.getChild(i), indent + 1); // Llamar recursivamente a cada hijo
-            // }
-        }
-    }
+   
     
 
 
