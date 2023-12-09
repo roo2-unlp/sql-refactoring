@@ -30,17 +30,17 @@ public class RenameAlias extends Refactoring {
 		
 		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
 		String checkedQuery = visitor.visit(newParseTree);
-		System.out.println("Imprimiendo checked query:" + checkedQuery);
+		//System.out.println("Imprimiendo checked query:" + checkedQuery);
 
 		if (this.esAliasValido(this.alias) && this.esAliasValido(this.newAlias) &&
 				(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido())) {
 			// Guardo el texto de la consulta
-			System.out.println("chepreconditions se está ejecutando el if");
+			//System.out.println("chepreconditions se está ejecutando el if");
 			preconditionText = newParseTree.getText();
-			System.out.println("PRECONDITION TEXT: " + preconditionText);
+			//System.out.println("PRECONDITION TEXT: " + preconditionText);
 			return true;
 		}
-		System.out.println("PRECONDITION TEXT: " + preconditionText);
+		//System.out.println("PRECONDITION TEXT: " + preconditionText);
 		preconditionText = null;
 		return false;
 	}
@@ -51,10 +51,12 @@ public class RenameAlias extends Refactoring {
 		ParseTree tree = parser.parse();
 
 		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
-		String transformedText = visitor.visit(tree);
-		System.out.println("transform se está ejecutando");
-		System.out.println(transformedText);
-		return transformedText;
+		visitor.visit(tree);
+		ParseTree newTree = tree;
+		TransformAliasVisitor visitor1 = new TransformAliasVisitor(this.alias, this.newAlias);
+		visitor1.visit(tree);
+		System.out.println("ARBOL VISITADO en string:  "+ visitor1.getSeparatedWords());
+		return visitor.getSeparatedWords();
 	}
 
 	@Override

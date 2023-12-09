@@ -31,7 +31,7 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
-        System.err.println("VISIT COLUMN ALIAS");
+        //System.err.println("VISIT COLUMN ALIAS");
         String currentAlias = ctx.IDENTIFIER().getText();
         // Verificar que el nuevo alias no se repita en la consulta
         if (currentAlias.equalsIgnoreCase(this.newAlias)) {
@@ -47,7 +47,7 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
-    	System.err.println("VISIT TABLE ALIAS");
+    	//System.err.println("VISIT TABLE ALIAS");
         String currentAlias = ctx.any_name().getChild(0).getText();
 
         // Verificar que el nuevo alias no se repita en la consulta
