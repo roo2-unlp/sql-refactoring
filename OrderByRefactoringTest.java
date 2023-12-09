@@ -12,18 +12,7 @@ public class OrderByRefactoringTest {
         assertEquals(result,"SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE");
     }
 
-<<<<<<< HEAD
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-=======
+
 	@Test // ESTE TEST DEBERIA AGREGAR EL ORDER BY AL FINAL DEL QUERY + NOMBREDECOLUMNA.
 		  //EJ:"(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2) ORDER BY columna1"
 	public void testOrderByInUnionQuery() throws RefactoringException {
@@ -48,7 +37,7 @@ public class OrderByRefactoringTest {
       		    
    		}
 	}
->>>>>>> f65b4ecbed9764241250d3390e608beafe045364
+
 
 	@Test // CON ORDER BY
     public void testTransformNoOrderByWhenExists() {
