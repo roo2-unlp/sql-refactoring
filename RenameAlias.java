@@ -56,7 +56,7 @@ public class RenameAlias extends Refactoring {
 		TransformAliasVisitor visitor1 = new TransformAliasVisitor(this.alias, this.newAlias);
 		visitor1.visit(tree);
 		System.out.println("ARBOL VISITADO en string:  "+ visitor1.getSeparatedWords());
-		return visitor.getSeparatedWords();
+		return visitor1.getSeparatedWords();
 	}
 
 	@Override

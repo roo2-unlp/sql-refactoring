@@ -18,54 +18,54 @@ public class RenameAliasTest {
 		refactoring = new RenameAlias();
 
 		// query with alias
-		queryWithAlias = "SELECT nombre_ciudad, cities.nom_pais, p.continente"
+		queryWithAlias = "SELECT nombre_ciudad, cities.nombre_pais, p.continente"
 				+ " FROM ("
-				+ "     SELECT nombre_ciudad, nombre_pais AS nom_pais"
-				+ "     FROM ciudades"
-				+ "     WHERE nombre_pais IN ("
-				+ "         SELECT nombre_pais"
-				+ "         FROM paises"
-				+ "         WHERE continente = 'América'"
-				+ "     )"
+				+ " SELECT nombre_ciudad, nombre_pais AS nom_pais"
+				+ " FROM ciudades"
+				+ " WHERE nom_pais IN ("
+				+ " SELECT nombre_pais"
+				+ " FROM paises"
+				+ " WHERE continente = 'América'"
+				+ ")"
 				+ ") AS cities"
-				+ " JOIN paises AS p ON cities.nom_pais = p.nombre_pais;";
+				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
 
 		// Query without alias
 		queryWithoutAlias = "SELECT nombre_ciudad, ciudades.nombre_pais, paises.continente"
 				+ " FROM ("
-				+ "     SELECT nombre_ciudad, nombre_pais"
-				+ "     FROM ciudades"
-				+ "     WHERE nombre_pais IN ("
-				+ "         SELECT nombre_pais"
-				+ "         FROM paises"
-				+ "         WHERE continente = 'América'"
-				+ "     )"
+				+ " SELECT nombre_ciudad, nombre_pais"
+				+ " FROM ciudades"
+				+ " WHERE nombre_pais IN ("
+				+ " SELECT nombre_pais"
+				+ " FROM paises"
+				+ " WHERE continente = 'América'"
+				+ ")"
 				+ ") ciudades"
 				+ " JOIN paises ON ciudades.nombre_pais = paises.nombre_pais;";
 
 		// Query refactored
-		queryColumnRefactored = "SELECT nombre_ciudad, c.nombre_pais, p.continente"
+		queryColumnRefactored = "SELECT nombre_ciudad, cities.nombre_pais, p.continente"
 				+ " FROM ("
-				+ "     SELECT nombre_ciudad, nombre_pais AS pais"
-				+ "     FROM ciudades"
-				+ "     WHERE pais IN ("
-				+ "         SELECT nombre_pais"
-				+ "         FROM paises"
-				+ "         WHERE continente = 'América'"
-				+ "     )"
+				+ " SELECT nombre_ciudad, nombre_pais AS pais"
+				+ " FROM ciudades"
+				+ " WHERE pais IN ("
+				+ " SELECT nombre_pais"
+				+ " FROM paises"
+				+ " WHERE continente = 'América'"
+				+ ")"
 				+ ") AS cities"
 				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
 
 		// Query refactored
 		queryTableRefactored = "SELECT nombre_ciudad, c.nombre_pais, p.continente"
 				+ " FROM ("
-				+ "     SELECT nombre_ciudad, nombre_pais AS nom_pais"
-				+ "     FROM ciudades"
-				+ "     WHERE nom_pais IN ("
-				+ "         SELECT nombre_pais"
-				+ "         FROM paises"
-				+ "         WHERE continente = 'América'"
-				+ "     )"
+				+ " SELECT nombre_ciudad, nombre_pais AS nom_pais"
+				+ " FROM ciudades"
+				+ " WHERE nom_pais IN ("
+				+ " SELECT nombre_pais"
+				+ " FROM paises"
+				+ " WHERE continente = 'América'"
+				+ ")"
 				+ ") AS c"
 				+ " JOIN paises AS p ON c.nombre_pais = p.nombre_pais;";
 
@@ -74,20 +74,17 @@ public class RenameAliasTest {
 	@Test
 	public void testAliasExist() {
 		// Testea que si el alias existe, se haya cambiado correctamente
-		String valor = "vacio";
 		// rename alias de una columna
 		try {
 			refactoring.setAlias("nom_pais", "pais");
-			// System.out.print("holaaa");
-			valor = "columna";
-			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias));
-			// rename alias de una tabla
+			assertEquals(queryColumnRefactored.replaceAll("\\s", ""), 
+			        refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			valor = "tabla";
-			assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
-			System.out.println("Vamoos ejecutó testAliasExist" + valor);
+			assertEquals(queryTableRefactored.replaceAll("\\s", ""), 
+			        refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			System.out.println("El refacoting se realizó con exito");
 		} catch (RefactoringException e) {
-			System.out.println("Falló EL testAliasExist" + valor);
+			System.out.println("Falló EL testAliasExist");
 			assertTrue(false);
 		}
 	}
@@ -192,5 +189,5 @@ public class RenameAliasTest {
 			assertTrue(false);
 			//e.printStackTrace();
 		}
-	}
+	} 
 }
