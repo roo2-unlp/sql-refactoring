@@ -23,19 +23,22 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
 
                 if (tipoSimbolo == SQLiteParser.DISTINCT_) {
                     distintIndice = i;
-                    
-                    /**
-                    Token distinctToken = new CommonToken(SQLiteParser.DISTINCT_, "DISTINCT");
-                    TerminalNodeImpl distinctNode = new TerminalNodeImpl(distinctToken);
 
-                    ctx.children.add(selectIndice + 1, distinctNode);
-                    */
                     int result_columnIndice = distintIndice + 1;
                     node = ctx.children.get(result_columnIndice);
 
 
                     ctx.children.remove(distintIndice);
 
+                }
+            }
+            if(hijo instanceof SQLiteParser.Result_columnContext){
+                System.out.println("Encontrado expr en result_column:");
+                SQLiteParser.Result_columnContext resultColumnContext = (SQLiteParser.Result_columnContext) hijo;
+                SQLiteParser.ExprContext exprContext = resultColumnContext.expr();
+                if (exprContext != null) {
+                    String exprText = exprContext.getText();
+                    System.out.println("Encontrado expr en result_column: " + exprText);
                 }
             }
         }
