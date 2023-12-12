@@ -54,13 +54,15 @@ public class GroupByRefactoring extends Refactoring{
 
         TransformerVisitor visitor = new TransformerVisitor();
         visitor.visit(tree);
+        String transformedText = "prueba";
 
-
+        
         TextVisitor visitorText = new TextVisitor();
         String res = visitorText.visit(tree);
         //System.out.println("TextVisitor PRINT: "+res);
-        String transformedText = visitorText.getTransformedText();
+        transformedText = visitorText.getTransformedText();
         //System.out.println("RefactoringTransform PRINT: "+transformedText);
+        transformedText = arreglarString(visitorText.visit(tree));
         return arreglarString(transformedText);
     }
     private String arreglarString(String conEspacios) {
