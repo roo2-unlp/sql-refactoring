@@ -19,7 +19,7 @@ public class GroupByRefactoringTest {
     @Test
     public void transformedTest() throws RuntimeException{
         Refactoring refactoring = new GroupByRefactoring();
-        System.out.println("TEST PRINT: "+refactoring.transform("SELECT DISTINCT producto FROM ventas;"));
+        System.out.println("TEST PRINT: "+refactoring.transform("SELECT DISTINCT producto , ventas AS ven FROM ventas;"));
     }
     
     @Test 
