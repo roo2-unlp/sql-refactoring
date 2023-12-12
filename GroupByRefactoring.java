@@ -57,13 +57,15 @@ public class GroupByRefactoring extends Refactoring{
 
 
         TextVisitor visitorText = new TextVisitor();
-        String transformedText = arreglarString(visitorText.visit(tree));
-        System.out.println("REFACTORING WITH SPACES PRINT: "+visitorText.getTransformedText());
-        System.out.println("RefactoringTransform PRINT: "+transformedText);
-        return transformedText;
+        String res = visitorText.visit(tree);
+        //System.out.println("TextVisitor PRINT: "+res);
+        String transformedText = visitorText.getTransformedText();
+        //System.out.println("RefactoringTransform PRINT: "+transformedText);
+        return arreglarString(transformedText);
     }
     private String arreglarString(String conEspacios) {
-		return conEspacios.toString().replaceAll("\\s*\\.\\s*", ".").replaceAll(" ; <EOF>", ";");
+        return conEspacios.toString().trim() + ";";
+		//return conEspacios.toString().replaceAll("\\s*\\.\\s*", ".").replaceAll(" ; <EOF>", ";");
 	}
     protected boolean checkPostconditions(String text) {
         if (preconditionText == null) {

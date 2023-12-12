@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
 public class TextVisitor extends SQLiteParserBaseVisitor<String>{
+    
     private String transformedText;
 
     public TextVisitor() {
@@ -16,14 +17,17 @@ public class TextVisitor extends SQLiteParserBaseVisitor<String>{
 
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
-        transformedText = nextResult + " " + transformedText;
-		return nextResult + aggregate;
+		return aggregate + nextResult;
 	}
 
-    @Override
-    public String visitParse(SQLiteParser.ParseContext ctx) { 
-        return ctx.getText(); 
-    }
+    @Override 
+	public String visitSelect_core(SQLiteParser.Select_coreContext ctx) { 
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            transformedText = transformedText + ctx.getChild(i).getText() + " ";
+        }
+        
+        return transformedText;
+	}
 
     public String getTransformedText() {
         return this.transformedText;
