@@ -4,7 +4,7 @@ import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
 
-public class CheckPrePostVistor extends SQLiteParserBaseVisitor<Boolean> { 
+public class CheckPreVisitor extends SQLiteParserBaseVisitor<Boolean> { 
     private Boolean existsOrderBy = false;
 
     //podemos llamar a este metodo en algun lado? 

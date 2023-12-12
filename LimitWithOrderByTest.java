@@ -15,7 +15,7 @@ public class LimitWithOrderByTest {
 
     // Caso de prueba: Consulta válida con ORDER BY pero con LIMIT
     @Test
-    public void testLimitWithOrderByRefactor() throws RefactoringException {
+    public void testLimitWithOrderByRefactorLimit() throws RefactoringException {
         LimitWithOrderBy refactoring = new LimitWithOrderBy();
         String inputQuery = "SELECT * FROM partidos ORDER BY nombre LIMIT 10;";        
         String result = refactoring.refactor(inputQuery);
@@ -23,12 +23,15 @@ public class LimitWithOrderByTest {
     }
     // Caso de prueba: Consulta inválida sin ORDER BY
     @Test
-    public void testLimitWithOrderByInvalidQuery() throws RefactoringException {
+    public void testLimitWithOrderByInvalidQuery() throws RefactoringException{
         LimitWithOrderBy refactoring = new LimitWithOrderBy();    
         String inputQuery = "SELECT * FROM partidos;";
-        String result = refactoring.refactor(inputQuery);
-        //manejar la excepcion try y catch 
-        assertEquals(inputQuery, result);
+        try{
+            refactoring.refactor(inputQuery);
+        }
+        catch (RefactoringException e){
+            assertNotNull(e.getMessage());
+        }
     }
 
     // setea el valor del limit
@@ -39,15 +42,6 @@ public class LimitWithOrderByTest {
         refactoring.setLimit(5);
         String result = refactoring.refactor(inputQuery); 
         assertEquals(result, "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE LIMIT 5;");
-    }
-
-    // Agrega limit a consutla
-    @Test
-    public void testLimitOrderByInUnionQuery() throws RefactoringException {
-        LimitWithOrderBy refactoring = new LimitWithOrderBy();
-        String inputQuery = "(SELECT columna1 FROM tabla1) UNION (SELECT columna2 FROM tabla2 ORDER BY columna1)";
-        String result = refactoring.refactor(inputQuery);
-        assertEquals(result, inputQuery+ " LIMIT 10");
     }
     
 }

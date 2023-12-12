@@ -6,20 +6,47 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder transformedText = new StringBuilder();
-    private String result;
     private int limit = 10;
 
     @Override
-    public String visitLimit_stmt(SQLiteParser.Limit_stmtContext ctx) {
-        if(ctx.LIMIT_() != null){
-            return ctx
+    public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
+        if (ctx.SELECT_() != null) {
+            transformedText.append(ctx.SELECT_().toString()).append(" ");
         }
-        return result.append(ctx.SELECT_().toString() + "LIMIT " + limit + ";");
+
+        if (!ctx.result_column().isEmpty()) {
+            for (SQLiteParser.Result_columnContext resultColumn : ctx.result_column()) {
+                transformedText.append(resultColumn.toString()).append(" ");
+            }
+        }
+
+        if (ctx.FROM_() != null) {
+            transformedText.append(ctx.FROM_().toString()).append(" ");
+        }
+
+        if (ctx.WHERE_() != null) {
+            transformedText.append(ctx.WHERE_().toString()).append(" ");
+        }
+
+        if (ctx.ORDER_() != null) {
+            transformedText.append(ctx.ORDER_().toString()).append(" ");
+        }
+
+        if (ctx.BY_() != null) {
+            transformedText.append(ctx.BY_().toString()).append(" ");
+        }
+
+        if (ctx.LIMIT_() == null) {
+            transformedText.append("LIMIT ").append(limit).append(";");
+        }
+
+        return transformedText.toString();
     }
+
 
     @Override
     protected String defaultResult() {
-        return "";
+        return transformedText.toString();
     }
 
     @Override
@@ -27,9 +54,7 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
         return aggregate + " " + nextResult;
     }
 
-    public int setLimit(int l){
+    public void setLimit(int l){
         this.limit = l;
     }
-
-    // tendiramos que agregar el visitor que verifica si existe o no la columna o ordenar ?
 }

@@ -11,7 +11,7 @@ public class LimitWithOrderBy extends Refactoring{
     public void setLimit(int limnit){
         this.limit = limit;
     }
-    // queda igual
+
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
@@ -23,13 +23,17 @@ public class LimitWithOrderBy extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0 || !isExistOrderBy ) {
+        if (parser.getNumberOfSyntaxErrors() > 0) {
             return false;
         }
 
-        CheckPreVistor checkPreVistor = new CheckPreVistor();
-        checkPreVistor.visit(newParseTree);
-        Boolean isExistOrderBy = checkPreVistor.isValidPre();
+        CheckPreVisitor checkPreVisitor = new CheckPreVisitor();
+        checkPreVisitor.visit(newParseTree);
+        Boolean isExistOrderBy = checkPreVisitor.isValidPre();
+
+        if(!isExistOrderBy){
+            return false;
+        }
 
         return true;
         //preconditionText = newParseTree.getText();
@@ -55,13 +59,17 @@ public class LimitWithOrderBy extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
-        if (parser.getNumberOfSyntaxErrors() > 0 || !isExistLimit ) {
+        if (parser.getNumberOfSyntaxErrors() > 0 ) {
             return false;
         }
         
-        CheckPostVistor checkPostVistor = new CheckPostVistor();
-        checkPostVistor.visit(newParseTree);
-        Boolean isExistLimit = checkPostVistor.isValidPost();
+        CheckPostVisitor checkPostVisitor = new CheckPostVisitor();
+        checkPostVisitor.visit(newParseTree);
+        Boolean isExistLimit = checkPostVisitor.isValidPost();
+
+        if(!isExistLimit){
+            return false;
+        }
         
         return true;
     }
