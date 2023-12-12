@@ -21,6 +21,7 @@ public class LimitWithOrderByTest {
         String result = refactoring.refactor(inputQuery);
         assertEquals("SELECT * FROM partidos ORDER BY nombre LIMIT 10;", result);
     }
+    
     // Caso de prueba: Consulta inválida sin ORDER BY
     @Test
     public void testLimitWithOrderByInvalidQuery() throws RefactoringException{

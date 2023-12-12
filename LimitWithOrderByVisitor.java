@@ -9,50 +9,26 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
     private int limit = 10;
 
     @Override
-    public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
-        if (ctx.SELECT_() != null) {
-            transformedText.append(ctx.SELECT_().toString()).append(" ");
+    public String visitSelect_stmt(SQLiteParser.Select_stmtContext ctx) {
+        if (ctx.limit_stmt() != null) {
+            // Si ya hay una cláusula LIMIT, retornamos el texto de select_core
+           return transformedText.append(ctx.select_core(0).getText() + ctx.order_by_stmt().getText() + " " + ctx.limit_stmt().getText() + ";").toString();
         }
-
-        if (!ctx.result_column().isEmpty()) {
-            for (SQLiteParser.Result_columnContext resultColumn : ctx.result_column()) {
-                transformedText.append(resultColumn.toString()).append(" ");
-            }
-        }
-
-        if (ctx.FROM_() != null) {
-            transformedText.append(ctx.FROM_().toString()).append(" ");
-        }
-
-        if (ctx.WHERE_() != null) {
-            transformedText.append(ctx.WHERE_().toString()).append(" ");
-        }
-
-        if (ctx.ORDER_() != null) {
-            transformedText.append(ctx.ORDER_().toString()).append(" ");
-        }
-
-        if (ctx.BY_() != null) {
-            transformedText.append(ctx.BY_().toString()).append(" ");
-        }
-
-        if (ctx.LIMIT_() == null) {
-            transformedText.append("LIMIT ").append(limit).append(";");
-        }
-
-        return transformedText.toString();
+        // Si no hay una cláusula LIMIT, la agregamos
+        return transformedText.append(ctx.select_core(0).getText() + " " + ctx.order_by_stmt().getText() + " LIMIT " + limit + ";").toString();
     }
-
 
     @Override
     protected String defaultResult() {
         return transformedText.toString();
     }
 
+    /*
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
         return aggregate + " " + nextResult;
     }
+    */
 
     public void setLimit(int l){
         this.limit = l;

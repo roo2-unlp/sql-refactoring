@@ -8,7 +8,7 @@ public class LimitWithOrderBy extends Refactoring{
     private String preconditionText = null;
     private int limit=10;
 
-    public void setLimit(int limnit){
+    public void setLimit(int limit){
         this.limit = limit;
     }
 
@@ -36,7 +36,6 @@ public class LimitWithOrderBy extends Refactoring{
         }
 
         return true;
-        //preconditionText = newParseTree.getText();
     }
  
     @Override
@@ -46,6 +45,7 @@ public class LimitWithOrderBy extends Refactoring{
         ParseTree tree = parser.parse();
        
         LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
+        visitor.setLimit(limit);
         String transformedText = visitor.visit(tree);
         System.out.println("Texto después de la transformación: " + transformedText);
         System.out.println("transform se está ejecutando");
@@ -62,7 +62,7 @@ public class LimitWithOrderBy extends Refactoring{
         if (parser.getNumberOfSyntaxErrors() > 0 ) {
             return false;
         }
-        
+    
         CheckPostVisitor checkPostVisitor = new CheckPostVisitor();
         checkPostVisitor.visit(newParseTree);
         Boolean isExistLimit = checkPostVisitor.isValidPost();
