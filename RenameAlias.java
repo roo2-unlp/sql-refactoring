@@ -35,7 +35,7 @@ public class RenameAlias extends Refactoring {
 		if (this.esAliasValido(this.alias) && this.esAliasValido(this.newAlias) &&
 				(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido())) {
 			// Guardo el texto de la consulta
-			// System.out.println("chepreconditions se está ejecutando el if");
+			System.out.println("chepreconditions se está ejecutando el if");
 			preconditionText = newParseTree.getText();
 			// System.out.println("PRECONDITION TEXT: " + preconditionText);
 			return true;

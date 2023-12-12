@@ -61,6 +61,38 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
+	
+	@Override
+	public String visitColumn_name(SQLiteParser.Column_nameContext ctx) {
+		// System.err.println("VISIT COLUMN ALIAS");
+		String currentAlias = ctx.any_name().getChild(0).getText();
+		// Verificar que el nuevo alias no se repita en la consulta
+		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+			System.err.println("Error: El nuevo alias ya existe en la consulta.");
+			this.esValido = false;
+			return ctx.getText();
+		}
+		this.esValido = true;
+
+		// Retornar el texto del contexto si las verificaciones son exitosas
+		return ctx.getText();
+	}
+
+	@Override
+	public String visitTable_name(SQLiteParser.Table_nameContext ctx) {
+		System.err.println("VISIT TABLE NAME");
+		String currentAlias = ctx.any_name().getChild(0).getText();
+		// Verificar que el nuevo alias no se repita en la consulta
+		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+			System.err.println("Error: El nuevo alias ya existe en la consulta.");
+			this.esValido = false;
+			return ctx.getText();
+		}
+		this.esValido = true;
+
+		// Retornar el texto del contexto si las verificaciones son exitosas
+		return ctx.getText();
+	}
 
 	public boolean aliasExist(String query, String alias) {
 		if (query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")) {
