@@ -16,21 +16,18 @@ public class PrePostConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 		
 	@Override 
     public Void visitSelect_core(SQLiteParser.Select_coreContext ctx) { 
-		for (ParseTree hijo : ctx.children) {
-            if (hijo != null && (hijo instanceof TerminalNode)) {
-            	TerminalNode nodoTerminal = (TerminalNode) hijo;
-            	if (nodoTerminal.getSymbol().getType() == SQLiteParser.GROUP_) {
-            		containsGroup = true;
-            	} 
-				if (nodoTerminal.getSymbol().getType() == SQLiteParser.BY_) {
-            		containsBy = true;
-            	}
-            	if (nodoTerminal.getSymbol().getType() == SQLiteParser.DISTINCT_) {
-            		containsDistinct = true;
-            	}   
-            }
-        }
-		return super.visitChildren(ctx);
+		// Utiliza los métodos proporcionados por ANTLR para verificar la presencia de ciertos tokens
+		if (ctx.GROUP_() != null) {
+			containsGroup = true;
+		}
+		if (ctx.BY_() != null) {
+			containsBy = true;
+		}
+		if (ctx.DISTINCT_() != null) {
+			containsDistinct = true;
+		}
+
+		return visitChildren(ctx);
     }
 	
 	@Override 
