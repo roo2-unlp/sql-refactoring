@@ -85,6 +85,6 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
         // Imprimir el objeto ctx
         System.out.println("NUEVO Contenido de ctx: " +  ctx.getText());
         // Puedes devolver algún valor según tus necesidades
-        return super.visitSelect_core(ctx);
+        return visitSelect_core(ctx);
     }
 }
