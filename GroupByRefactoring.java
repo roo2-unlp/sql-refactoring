@@ -8,7 +8,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 
 public class GroupByRefactoring extends Refactoring{
-    private String preconditionText = null;
+    private String preconditionText;
+
+    public GroupByRefactoring() {
+        super();
+        this.preconditionText = null;
+    }
     
     private SQLiteParser createSQLiteParser (String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -45,7 +50,11 @@ public class GroupByRefactoring extends Refactoring{
             return false;
         }
 
-        preconditionText = null;
+        // if (!preconditionText.equals(text)) {
+        //     System.out.println("Precondition text: " + preconditionText);
+        //     System.out.println("Text: " + text);
+        //     return false;
+        // }
         return true;
     }
     protected String transform(String text) {
@@ -54,26 +63,40 @@ public class GroupByRefactoring extends Refactoring{
 
         TransformerVisitor visitor = new TransformerVisitor();
         visitor.visit(tree);
-        String transformedText = "prueba";
-
         
         TextVisitor visitorText = new TextVisitor();
-        //String res = visitorText.visit(tree);
-        //System.out.println("TextVisitor PRINT: "+res);
-        transformedText = visitorText.getTransformedText();
-        //System.out.println("RefactoringTransform PRINT: "+transformedText);
-        transformedText = arreglarString(visitorText.visit(tree));
+        String transformedText = arreglarString(visitorText.visit(tree));
         return transformedText;
     }
     private String arreglarString(String text) {
         return text.toString().trim() + ";";
-		//return conEspacios.toString().replaceAll("\\s*\\.\\s*", ".").replaceAll(" ; <EOF>", ";");
 	}
     protected boolean checkPostconditions(String text) {
-        if (preconditionText == null) {
+        SQLiteParser parser = this.createSQLiteParser(text);
+        ParseTree newParseTree = parser.parse();
+
+        
+        PrePostConditionsVisitor postConditionsVisitor = new PrePostConditionsVisitor();
+        
+        postConditionsVisitor.visit(newParseTree);
+        if (parser.getNumberOfSyntaxErrors() > 0) {
+            preconditionText = newParseTree.getText();
             return false;
         }
 
-        return preconditionText.equals(text);
+        if (postConditionsVisitor.getContainsDistinct()) {
+            preconditionText = newParseTree.getText();
+            return false;
+        }
+        if (postConditionsVisitor.getContainsAggregateFunction()) {
+            preconditionText = newParseTree.getText();
+            return false;
+        }
+        
+        if (!postConditionsVisitor.getContainsGroupBy()) {
+            preconditionText = newParseTree.getText();
+            return false;
+        }
+        return true;
     }
 }
