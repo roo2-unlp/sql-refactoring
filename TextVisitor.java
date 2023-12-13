@@ -22,6 +22,7 @@ public class TextVisitor extends SQLiteParserBaseVisitor<String>{
 
     @Override 
 	public String visitSelect_core(SQLiteParser.Select_coreContext ctx) { 
+        System.out.println("TextVisitor:"+ctx.getText());
         for (int i = 0; i < ctx.getChildCount(); i++) {
             transformedText = transformedText + ctx.getChild(i).getText() + " ";
         }

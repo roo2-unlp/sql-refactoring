@@ -58,15 +58,15 @@ public class GroupByRefactoring extends Refactoring{
 
         
         TextVisitor visitorText = new TextVisitor();
-        String res = visitorText.visit(tree);
+        //String res = visitorText.visit(tree);
         //System.out.println("TextVisitor PRINT: "+res);
         transformedText = visitorText.getTransformedText();
         //System.out.println("RefactoringTransform PRINT: "+transformedText);
         transformedText = arreglarString(visitorText.visit(tree));
-        return arreglarString(transformedText);
+        return transformedText;
     }
-    private String arreglarString(String conEspacios) {
-        return conEspacios.toString().trim() + ";";
+    private String arreglarString(String text) {
+        return text.toString().trim() + ";";
 		//return conEspacios.toString().replaceAll("\\s*\\.\\s*", ".").replaceAll(" ; <EOF>", ";");
 	}
     protected boolean checkPostconditions(String text) {
