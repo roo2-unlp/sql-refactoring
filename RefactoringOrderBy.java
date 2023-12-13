@@ -1,6 +1,11 @@
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.CharStreams;
 
 public class RefactoringOrderBy extends Refactoring {
 
+	private String nombreCampo = "";
 		
 	private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
@@ -19,6 +24,11 @@ public class RefactoringOrderBy extends Refactoring {
 			return false;
 		}
 		
+		//Verificar que campo sea != ""
+		if (nombreCampo.equals("")) {
+				return false;
+		}
+		
 		VisitorIsSelect visitorSelect = new VisitorIsSelect();
 		visitorSelect.visit(newParseTree);
 		
@@ -31,17 +41,7 @@ public class RefactoringOrderBy extends Refactoring {
 		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
 		visitor.visit(newParseTree);
 		
-		
-		return !visitor.isValid();
-
-	//	SQLiteParser.Ordering_termContext orderByContext = parser.ordering_term();
-    //   if (orderByContext == null) {
-    //        preconditionText = null;
-    //        return false;
-    //    }
-	//	preconditionText = newParseTree.getText();
-    //    return true;
-		
+		return !visitor.isValid();		
 	}
 	
 	
@@ -50,14 +50,9 @@ public class RefactoringOrderBy extends Refactoring {
 	public String transform(String text) {
 		SQLiteParser parser = this.createSQLiteParser(text);
 	    ParseTree newParseTree = parser.parse();
-	    VisitorAddOrderBy visitorAddOrder = new VisitorAddOrderBy();
-	    visitorAddOrder.visit(newParseTree);
 
-		//visitorAddOrder.visitResult_column(text)?
-		//visitorAddOrder.visitResult_column(text)?
-
-		//String transformedQuery = text + visitorAddOrder.getTextToAppend();
-		//return transformedQuery; 
+		String transformedQuery = text + " Order By " + nombreCampo;
+		return transformedQuery; 
 	}
 
 	public boolean checkPostconditions(String text) {
@@ -72,9 +67,13 @@ public class RefactoringOrderBy extends Refactoring {
 		VisitorExistsOrderBy visitor = new VisitorExistsOrderBy();
 		visitor.visit(newParseTree);
 		
-		
 		//Verificamos que se haya hecho la transformacion de agregar order by.
 		return visitor.isValid();
+	}
+	
+	
+	public void setParameter(String nombreCampo) {
+		this.nombreCampo = nombreCampo;
 	}
 	
 	
