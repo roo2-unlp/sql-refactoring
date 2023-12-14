@@ -2,11 +2,11 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
-public class TextVisitor extends SQLiteParserBaseVisitor<String>{
+public class TerminalNodesToTextVisitor extends SQLiteParserBaseVisitor<String>{
     
     private String transformedText;
 
-    public TextVisitor() {
+    public TerminalNodesToTextVisitor() {
         transformedText = "";
     }
 

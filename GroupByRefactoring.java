@@ -51,11 +51,11 @@ public class GroupByRefactoring extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
 
-        TransformerVisitor visitor = new TransformerVisitor();
-        visitor.visit(tree);
+        TransformerVisitor transformerVisitor = new TransformerVisitor();
+        transformerVisitor.visit(tree);
         
-        TextVisitor visitorText = new TextVisitor();
-        String transformedText = arreglarString(visitorText.visit(tree));
+        TerminalNodesToTextVisitor textVisitor = new TerminalNodesToTextVisitor();
+        String transformedText = arreglarString(textVisitor.visit(tree));
         //System.out.println("Transformed text: " + transformedText);
 
         return transformedText;
