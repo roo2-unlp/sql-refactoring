@@ -77,13 +77,13 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryColumnRefactored.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", "")); // rename alias de una tabla
-
+			assertEquals(queryColumnRefactored,
+					refactoring.refactor(queryWithAlias)); // rename alias de una tabla
+			
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryTableRefactored.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryTableRefactored,
+					refactoring.refactor(queryWithAlias));
 			System.out.println("***********************");
 			System.out.println("El refactoring se realizó con exito");
 		} catch (RefactoringException e) {
@@ -98,13 +98,12 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
-			assertEquals(queryWithAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", "")); // rename alias de una tabla
+			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias)); // rename alias de una tabla
 
 			// rename alias de una tabla
 			refactoring.setAlias("ciu", "c");
-			assertEquals(queryWithAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithAlias,
+					refactoring.refactor(queryWithAlias));
 			System.out.println("***********************");
 			System.out.println("El refactoring de alias not exist se realizó con exito");
 		} catch (RefactoringException e) {
@@ -112,20 +111,20 @@ public class RenameAliasTest {
 			assertTrue(false);
 		}
 	}
-
+	
 	@Test
 	public void testQueryWithoutAlias() {// falla pero no se por que
 		// Testea que la query sin alias no se haya cambiado
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
-			assertEquals(queryWithoutAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithoutAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithoutAlias,
+					refactoring.refactor(queryWithoutAlias));
 
 			// rename alias de una tabla
 			//refactoring.setAlias("ciudades", "c");
-			assertEquals(queryWithoutAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithoutAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithoutAlias,
+					refactoring.refactor(queryWithoutAlias));
 			System.out.println("*******QUERY SIN ALIAS****************");
 			System.out.println("El refactoring consulta sin alias se realizó con exito");
 		} catch (RefactoringException e) {
@@ -137,16 +136,16 @@ public class RenameAliasTest {
 
 	@Test
 	public void testNewAliasNotExist() {
-		// Testea que el nuevo alias no exista
+		// Testea que el nuevo alias no esté siendo utilizado
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryColumnRefactored.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryColumnRefactored,
+					refactoring.refactor(queryWithAlias));
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryTableRefactored.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryTableRefactored,
+					refactoring.refactor(queryWithAlias));
 			System.out.println("*******NUEVO ALIAS****************");
 			System.out.println("El refactoring consulta nuevo alias se realizó con exito");
 		} catch (RefactoringException e) {
@@ -162,12 +161,12 @@ public class RenameAliasTest {
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "p");
-			assertEquals(queryWithAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithAlias,
+					refactoring.refactor(queryWithAlias));
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryWithAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithAlias,
+					refactoring.refactor(queryWithAlias));
 			System.out.println("***********************");
 			System.out.println("El nuevo alias ya existe no cambia nada");
 		} catch (RefactoringException e) {
@@ -176,14 +175,14 @@ public class RenameAliasTest {
 			// e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testInvalidAlias() {
 		// Testea que el alias no sea una palabra reservada
 		refactoring.setAlias("nom_pais", "*");
 		try {
-			assertEquals(queryWithAlias.replaceAll("\\s", ""),
-					refactoring.refactor(queryWithAlias).replaceAll("\\s", ""));
+			assertEquals(queryWithAlias,
+					refactoring.refactor(queryWithAlias));
 			System.out.println("***********************");
 			System.out.println("El refactoring INVALID ALIAS se realizó con exito");
 		} catch (RefactoringException e) {

@@ -53,30 +53,24 @@ public class RenameAlias extends Refactoring {
 		TransformAliasVisitor visitor = new TransformAliasVisitor(this.alias, this.newAlias);
 		visitor.visit(tree);
 		ParseTree newTree = tree;
-		TransformAliasVisitor visitor1 = new TransformAliasVisitor(this.alias, this.newAlias);
+		SeparateTokensVisitor visitor1 = new SeparateTokensVisitor();
 		// visitor1.visit(tree);
 		visitor1.visit(newTree);
-		System.out.println("ARBOL VISITADO en string:  " + visitor1.getSeparatedWords());
-		return visitor1.getSeparatedWords();
+		System.out.println("ARBOL VISITADO en string:  " + visitor1);
+		return visitor1.getSeparatedWords().toString();
 	}
 
 	@Override
 	protected boolean checkPostconditions(String text) {
-		// Si la precondición es null directamente no pasó las precondiciones
-		// y por ende las postcondiciones tampoco
-		if (preconditionText == null) {
-			return false;
-		}
 		// Sino se compara el texto de la consulta antes y después del refactoring
 		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
-		else {
+
 			// return !(preconditionText.equals(text));
 			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
-			if (!(preconditionText.equals(this.transform(text)))) {
-				return true;
-			}
-			System.out.println("checkpostconditions se está ejecutando");
+		if (!(preconditionText.equals(this.transform(text)))) {
+			return true;
 		}
+		System.out.println("checkpostconditions se está ejecutando");
 		return false;
 
 	}

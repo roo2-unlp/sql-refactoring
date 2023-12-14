@@ -94,20 +94,6 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 		return ctx.getText();
 	}
 
-	public boolean aliasExist(String query, String alias) {
-		if (query.toUpperCase().contains(" " + alias.toUpperCase() + " AS")) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean newAliasNotExist(String query) {
-		if (!query.toUpperCase().contains(" " + newAlias.toUpperCase() + " AS")) {
-			return true;
-		}
-		return false;
-	}
-
 	public String getAlias() {
 		return alias;
 	}

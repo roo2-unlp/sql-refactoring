@@ -7,16 +7,11 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
     private String alias;
     private String newAlias;
-    private StringBuilder separatedWords;
-    private boolean esEspecial = false;
-    private String column_name;
-    private String table_name;
 
     public TransformAliasVisitor(String alias, String newAlias) {
         super();
         this.alias = alias;
         this.newAlias = newAlias;
-        this.separatedWords = new StringBuilder();
     }
 
     @Override
@@ -126,41 +121,6 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
         }
 
         return super.visitTable_name(ctx);
-    }
-
-    public String getSeparatedWords() {
-        return separatedWords.toString();
-    }
-
-    @Override
-    public String visitTerminal(TerminalNode node) {
-        String text = node.getText();
-        if (!text.equals("<EOF>"))
-            appendSeparatedWords(text);
-
-        return super.visitTerminal(node);
-    }
-
-    private void appendSeparatedWords(String text) {
-        if (!text.equals(",") && !text.equals(";")) {
-            if (separatedWords.length() > 0 && !text.equals(".")) {
-                if (!this.esEspecial) {
-                    separatedWords.append(" ");
-                } else {
-                    this.esEspecial = false;
-                }
-                separatedWords.append(text);
-            } else {
-                if (text.equals(".")) {
-                    this.esEspecial = true;
-                    separatedWords.append(text);
-                } else {
-                    separatedWords.append(text);
-                    separatedWords.append(" ");
-                }
-            }
-        } else
-            separatedWords.append(text);
     }
 
     @Override
