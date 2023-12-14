@@ -21,30 +21,48 @@ public class TextVisitor extends SQLiteParserBaseVisitor<String>{
 	}
 
     @Override 
-	public String visitSelect_core(SQLiteParser.Select_coreContext ctx) { 
-        System.out.println("TextVisitor:"+ctx.getText());
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            if (ctx.getChild(i) instanceof SQLiteParser.Result_columnContext) {
-                transformedText = transformedText + visitResult_column((SQLiteParser.Result_columnContext) ctx.getChild(i));
-            } else {
-                transformedText = transformedText + ctx.getChild(i).getText() + " ";
-            }
-        }
+    public String visitTerminal(TerminalNode node) {
+        return node.getText() + " ";
+    }
+
+    
+    // @Override 
+	// public String visitSelect_core(SQLiteParser.Select_coreContext ctx) { 
+    //     System.out.println("TextVisitor:"+ctx.getText());
+    //     for (int i = 0; i < ctx.getChildCount(); i++) {
+    //         if (ctx.getChild(i) instanceof SQLiteParser.Result_columnContext) {
+    //             transformedText = transformedText + visitResult_column((SQLiteParser.Result_columnContext) ctx.getChild(i));
+    //         } else {
+    //             System.out.println(ctx.getChild(i).getClass());
+    //             transformedText = transformedText + ctx.getChild(i).getText() + " ";
+    //         }
+    //     }
         
-        return transformedText;
-	}
+    //     return transformedText;
+	// }
 
-    @Override 
-    public String visitResult_column(SQLiteParser.Result_columnContext ctx) {
-        String transformedText = "";
+    // @Override 
+    // public String visitResult_column(SQLiteParser.Result_columnContext ctx) {
+    //     String transformedText = "";
 
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            transformedText = transformedText + ctx.getChild(i).getText() + " ";
-        }
-        return transformedText;
-    }
+    //     for (int i = 0; i < ctx.getChildCount(); i++) {
+    //         transformedText = transformedText + ctx.getChild(i).getText() + " ";
+    //     }
+    //     return transformedText;
+    // }
 
-    public String getTransformedText() {
-        return this.transformedText;
-    }
+    //  @Override 
+    // public String visitExpr(SQLiteParser.ExprContext ctx) {
+    //     String transformedText = "";
+
+    //     for (int i = 0; i < ctx.getChildCount(); i++) {
+    //         transformedText = transformedText + ctx.getChild(i).getText() + " ";
+    //     }
+    //     return transformedText;
+    // }
+    
+
+    // public String getTransformedText() {
+    //     return this.transformedText;
+    // }
 }
