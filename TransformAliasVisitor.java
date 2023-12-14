@@ -33,7 +33,6 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
             // Reemplazar el nodo original con el nuevo nodo
             ParserRuleContext parent = ctx.getParent();
             int index = parent.children.indexOf(originalNode);
-            this.column_name = parent.children.get(0).getText();
             parent.children.set(2, newAliasNode);
         }
 

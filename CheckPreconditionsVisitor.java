@@ -7,7 +7,7 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	private String alias;
 	// nuevo alias
 	private String newAlias;
-	private boolean esValido = false;
+	private boolean esValido = true;
 
 	public CheckPreconditionsVisitor(String alias, String newAlias) {
 		super();
@@ -33,15 +33,15 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	@Override
 	public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
 		// System.err.println("VISIT COLUMN ALIAS");
-		String currentAlias = ctx.IDENTIFIER().getText();
-		// Verificar que el nuevo alias no se repita en la consulta
-		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
-			System.err.println("Error: El nuevo alias ya existe en la consulta.");
-			this.esValido = false;
-			return ctx.getText();
+		if (this.esValido) {
+			String currentAlias = ctx.IDENTIFIER().getText();
+			// Verificar que el nuevo alias no se repita en la consulta
+			if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+				System.err.println("Error: El nuevo alias ya existe en la consulta.");
+				this.esValido = false;
+				return ctx.getText();
+			}
 		}
-		this.esValido = true;
-
 		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
@@ -49,14 +49,15 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	@Override
 	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
 		// System.err.println("VISIT TABLE ALIAS");
-		String currentAlias = ctx.any_name().getChild(0).getText();
-		// Verificar que el nuevo alias no se repita en la consulta
-		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
-			System.err.println("Error: El nuevo alias ya existe en la consulta.");
-			this.esValido = false;
-			return ctx.getText();
+		if (this.esValido) {
+			String currentAlias = ctx.any_name().getChild(0).getText();
+			// Verificar que el nuevo alias no se repita en la consulta
+			if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+				System.err.println("Error: El nuevo alias ya existe en la consulta.");
+				this.esValido = false;
+				return ctx.getText();
+			}
 		}
-		this.esValido = true;
 
 		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
@@ -65,15 +66,15 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	@Override
 	public String visitColumn_name(SQLiteParser.Column_nameContext ctx) {
 		// System.err.println("VISIT COLUMN ALIAS");
-		String currentAlias = ctx.any_name().getChild(0).getText();
-		// Verificar que el nuevo alias no se repita en la consulta
-		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
-			System.err.println("Error: El nuevo alias ya existe en la consulta.");
-			this.esValido = false;
-			return ctx.getText();
+		if (this.esValido) {
+			String currentAlias = ctx.any_name().getChild(0).getText();
+			// Verificar que el nuevo alias no se repita en la consulta
+			if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+				System.err.println("Error: El nuevo alias ya existe en la consulta.");
+				this.esValido = false;
+				return ctx.getText();
+			}
 		}
-		this.esValido = true;
-
 		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
@@ -81,15 +82,15 @@ public class CheckPreconditionsVisitor extends SQLiteParserBaseVisitor<String> {
 	@Override
 	public String visitTable_name(SQLiteParser.Table_nameContext ctx) {
 		System.err.println("VISIT TABLE NAME");
-		String currentAlias = ctx.any_name().getChild(0).getText();
-		// Verificar que el nuevo alias no se repita en la consulta
-		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
-			System.err.println("Error: El nuevo alias ya existe en la consulta.");
-			this.esValido = false;
-			return ctx.getText();
+		if (this.esValido) {
+			String currentAlias = ctx.any_name().getChild(0).getText();
+			// Verificar que el nuevo alias no se repita en la consulta
+			if (currentAlias.equalsIgnoreCase(this.newAlias)) {
+				System.err.println("Error: El nuevo alias ya existe en la consulta.");
+				this.esValido = false;
+				return ctx.getText();
+			}
 		}
-		this.esValido = true;
-
 		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
