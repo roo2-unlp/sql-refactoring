@@ -23,14 +23,23 @@ public class LimitWithOrderBy extends Refactoring{
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
 
+        // Validar que no tenga errores de sintaxis
         if (parser.getNumberOfSyntaxErrors() > 0) {
             return false;
         }
 
+        CheckPreVisitorSelect visitorSselect = new CheckPreVisitorSelect();
+		visitorSelect.visit(newParseTree);
+		
+		// Validar si es una consutla sql
+		if(!visitorSelect.isSelect()){
+			return false;
+		}
         CheckPreVisitor checkPreVisitor = new CheckPreVisitor();
         checkPreVisitor.visit(newParseTree);
         Boolean isExistOrderBy = checkPreVisitor.isValidPre();
 
+        // Validar que tenga el order by
         if(!isExistOrderBy){
             return false;
         }
@@ -48,7 +57,6 @@ public class LimitWithOrderBy extends Refactoring{
         visitor.setLimit(limit);
         String transformedText = visitor.visit(tree);
         System.out.println("Texto después de la transformación: " + transformedText);
-        System.out.println("transform se está ejecutando");
 
         return transformedText; 
     }
