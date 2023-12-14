@@ -13,7 +13,7 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
 
         // Imprimir el objeto ctx
-        System.out.println("Contenido de ctx: " + ctx.getText());
+        //System.out.println("Contenido de ctx: " + ctx.getText());
 
         // Obtener la lista de instancias de Result_columnContext
         List<SQLiteParser.Result_columnContext> resultColumns = ctx.result_column();
@@ -24,7 +24,7 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
         TerminalNode distinctToken = ctx.DISTINCT_();
         
         if (distinctToken != null) {
-            System.out.println("La palabra clave DISTINCT está presente.");
+            //System.out.println("La palabra clave DISTINCT está presente.");
             //Elimino la palabra clave DISTINCT
             ctx.children.remove(distinctToken.getSymbol().getTokenIndex() - 1);
         }
@@ -67,7 +67,7 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
                 } else {
                     firstExpr = false; // Cambia la bandera después de la primera expresión
                 }
-                System.out.println("Expression in List: " + expr.getText());
+                //System.out.println("Expression in List: " + expr.getText());
 
                 //Creo el token para la nueva expr
                 Token newExprToken = new CommonToken(SQLiteParser.IDENTIFIER, expr.getText());
@@ -83,7 +83,7 @@ public class TransformerVisitor extends SQLiteParserBaseVisitor<String> {
 
 
         // Imprimir el objeto ctx
-        System.out.println("NUEVO Contenido de ctx: " +  ctx.getText());
+        //System.out.println("NUEVO Contenido de ctx: " +  ctx.getText());
         // Puedes devolver algún valor según tus necesidades
         return null;
     }

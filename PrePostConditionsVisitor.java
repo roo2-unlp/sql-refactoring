@@ -6,12 +6,14 @@ public class PrePostConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	private boolean containsBy;
 	private boolean containsAggregateFunction;
 	private boolean containsDistinct;
+	private boolean containsStar;
 	
 	public PrePostConditionsVisitor() {
 		containsGroup = false;
 		containsBy = false;
 		containsAggregateFunction = false;
 		containsDistinct = false;
+		containsStar = false;
 	}
 		
 	@Override 
@@ -37,6 +39,14 @@ public class PrePostConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 		}	
 		return visitChildren(ctx); 
 	}
+
+	@Override
+    public Void visitResult_column(SQLiteParser.Result_columnContext ctx) {
+		if (ctx.STAR() != null) {
+			containsStar = true;
+		}
+		return visitChildren(ctx);
+	}
 	
 	public boolean getContainsGroup() {
 		return this.containsGroup;
@@ -56,6 +66,10 @@ public class PrePostConditionsVisitor extends SQLiteParserBaseVisitor<Void>{
 	
 	public boolean getContainsDistinct() {
 		return this.containsDistinct;
+	}
+
+	public boolean getContainsStar() {
+		return this.containsStar;
 	}
 	
 }

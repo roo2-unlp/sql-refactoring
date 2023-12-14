@@ -95,6 +95,18 @@ public class GroupByRefactoringTest {
         assertTrue(failure);       
     }
 
+    @Test 
+    public void containsStarTest()  {
+        boolean failure = false;
+        Refactoring refactoring = new GroupByRefactoring();
+        try{
+            refactoring.refactor("SELECT DISTINCT * FROM ventas");  
+        }
+        catch(Exception e) { failure = true; }
+
+        assertTrue(failure);       
+    }
+
     @Test
     public void semiColonTest() throws RefactoringException{
         Refactoring refactoring = new GroupByRefactoring();

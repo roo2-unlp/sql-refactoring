@@ -41,6 +41,10 @@ public class GroupByRefactoring extends Refactoring{
             return false;
         }
 
+        if (preConditionsVisitor.getContainsStar()) {
+            return false;
+        }
+
         return true;
     }
     protected String transform(String text) {
@@ -52,7 +56,7 @@ public class GroupByRefactoring extends Refactoring{
         
         TextVisitor visitorText = new TextVisitor();
         String transformedText = arreglarString(visitorText.visit(tree));
-        System.out.println("Transformed text: " + transformedText);
+        //System.out.println("Transformed text: " + transformedText);
 
         return transformedText;
     }
