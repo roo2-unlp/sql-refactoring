@@ -1,12 +1,17 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
-import org.antlr.v4.runtime.tree.ParseTree;
+
 import org.antlr.v4.runtime.Token;
 
 public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder transformedText = new StringBuilder();
+    private int limit = 10;
+    
+    public void setLimit(int limit){
+        this.limit = limit;
+    }
 
     @Override
     public String visitTerminal(TerminalNode node) {
@@ -17,7 +22,9 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
             if (length > 0 && transformedText.charAt(length - 1) == ' ') {
                 transformedText.deleteCharAt(length - 1);
             }
-            return transformedText.append(";").toString();
+            // agrego el limit a la consulta cuando llego al final
+            return transformedText.append(" LIMIT ").append(limit).append(";").toString();
+            // return transformedText.append(";").toString();
         }
 
         // Obtener el texto del nodo
