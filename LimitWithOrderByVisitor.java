@@ -2,85 +2,47 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.Token;
 
 public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
 
     private StringBuilder transformedText = new StringBuilder();
-    private int limit = 10;
 
     @Override
-    public String visitSelect_stmt(SQLiteParser.Select_stmtContext ctx) {
-        /*if (ctx.limit_stmt() != null) {
-            // Si ya hay una cláusula LIMIT, retornamos el texto de select_core
-           return transformedText.append(
-                ctx.select_core(0).getChild(0).getText() + " " +
-                ctx.select_core(0).getChild(1).getText() + " " +
-                ctx.select_core(0).getChild(2).getText() + " " +
-                ctx.select_core(0).getChild(3).getText() + " " +
-                ctx.order_by_stmt().getChild(0).getText() + " " +
-                ctx.order_by_stmt().getChild(1).getText() + " " +
-                ctx.order_by_stmt().getChild(2).getText() + " " +
-                ctx.limit_stmt().getChild(0).getText() + " " +
-                ctx.limit_stmt().getChild(1).getText() + " " +
-                ";"
-        ).toString();
-        }
-        // Si no hay una cláusula LIMIT, la agregamos
-        return transformedText.append(
-                ctx.select_core(0).getChild(0).getText() + " " +
-                ctx.select_core(0).getChild(1).getText() + " " +
-                ctx.select_core(0).getChild(2).getText() + " " +
-                ctx.select_core(0).getChild(3).getText() + " " +
-                ctx.order_by_stmt().getChild(0).getText() + " " +
-                ctx.order_by_stmt().getChild(1).getText() + " " +
-                ctx.order_by_stmt().getChild(2).getText() + " " +
-                " " + " LIMIT " + limit + ";").toString();*/
-
-            if (ctx.limit_stmt() != null) {
-            // Si ya hay una cláusula LIMIT, retornamos el texto de select_core
-            
-            for (int i = 0; i < ctx.select_core(0).getChildCount(); i++) {
-                transformedText.append(ctx.select_core(0).getChild(i).getText()).append(" ");
+    public String visitTerminal(TerminalNode node) {
+        // Verificar si el nodo es EOF
+        if (node.getSymbol().getType() == Token.EOF) {
+            // No agregues el EOF a la consulta, solo devuelve el texto transformado
+            int length = transformedText.length();
+            if (length > 0 && transformedText.charAt(length - 1) == ' ') {
+                transformedText.deleteCharAt(length - 1);
             }
-
-            for (int i = 0; i < ctx.order_by_stmt().getChildCount(); i++) {
-                transformedText.append(ctx.order_by_stmt().getChild(i).getText()).append(" ");
-            }
-
-            for (int i = 0; i < ctx.limit_stmt().getChildCount(); i++) {
-                transformedText.append(ctx.limit_stmt().getChild(i).getText()).append(" ");
-            }
-
-            transformedText.append(";");
-            return transformedText.toString();
+            return transformedText.append(";").toString();
         }
 
-        // Si no hay una cláusula LIMIT, la agregamos
-         for (int i = 0; i < ctx.select_core(0).getChildCount(); i++) {
-                transformedText.append(ctx.select_core(0).getChild(i).getText()).append(" ");
+        // Obtener el texto del nodo
+        String nodeText = node.getText();
+
+        // Verificar si el nodo es una coma, un punto o un punto y coma
+        if (".".contains(nodeText)){
+            int length = transformedText.length();
+            if (length > 0 && transformedText.charAt(length - 1) == ' ') {
+                transformedText.deleteCharAt(length - 1);
             }
-
-        for (int i = 0; i < ctx.order_by_stmt().getChildCount(); i++) {
-            transformedText.append(ctx.order_by_stmt().getChild(i).getText()).append(" ");
+            transformedText.append(node.getText());
         }
-
-        transformedText.append(" LIMIT ").append(limit).append(";");
-        return transformedText.toString();
+        else{
+           if (",".contains(nodeText)) {
+                // Eliminar el espacio anterior si existe
+                int length = transformedText.length();
+                if (length > 0 && transformedText.charAt(length - 1) == ' ') {
+                    transformedText.deleteCharAt(length - 1);
+                }
+            }
+            // Agregar el texto del nodo al constructor de la consulta
+            transformedText.append(node.getText()).append(" ");
         }
-    
-
-    @Override
-    protected String defaultResult() {
-        return transformedText.toString();
+        return null;
     }
 
-    @Override
-    protected String aggregateResult(String aggregate, String nextResult) {
-        return aggregate + " " + nextResult;
-    }
-    
-
-    public void setLimit(int l){
-        this.limit = l;
-    }
 }

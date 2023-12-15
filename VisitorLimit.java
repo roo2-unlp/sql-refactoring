@@ -4,11 +4,11 @@ import org.antlr.v4.runtime.tree.*;
 import sqlitegrammar.*;
 
 
-public class CheckPostVisitor extends SQLiteParserBaseVisitor<Boolean> { 
+public class VisitorLimit extends SQLiteParserBaseVisitor<Boolean> { 
     private Boolean existsLimit = false;
 
     //quien llama a este metodo? 
-    public Boolean isValidPost(){
+    public Boolean isValidLimit(){
         return existsLimit;
     }
 

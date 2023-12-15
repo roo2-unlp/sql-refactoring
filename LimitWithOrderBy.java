@@ -28,13 +28,13 @@ public class LimitWithOrderBy extends Refactoring{
             return false;
         }
 
-        CheckPreVisitorSelect visitorSselect = new CheckPreVisitorSelect();
+        /*CheckPreVisitorSelect visitorSelect = new CheckPreVisitorSelect();
 		visitorSelect.visit(newParseTree);
 		
 		// Validar si es una consutla sql
 		if(!visitorSelect.isSelect()){
 			return false;
-		}
+		}*/
         CheckPreVisitor checkPreVisitor = new CheckPreVisitor();
         checkPreVisitor.visit(newParseTree);
         Boolean isExistOrderBy = checkPreVisitor.isValidPre();
@@ -49,16 +49,29 @@ public class LimitWithOrderBy extends Refactoring{
  
     @Override
     protected String transform(String text) {
-        System.out.println("Texto antes de la transformación: " + text);
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
-       
-        LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
-        visitor.setLimit(limit);
-        String transformedText = visitor.visit(tree);
-        System.out.println("Texto después de la transformación: " + transformedText);
+        
+        VisitorLimit visitorLimit = new VisitorLimit();
+        visitorLimit.visit(tree);
+        Boolean isExistLimit = visitorLimit.isValidLimit();
+        System.out.println("Texto antes de la transformación: " + text);
+        if(isExistLimit){
+            return text;
+        }
+        else{
+            text = text.replace(";", "");
+            text = text + " LIMIT " + limit;
+        }
 
-        return transformedText; 
+        SQLiteParser newParser = this.createSQLiteParser(text);
+        ParseTree newTree = newParser.parse();
+        
+        LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
+        String transformedText = visitor.visit(newTree);
+        System.out.println("Texto después de la transformación: " + transformedText.toString());
+
+        return transformedText.toString(); 
     }
 
     // verifica que la consulta despues de la transformacion tenga LIMIT
@@ -71,9 +84,9 @@ public class LimitWithOrderBy extends Refactoring{
             return false;
         }
     
-        CheckPostVisitor checkPostVisitor = new CheckPostVisitor();
-        checkPostVisitor.visit(newParseTree);
-        Boolean isExistLimit = checkPostVisitor.isValidPost();
+        VisitorLimit visitorLimit = new VisitorLimit();
+        visitorLimit.visit(newParseTree);
+        Boolean isExistLimit = visitorLimit.isValidLimit();
 
         if(!isExistLimit){
             return false;
