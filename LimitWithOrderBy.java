@@ -66,7 +66,8 @@ public class LimitWithOrderBy extends Refactoring{
             return text;
         }
         else{
-            //text = text.replace(";", "");
+            // esto tenemos q hacerlo dentro del visitor tambien
+            text = text.replace(";", "");
             //text = text + " LIMIT " + limit + ";";
 
         // genero de vuelta el arbol con el texto transformado
