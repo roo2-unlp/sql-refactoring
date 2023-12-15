@@ -74,9 +74,9 @@ public class LimitWithOrderByTest {
     @Test
     public void testTransformAddLimitWithOrderBySub() throws RefactoringException {
         LimitWithOrderBy refactoring = new LimitWithOrderBy();
-        String inputQuery = "(SELECT a.nombre FROM alumnos) UNION (SELECT p.nombre FROM profesores) ORDER BY nombre";
+        String inputQuery = "SELECT a.nombre FROM alumnos UNION SELECT p.nombre FROM profesores ORDER BY nombre";
         String result = refactoring.refactor(inputQuery); 
-        assertEquals(result, "(SELECT a.nombre FROM alumnos) UNION (SELECT p.nombre FROM profesores) ORDER BY nombre LIMIT 10;");
+        assertEquals(result, "SELECT a.nombre FROM alumnos UNION SELECT p.nombre FROM profesores ORDER BY nombre LIMIT 10;");
     }*/
     
 } 

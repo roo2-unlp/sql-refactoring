@@ -57,13 +57,24 @@ public class LimitWithOrderBy extends Refactoring{
         Boolean isExistLimit = visitorLimit.isValidLimit();
         System.out.println("Texto antes de la transformación: " + text);
         if(isExistLimit){
+            // Verificar si la cadena contiene ";"
+            if (!text.contains(";")) {
+                // Si no contiene, agregar ";" al final
+                text += ";";
+            }
             return text;
         }
         else{
             text = text.replace(";", "");
-            text = text + " LIMIT " + limit;
+            text = text + " LIMIT " + limit + ";";
         }
+        
+        System.out.println("Texto después de la transformación: " + text);
 
+        return text; 
+        
+        /* 
+        // genero de vuelta el arbol con el texto transformado
         SQLiteParser newParser = this.createSQLiteParser(text);
         ParseTree newTree = newParser.parse();
         
@@ -72,6 +83,7 @@ public class LimitWithOrderBy extends Refactoring{
         System.out.println("Texto después de la transformación: " + transformedText.toString());
 
         return transformedText.toString(); 
+        */
     }
 
     // verifica que la consulta despues de la transformacion tenga LIMIT
