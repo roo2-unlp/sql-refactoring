@@ -6,7 +6,7 @@ public class LimitWithOrderByTest {
 
     // Caso de prueba: Consulta inválida
     // deberia retornar "Preconditions not met."
-   /* @Test
+    @Test
     public void testInvalidQuery() throws RefactoringException{
         LimitWithOrderBy refactoring = new LimitWithOrderBy();    
         String inputQuery = "Redictado objetos 2";
@@ -15,8 +15,9 @@ public class LimitWithOrderByTest {
         }
         catch (RefactoringException e){
             assertEquals("Preconditions not met.", e.getMessage());
+            System.out.println("Consulta SQL no válida.");
         }
-    }*/
+    }
     
     // Caso de prueba: Consulta inválida sin ORDER BY
     // deberia retornar "Preconditions not met."
@@ -69,7 +70,7 @@ public class LimitWithOrderByTest {
         String result = refactoring.refactor(inputQuery); 
         assertEquals(result, "SELECT P.NOMBRE FROM PERSONA P ORDER BY P.NOMBRE LIMIT 10;");
     }
-    /*
+
     // PROBAR SI LAS SUBCONSULTAS PASAN IGUAL
     @Test
     public void testTransformAddLimitWithOrderBySub() throws RefactoringException {
@@ -77,6 +78,6 @@ public class LimitWithOrderByTest {
         String inputQuery = "SELECT a.nombre FROM alumnos UNION SELECT p.nombre FROM profesores ORDER BY nombre";
         String result = refactoring.refactor(inputQuery); 
         assertEquals(result, "SELECT a.nombre FROM alumnos UNION SELECT p.nombre FROM profesores ORDER BY nombre LIMIT 10;");
-    }*/
+    }
     
 } 

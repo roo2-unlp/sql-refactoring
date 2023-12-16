@@ -28,13 +28,13 @@ public class LimitWithOrderBy extends Refactoring{
             return false;
         }
 
-        /*CheckPreVisitorSelect visitorSelect = new CheckPreVisitorSelect();
+        CheckPreVisitorSelect visitorSelect = new CheckPreVisitorSelect();
 		visitorSelect.visit(newParseTree);
 		
 		// Validar si es una consutla sql
 		if(!visitorSelect.isSelect()){
 			return false;
-		}*/
+		}
         CheckPreVisitor checkPreVisitor = new CheckPreVisitor();
         checkPreVisitor.visit(newParseTree);
         Boolean isExistOrderBy = checkPreVisitor.isValidPre();
@@ -59,6 +59,7 @@ public class LimitWithOrderBy extends Refactoring{
         
         if(isExistLimit){
             // Verificar si la cadena contiene ";"
+            System.out.println("No se aplica la transformación. La consulta es válida");
             if (!text.contains(";")) {
                 // Si no contiene, agregar ";" al final
                 text += ";";
@@ -66,17 +67,15 @@ public class LimitWithOrderBy extends Refactoring{
             return text;
         }
         else{
-            // esto tenemos q hacerlo dentro del visitor tambien
             text = text.replace(";", "");
-            //text = text + " LIMIT " + limit + ";";
 
-        // genero de vuelta el arbol con el texto transformado
-        //SQLiteParser newParser = this.createSQLiteParser(text);
-        //ParseTree newTree = newParser.parse();
+            // genero de vuelta el arbol con el texto transformado
+            SQLiteParser newParser = this.createSQLiteParser(text);
+            ParseTree newTree = newParser.parse();
         
             LimitWithOrderByVisitor visitor = new LimitWithOrderByVisitor();
             visitor.setLimit(limit);
-            String transformedText = visitor.visit(tree);
+            String transformedText = visitor.visit(newTree);
             System.out.println("Texto después de la transformación: " + transformedText.toString());
 
             return transformedText.toString(); 

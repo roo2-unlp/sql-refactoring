@@ -39,7 +39,7 @@ public class LimitWithOrderByVisitor extends SQLiteParserBaseVisitor<String> {
             transformedText.append(node.getText());
         }
         else{
-           if (",".contains(nodeText)) {
+            if (",".contains(nodeText)) {
                 // Eliminar el espacio anterior si existe
                 int length = transformedText.length();
                 if (length > 0 && transformedText.charAt(length - 1) == ' ') {
