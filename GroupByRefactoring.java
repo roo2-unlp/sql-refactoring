@@ -56,7 +56,6 @@ public class GroupByRefactoring extends Refactoring{
         
         TerminalNodesToTextVisitor textVisitor = new TerminalNodesToTextVisitor();
         String transformedText = arreglarString(textVisitor.visit(tree));
-        //System.out.println("Transformed text: " + transformedText);
 
         return transformedText;
     }
@@ -82,10 +81,6 @@ public class GroupByRefactoring extends Refactoring{
         }
 
         if (postConditionsVisitor.getContainsDistinct()) {
-            return false;
-        }
-
-        if (postConditionsVisitor.getContainsAggregateFunction()) {
             return false;
         }
         
