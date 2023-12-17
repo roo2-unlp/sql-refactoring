@@ -62,10 +62,10 @@ Para compilar nuestro proyecto nos tendremos que ubicar en la raiz de nuestro pr
 -javac *.java;
 
 Luego, para correr nuestro proyecto debemos ejecutar los siguiente comandos:
--java org.junit.runner.JUnitCore TusTestCase
+-java org.junit.runner.JUnitCore RemoveAliasRefactoringTest
 
 Aclaracion: se puede compilar y correr los Test de nuestro proyecto utilizando este comando:
--javac *.java; java org.junit.runner.JUnitCore TusTestCase
+-javac *.java; java org.junit.runner.JUnitCore RemoveAliasRefactoringTest
 
 
 Objetivo del proyecto:

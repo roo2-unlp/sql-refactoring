@@ -1,96 +1,119 @@
-
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-//import grammarSQLite.*;
-// import sqlitegrammar.SQLiteParser;
-// import SQLiteParserBaseVisitor.RemoveAliasVisitor;
+/**
+ * Clase que implementa un refactoring para eliminar un alias específico de una
+ * consulta SQL.
+ */
+public class RemoveAliasRefactoring extends Refactoring {
+    private String alias = "";
+    private String aliasReference = "";
 
-
-public class RemoveAliasRefactoring extends Refactoring{
-    private String preconditionText = null;   
-    private String alias="";
-    private String aliasReference="";
-    
-    public void setAlias(String alias){
-        this.alias=alias;
+    /**
+     * Establece el alias que se eliminará de la consulta.
+     *
+     * @param alias Alias a eliminar.
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
-    public String getAlias(){
+
+    /**
+     * Obtiene el alias que se eliminará de la consulta.
+     *
+     * @return Alias a eliminar.
+     */
+    public String getAlias() {
         return this.alias;
     }
-    public void setAliasReference(String aliasReference){
-        this.aliasReference=aliasReference;
+
+    /**
+     * Establece la tabla o columna a la que hace referencia el alias que se
+     * eliminará de la consulta.
+     *
+     * @param aliasReference Tabla o columna a la que hace referencia el alias.
+     */
+    public void setAliasReference(String aliasReference) {
+        this.aliasReference = aliasReference;
     }
-    public String getAliasReference(){
+
+    /**
+     * Obtiene la tabla o columna a la que hace referencia el alias que se eliminará
+     * de la consulta.
+     *
+     * @return Tabla o columna a la que hace referencia el alias.
+     */
+    public String getAliasReference() {
         return this.aliasReference;
     }
 
-
-    private SQLiteParser createSQLiteParser (String text) {
+    /**
+     * Crea un analizador sintáctico SQLiteParser a partir de un texto de consulta.
+     *
+     * @param text Texto de la consulta.
+     * @return Objeto SQLiteParser.
+     */
+    private SQLiteParser createSQLiteParser(String text) {
         CharStream charStream = CharStreams.fromString(text);
         SQLiteLexer lexer = new SQLiteLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         return new SQLiteParser(tokens);
     }
 
-    protected boolean checkPreconditions(String text) {//el text que representa la query
-        SQLiteParser  parser = this.createSQLiteParser(text);
+    /**
+     * Verifica las precondiciones antes de aplicar el refactoring.
+     *
+     * @param text Texto de la consulta.
+     * @return true si las precondiciones son satisfactorias, false de lo contrario.
+     */
+    protected boolean checkPreconditions(String text) {
+        SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
-        AliasCheckerVisitor visitorCheck= new AliasCheckerVisitor();
-        if (parser.getNumberOfSyntaxErrors() > 0) { //Revisa que la sintaxis sea exitoso
-            preconditionText = null;
+        AliasCheckerVisitor visitorCheck = new AliasCheckerVisitor();
+        if (parser.getNumberOfSyntaxErrors() > 0) {
             return false;
         }
         visitorCheck.setAlias(getAlias());
         visitorCheck.visit(newParseTree);
-        
-        if(visitorCheck.getAliasEncontrado()){  // verifica que el alias existe y retorna true o false
-            // aca me tengo que quedar con el nombre de la tabla o columna si el alias existe 
-            preconditionText = newParseTree.getText();
-           this.setAliasReference(visitorCheck.getAliasReference());
+
+        if (visitorCheck.getAliasEncontrado()) {
+            newParseTree.getText();
+            this.setAliasReference(visitorCheck.getAliasReference());
             return true;
+        } else {
+            return false;
         }
-        else
-            {return false;}
     }
-    protected String transform(String text) {  
+
+    /**
+     * Realiza la transformación del texto de la consulta aplicando el refactoring.
+     *
+     * @param text Texto de la consulta.
+     * @return Texto transformado después de aplicar el refactoring.
+     */
+    protected String transform(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
-        ParseTree tree = parser.parse();      
+        ParseTree tree = parser.parse();
         RemoveAliasVisitor visitor = new RemoveAliasVisitor();
         visitor.setAlias(alias);
-        visitor.setAliasReference(aliasReference);   
-        visitor.visit(tree);     
-        String transformedText = visitor.getQuerySeparete();
-        System.out.println(); 
-        System.out.println("TEXTO ORIGINAL");
-        System.out.println(text);
-        System.out.println();
-        System.out.println(); 
-        System.out.println("TEXTO MODIFICADO");
-        System.out.println(transformedText);
-        System.out.println();
-        return transformedText;
-        
+        visitor.setAliasReference(aliasReference);
+        visitor.visit(tree);
+        return visitor.getQuerySeparete();
     }
+
+    /**
+     * Verifica las postcondiciones después de aplicar el refactoring.
+     *
+     * @param text Texto de la consulta transformada.
+     * @return true si las postcondiciones son satisfactorias, false de lo
+     *         contrario.
+     */
     protected boolean checkPostconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree tree = parser.parse();
-        AliasCheckerVisitor visitor= new AliasCheckerVisitor();
+        AliasCheckerVisitor visitor = new AliasCheckerVisitor();
         visitor.visit(tree);
         return !visitor.getAliasEncontrado();
-   
-         
-        
-         // deberia cheakear si el alias fue eliminado
     }
-    
-    
-   
-
-
-   
-    
-
 
 }
-
