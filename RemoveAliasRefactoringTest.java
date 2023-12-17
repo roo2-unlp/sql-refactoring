@@ -35,8 +35,8 @@ public class RemoveAliasRefactoringTest {
       public void refactorAliasWithAsAndRef() throws RefactoringException {
           refactoring = new RemoveAliasRefactoring();
           refactoring.setAlias("tnm");
-          assertEquals("SELECT * FROM table_name WHERE table_name.codigo=123", 
-          refactoring.refactor("SELECT * FROM table_name as tnm WHERE tnm.codigo=123"));
+          assertEquals("SELECT * FROM table_name WHERE table_name.codigo = 123", 
+          refactoring.refactor("SELECT * FROM table_name as tnm WHERE tnm.codigo = 123"));
   
       } //Aca tendra que devolver la query sin el alias y cambiar la referencia a tnm.codigo por table_name.codigo
     
@@ -45,7 +45,7 @@ public class RemoveAliasRefactoringTest {
       public void refactorAliasWithSubquery() throws RefactoringException {
          refactoring = new RemoveAliasRefactoring();
          refactoring.setAlias("tnm2");
-         assertEquals("SELECT * FROM table_name as tnm WHERE tnm.codigo=123 and not in(SELECT table_name2.codigo FROM table_name2 WHERE table_name2.nombre=lautaro)",refactoring.refactor("SELECT * FROM table_name as tnm WHERE tnm.codigo=123 and not in(SELECT tnm2.codigo FROM table_name2 as tnm2 WHERE tnm2.nombre=lautaro)"));
+         assertEquals("SELECT * FROM table_name as tnm WHERE tnm.codigo = 123 and not in(SELECT table_name2.codigo FROM table_name2 WHERE table_name2.nombre = lautaro)",refactoring.refactor("SELECT * FROM table_name as tnm WHERE tnm.codigo = 123 and not in(SELECT tnm2.codigo FROM table_name2 as tnm2 WHERE tnm2.nombre = lautaro)"));
 
       } //Aca tendra que quitar el alias y cambiarle la ref de tnm2.nombre a table_name2.nombre y devolver el otro alias normal;
     
@@ -56,8 +56,8 @@ public class RemoveAliasRefactoringTest {
        public void refactorAliasWithJoin() throws RefactoringException {
          refactoring = new RemoveAliasRefactoring();
          refactoring.setAlias("cte");
-         assertEquals("SELECT cliente.codigo FROM productos as p JOIN cliente ON cliente.codigo=p.codigo",
-          refactoring.refactor("SELECT cte.codigo FROM productos as p JOIN cliente as cte ON cte.codigo=p.codigo"));
+         assertEquals("SELECT cliente.codigo FROM productos as p JOIN cliente ON cliente.codigo = p.codigo",
+          refactoring.refactor("SELECT cte.codigo FROM productos as p JOIN cliente as cte ON cte.codigo = p.codigo"));
        } //Aca tendra que quitar el alias elegido y cambiarle la ref de la  tabla que se cruzan ej: si es el alias c
     
 
@@ -66,7 +66,7 @@ public class RemoveAliasRefactoringTest {
      public void refactorAliasWithFuntions() throws RefactoringException {
        refactoring = new RemoveAliasRefactoring();
        refactoring.setAlias("max_value");
-       assertEquals("SELECT COUNT(*) as count,MAX(column1) FROM table1", refactoring.refactor("SELECT COUNT(*) as count,MAX(column1) as max_value FROM table1"));
+       assertEquals("SELECT COUNT(*) as count, MAX(column1) FROM table1", refactoring.refactor("SELECT COUNT(*) as count, MAX(column1) as max_value FROM table1"));
 
      } //Aca tendra que quitar el alias de la funcion max.
         
@@ -82,7 +82,7 @@ public class RemoveAliasRefactoringTest {
      public void refactorAliasWithAliasAtColumn() throws RefactoringException {
        refactoring = new RemoveAliasRefactoring();
        refactoring.setAlias("ali");
-       assertEquals("SELECT column1 as Alias1,column2 FROM table1", refactoring.refactor( "SELECT column1 as Alias1,column2 ali FROM table1"));
+       assertEquals("SELECT column1 as Alias1, column2 FROM table1", refactoring.refactor( "SELECT column1 as Alias1, column2 ali FROM table1"));
 
      } //Aca tendra que remover el ALIAS 2 que esta en la columna
     
@@ -90,7 +90,7 @@ public class RemoveAliasRefactoringTest {
       public void refactorAliasWithGroup() throws RefactoringException {
         refactoring = new RemoveAliasRefactoring();
         refactoring.setAlias("t1");
-        assertEquals("SELECT column1 FROM table1 WHERE table1.column1=table1.column3 GROUP BY table1.column2 ORDER BY table1.column2", refactoring.refactor("SELECT column1 FROM table1 as t1 WHERE t1.column1=t1.column3 GROUP BY t1.column2 ORDER BY t1.column2"));
+        assertEquals("SELECT column1, column2 FROM table1 WHERE table1.column1 = table1.column3 GROUP BY table1.column2 ORDER BY table1.column2", refactoring.refactor("SELECT column1, column2 FROM table1 as t1 WHERE t1.column1 = t1.column3 GROUP BY t1.column2 ORDER BY t1.column2"));
       } //Aca tendra que remover el alias pasado por parametro y devolver la query cambiando la ref
     
 
@@ -102,10 +102,16 @@ public class RemoveAliasRefactoringTest {
       refactoring.setAlias("nm");
       assertThrows(RefactoringException.class, () -> refactoring.refactor("SELECT * FROM name nm as nm WHERE 1=1"));  
         
-
+      
             
     } // deberia dar error de sintaxis
 
-
+     @Test 
+      public void refactorPrueba() throws RefactoringException {
+        refactoring = new RemoveAliasRefactoring();
+        refactoring.setAlias("t1");
+        assertEquals("SELECT table1.column1 FROM table1 WHERE table1.column1 = table1.column3 GROUP BY table1.column2 HAVING table1.column2 > table1.column4 ORDER BY table1.column2", refactoring.refactor("SELECT t1.column1 FROM table1 t1 WHERE t1.column1 = t1.column3 GROUP BY t1.column2 HAVING t1.column2 > t1.column4 ORDER BY t1.column2"));
+      } //
+    
 
 }

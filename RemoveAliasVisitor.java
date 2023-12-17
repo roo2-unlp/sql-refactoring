@@ -14,7 +14,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
       private String alias=" ";
       private String aliasReference="";
       private StringBuilder querySeparate=new StringBuilder();
-      private final Set<String> specialCharacters = new HashSet<>(Arrays.asList(".", "(",")", ",", "="));
+      private final Set<String> specialCharacters = new HashSet<>(Arrays.asList(".", "(",")", ","));
 
       public void setAlias(String alias){
          this.alias=alias;
@@ -88,7 +88,7 @@ public class RemoveAliasVisitor extends SQLiteParserBaseVisitor<String>{
                      if (!specialCharacters.contains(text) && !querySeparate.toString().isEmpty()) {
                         String lastText = querySeparate.toString();
                         char lastCharacter = lastText.charAt(lastText.length() - 1);
-                        if (lastCharacter == ')' && !text.equals(" ")) {
+                        if ((lastCharacter == ')' || (lastCharacter == ',')) && !text.equals(" ")) {
                             querySeparate.append(" ");
                         }
                     }
