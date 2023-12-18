@@ -69,10 +69,11 @@ public class RemoveAliasRefactoring extends Refactoring {
     protected boolean checkPreconditions(String text) {
         SQLiteParser parser = this.createSQLiteParser(text);
         ParseTree newParseTree = parser.parse();
-        AliasCheckerVisitor visitorCheck = new AliasCheckerVisitor();
         if (parser.getNumberOfSyntaxErrors() > 0) {
             return false;
         }
+
+        AliasCheckerVisitor visitorCheck = new AliasCheckerVisitor();
         visitorCheck.setAlias(getAlias());
         visitorCheck.visit(newParseTree);
 

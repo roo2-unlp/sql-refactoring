@@ -69,7 +69,7 @@ Para compilar las clases de ANTLR4 necesarias para el proyecto, ejecuta el sigui
 Para compilar nuestro proyecto nos tendremos que ubicar en la raiz de nuestro proyecto y ejecutar este comando:
 `javac *.java;`
 
-Luego, para correr nuestro proyecto debemos ejecutar el siguiente comando:
+Luego, para correr la colección de test unitarios de nuestro proyecto debemos ejecutar el siguiente comando:
 `java org.junit.runner.JUnitCore RemoveAliasRefactoringTest`
 
 *Nota: se puede resumir los dos pasos anteriores  en un comando:*
