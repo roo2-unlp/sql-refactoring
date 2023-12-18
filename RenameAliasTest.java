@@ -78,7 +78,7 @@ public class RenameAliasTest {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
 			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias)); // rename alias de una tabla
-			
+
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
 			assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
@@ -108,7 +108,7 @@ public class RenameAliasTest {
 			assertTrue(false);
 		}
 	}
-	
+
 	@Test
 	public void testQueryWithoutAlias() {// falla pero no se por que
 		// Testea que la query sin alias no se haya cambiado
@@ -118,7 +118,7 @@ public class RenameAliasTest {
 			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
 
 			// rename alias de una tabla
-			//refactoring.setAlias("ciudades", "c");
+			// refactoring.setAlias("ciudades", "c");
 			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
 			System.out.println("*******QUERY SIN ALIAS****************");
 			System.out.println("El refactoring consulta sin alias se realizó con exito");
@@ -152,14 +152,14 @@ public class RenameAliasTest {
 	public void testNewAliasExist() {
 		// Testea que si el nuevo alias ya existe no se hacen cambios
 
-			// rename alias de una columna
-			refactoring.setAlias("nom_pais", "p");
-			assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
-			// rename alias de una tabla
-			refactoring.setAlias("c", "cities");
-			assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
-			System.out.println("***********************");
-			System.out.println("El nuevo alias ya existe no cambia nada");
+		// rename alias de una columna
+		refactoring.setAlias("nom_pais", "p");
+		assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
+		// rename alias de una tabla
+		refactoring.setAlias("c", "cities");
+		assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
+		System.out.println("***********************");
+		System.out.println("El nuevo alias ya existe no cambia nada");
 
 	}
 

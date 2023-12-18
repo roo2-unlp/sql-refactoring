@@ -8,9 +8,9 @@ public class RenameAlias extends Refactoring {
 	private String alias;
 	// nuevo alias
 	private String newAlias;
-	// texto de la consulta antes de aplicar el refactoring
+	// texto dl transform
 	// se usa para comparar luego con las postcondiciones
-	private String preconditionText;
+	private String transformedText;
 
 	public void setAlias(String alias, String newAlias) {
 		this.alias = alias;
@@ -28,7 +28,7 @@ public class RenameAlias extends Refactoring {
 		SQLiteParser parser = this.createSQLiteParser(text);
 		ParseTree newParseTree = parser.parse();
 
-		CheckPreconditionsVisitor visitor = new CheckPreconditionsVisitor(this.alias, this.newAlias);
+		CheckAliasVisitor visitor = new CheckAliasVisitor(this.alias, this.newAlias);
 		String checkedQuery = visitor.visit(newParseTree);
 		// System.out.println("Imprimiendo checked query:" + checkedQuery);
 
@@ -36,12 +36,8 @@ public class RenameAlias extends Refactoring {
 				(parser.getNumberOfSyntaxErrors() == 0) && (visitor.getEsValido())) {
 			// Guardo el texto de la consulta
 			System.out.println("chepreconditions se está ejecutando el if");
-			preconditionText = newParseTree.getText();
-			// System.out.println("PRECONDITION TEXT: " + preconditionText);
 			return true;
 		}
-		// System.out.println("PRECONDITION TEXT: " + preconditionText);
-		preconditionText = null;
 		return false;
 	}
 
@@ -57,22 +53,28 @@ public class RenameAlias extends Refactoring {
 		// visitor1.visit(tree);
 		visitor1.visit(newTree);
 		System.out.println("ARBOL VISITADO en string:  " + visitor1);
-		return visitor1.getSeparatedWords().toString();
+		transformedText = visitor1.getSeparatedWords().toString();
+		return transformedText;
 	}
 
 	@Override
 	protected boolean checkPostconditions(String text) {
-		// Sino se compara el texto de la consulta antes y después del refactoring
-		// Que el alias haya sido modificado en todos los lugares y no esté el anterior
-
-			// return !(preconditionText.equals(text));
-			// && metodo que chequea que el alias haya sido modificado en todos los lugares;
-		if (!(preconditionText.equals(this.transform(text)))) {
-			return true;
-		}
+		SQLiteParser parser = this.createSQLiteParser(text);
+		ParseTree tree = parser.parse();
+		CheckAliasVisitor visitor = new CheckAliasVisitor(this.newAlias, this.alias);
+		String checkedQuery = visitor.visit(tree);
 		System.out.println("checkpostconditions se está ejecutando");
+		if (visitor.getEsValido()) {
+			ParseTree newTree = tree;
+			SeparateTokensVisitor tokensVisitor = new SeparateTokensVisitor();
+			tokensVisitor.visit(newTree);
+			System.out.println("TRANSFORMED TEXT: " + transformedText);
+			System.out.println("TOKENS VISITOR: " + tokensVisitor.getSeparatedWords().toString());
+			if (transformedText.equals(tokensVisitor.getSeparatedWords().toString())) {
+				return true;
+			}
+		}
 		return false;
-
 	}
 
 	private boolean esPalabraReservada(String newAlias) {
