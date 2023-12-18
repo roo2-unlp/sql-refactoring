@@ -12,70 +12,64 @@ public class SeparateTokensVisitor extends SQLiteParserBaseVisitor<String> {
         super();
         this.separatedWords = new StringBuilder();
     }
-    
+
     @Override
     public String visitTerminal(TerminalNode node) {
         String text = node.getText();
-        if (!text.equals("<EOF>") )
+        if (!text.equals("<EOF>"))
             appendSeparatedWords(text);
 
         return super.visitTerminal(node);
     }
-    
-
 
     public StringBuilder getSeparatedWords() {
-		return separatedWords;
-	}
-/*
-	   private void appendSeparatedWords(String text) {
-        if (!text.equals(",") && !text.equals(";")) {
-            if (separatedWords.length() > 0 && !text.equals(".")) {
-                if (!this.esEspecial || !text.equals(")")) {
-                    separatedWords.append(" ");
-                } else {
-                    this.esEspecial = false;
-                }
+        return separatedWords;
+    }
+
+    /*
+     * private void appendSeparatedWords(String text) {
+     * if (!text.equals(",") && !text.equals(";")) {
+     * if (separatedWords.length() > 0 && !text.equals(".")) {
+     * if (!this.esEspecial || !text.equals(")")) {
+     * separatedWords.append(" ");
+     * } else {
+     * this.esEspecial = false;
+     * }
+     * separatedWords.append(text);
+     * } else {
+     * if (text.equals(".")) {
+     * this.esEspecial = true;
+     * separatedWords.append(text);
+     * } else {
+     * separatedWords.append(text);
+     * }
+     * }
+     * } else
+     * separatedWords.append(text);
+     * }
+     */
+    private void appendSeparatedWords(String text) {
+
+        if (separatedWords.length() > 0) {
+            if (text.equals(".")) {
+                this.esEspecial = true;
                 separatedWords.append(text);
             } else {
-                if (text.equals(".")) {
-                    this.esEspecial = true;
+                if (this.esEspecial) {
+                    this.esEspecial = false;
                     separatedWords.append(text);
                 } else {
-                    separatedWords.append(text);
+                    if (text.equals(";") || text.equals(",") || text.equals(")")) {
+                        separatedWords.append(text);
+                    } else
+                        separatedWords.append(" " + text);
                 }
             }
-        } else
+        } else {
             separatedWords.append(text);
+        }
     }
-    */
-    private void appendSeparatedWords(String text) {
-    	
-    	if (separatedWords.length() > 0) {
-    		if (text.equals(".")) {
-    			this.esEspecial = true;
-    			separatedWords.append(text);
-    		}
-    		else {
-        		if (this.esEspecial) {
-        			this.esEspecial = false;
-        			separatedWords.append(text);
-        		}
-        		else {
-        			if (text.equals(";") || text.equals(",") || text.equals(")")) {
-            			separatedWords.append(text);
-            		}
-        			else 
-        				separatedWords.append(" " + text);
-        		}
-    		}
-    	}
-    	else {
-    		separatedWords.append(text);
-    	}
-    }
-    
-    
+
     @Override
     protected String defaultResult() {
         return "";

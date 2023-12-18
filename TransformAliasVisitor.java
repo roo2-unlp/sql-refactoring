@@ -16,7 +16,6 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
-        //System.out.println("VISIT COLUMN ALIAS TRANSFORM");
         // Obtener el nodo original
         TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.getChild(0);
         if (originalNode.getText().equals(this.alias)) {
@@ -41,12 +40,10 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
-        // System.out.println("VISIT TABLE ALIAS TRANSFORM");
         // Obtener el nodo original
         TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);
 
         if (originalNode.getText().equals(this.alias)) {
-            // System.out.println("entró al if del transform column alias");
             // Obtener el token original
             Token originalToken = originalNode.getSymbol();
 
@@ -68,13 +65,11 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitColumn_name(SQLiteParser.Column_nameContext ctx) {
-        // System.out.println("VISIT COLUMN NAME TRANSFORM");
         // Obtener el nodo original
         if (ctx.any_name() != null) {
             TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);
 
             if (originalNode.getText().equals(this.alias)) {
-                System.out.println("Entró al if column name " + originalNode.getText() + " nuevo " + this.newAlias);
                 // Obtener el token original
                 Token originalToken = originalNode.getSymbol();
 
@@ -96,7 +91,6 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
     @Override
     public String visitTable_name(SQLiteParser.Table_nameContext ctx) {
-        // System.out.println("VISIT TABLE NAME TRANSFORM");
         if (ctx.any_name() != null) {
             // Obtener el nodo original
             TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);

@@ -32,7 +32,6 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
 	@Override
 	public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
-		// System.err.println("VISIT COLUMN ALIAS");
 		if (this.esValido) {
 			String currentAlias = ctx.IDENTIFIER().getText();
 			// Verificar que el nuevo alias no se repita en la consulta
@@ -44,7 +43,6 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
 	@Override
 	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
-		// System.err.println("VISIT TABLE ALIAS");
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
 			// Verificar que el nuevo alias no se repita en la consulta
@@ -57,7 +55,6 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
 	@Override
 	public String visitColumn_name(SQLiteParser.Column_nameContext ctx) {
-		// System.err.println("VISIT COLUMN ALIAS");
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
 			// Verificar que el nuevo alias no se repita en la consulta
@@ -69,7 +66,6 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 
 	@Override
 	public String visitTable_name(SQLiteParser.Table_nameContext ctx) {
-		System.err.println("VISIT TABLE NAME");
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
 			// Verificar que el nuevo alias no se repita en la consulta
