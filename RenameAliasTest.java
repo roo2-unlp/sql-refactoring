@@ -21,53 +21,45 @@ public class RenameAliasTest {
 		queryWithAlias = "SELECT nombre_ciudad, cities.nombre_pais, p.continente"
 				+ " FROM ("
 				+ " SELECT nombre_ciudad, nombre_pais AS nom_pais"
-				+ " FROM ciudades"
+				+ " FROM ciudades AS cdades"
 				+ " WHERE nom_pais IN ("
 				+ " SELECT nombre_pais"
 				+ " FROM paises"
-				+ " WHERE continente = 'América'"
+				+ " WHERE continente = 'América' and cdades.nombre_ciudad = 'La Plata'"
 				+ ")"
 				+ ") AS cities"
 				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
 
 		// Query without alias
-		queryWithoutAlias = "SELECT nombre_ciudad, ciudades.nombre_pais, paises.continente"
-				+ " FROM ("
-				+ " SELECT nombre_ciudad, nombre_pais"
-				+ " FROM ciudades"
-				+ " WHERE nombre_pais IN ("
-				+ " SELECT nombre_pais"
-				+ " FROM paises"
-				+ " WHERE continente = 'América'"
-				+ ")"
-				+ ") ciudades"
-				+ " JOIN paises ON ciudades.nombre_pais = paises.nombre_pais;";
+		queryWithoutAlias = "SELECT *"
+				+ " FROM provincias"
+				+ " WHERE nombre_pais = 'Argentina';";
 
 		// Query refactored
 		queryColumnRefactored = "SELECT nombre_ciudad, cities.nombre_pais, p.continente"
 				+ " FROM ("
 				+ " SELECT nombre_ciudad, nombre_pais AS pais"
-				+ " FROM ciudades"
+				+ " FROM ciudades AS cdades"
 				+ " WHERE pais IN ("
 				+ " SELECT nombre_pais"
 				+ " FROM paises"
-				+ " WHERE continente = 'América'"
+				+ " WHERE continente = 'América' and cdades.nombre_ciudad = 'La Plata'"
 				+ ")"
 				+ ") AS cities"
 				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
 
 		// Query refactored
-		queryTableRefactored = "SELECT nombre_ciudad, c.nombre_pais, p.continente"
+		queryTableRefactored = "SELECT nombre_ciudad, cities.nombre_pais, p.continente"
 				+ " FROM ("
 				+ " SELECT nombre_ciudad, nombre_pais AS nom_pais"
-				+ " FROM ciudades"
+				+ " FROM ciudades AS c"
 				+ " WHERE nom_pais IN ("
 				+ " SELECT nombre_pais"
 				+ " FROM paises"
-				+ " WHERE continente = 'América'"
+				+ " WHERE continente = 'América' and c.nombre_ciudad = 'La Plata'"
 				+ ")"
-				+ ") AS c"
-				+ " JOIN paises AS p ON c.nombre_pais = p.nombre_pais;";
+				+ ") AS cities"
+				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
 
 	}
 
@@ -81,7 +73,7 @@ public class RenameAliasTest {
 			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias)); 
 
 			// rename alias de una tabla
-			refactoring.setAlias("cities", "c");
+			refactoring.setAlias("cdades", "c");
 			assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
 		} catch (RefactoringException e) {
 			assertTrue(false);

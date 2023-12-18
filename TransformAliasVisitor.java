@@ -19,20 +19,9 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
         // Obtener el nodo original
         TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.getChild(0);
         if (originalNode.getText().equals(this.alias)) {
-            // Obtener el token original
-            Token originalToken = originalNode.getSymbol();
-
-            // Crear un nuevo token con el nuevo alias
-            CommonToken newAliasToken = new CommonToken(originalToken);
-            newAliasToken.setText(newAlias);
-
-            // Crear un nuevo nodo terminal para el nuevo alias
-            TerminalNodeImpl newAliasNode = new TerminalNodeImpl(newAliasToken);
-
             // Reemplazar el nodo original con el nuevo nodo
             ParserRuleContext parent = ctx.getParent();
-            int index = parent.children.indexOf(originalNode);
-            parent.children.set(2, newAliasNode);
+            parent.children.set(2, this.modifyToken(originalNode));
         }
 
         return super.visitColumn_alias(ctx);
@@ -44,20 +33,8 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
         TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);
 
         if (originalNode.getText().equals(this.alias)) {
-            // Obtener el token original
-            Token originalToken = originalNode.getSymbol();
-
-            // Crear un nuevo token con el nuevo alias
-            CommonToken newAliasToken = new CommonToken(originalToken);
-            newAliasToken.setText(newAlias);
-
-            // Crear un nuevo nodo terminal para el nuevo alias
-            TerminalNodeImpl newAliasNode = new TerminalNodeImpl(newAliasToken);
-
             // Reemplazar el nodo original con el nuevo nodo
-            // ParserRuleContext parent = ctx.any_name().getParent();
-            // int index = parent.children.indexOf(originalNode);
-            ctx.any_name().children.set(0, newAliasNode);
+            ctx.any_name().children.set(0, this.modifyToken(originalNode));
         }
 
         return super.visitTable_alias(ctx);
@@ -70,20 +47,9 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
             TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);
 
             if (originalNode.getText().equals(this.alias)) {
-                // Obtener el token original
-                Token originalToken = originalNode.getSymbol();
-
-                // Crear un nuevo token con el nuevo alias
-                CommonToken newAliasToken = new CommonToken(originalToken);
-                newAliasToken.setText(newAlias);
-
-                // Crear un nuevo nodo terminal para el nuevo alias
-                TerminalNodeImpl newAliasNode = new TerminalNodeImpl(newAliasToken);
-
                 // Reemplazar el nodo original con el nuevo nodo
                 ParserRuleContext parent = ctx.any_name().getParent();
-                int index = parent.children.indexOf(originalNode);
-                parent.children.set(0, newAliasNode);
+                parent.children.set(0, this.modifyToken(originalNode));
             }
         }
         return super.visitColumn_name(ctx);
@@ -96,25 +62,28 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
             TerminalNodeImpl originalNode = (TerminalNodeImpl) ctx.any_name().getChild(0);
 
             if (originalNode.getText().equals(this.alias)) {
-                // Obtener el token original
-                Token originalToken = originalNode.getSymbol();
-
-                // Crear un nuevo token con el nuevo alias
-                CommonToken newAliasToken = new CommonToken(originalToken);
-                newAliasToken.setText(newAlias);
-
-                // Crear un nuevo nodo terminal para el nuevo alias
-                TerminalNodeImpl newAliasNode = new TerminalNodeImpl(newAliasToken);
-
                 // Reemplazar el nodo original con el nuevo nodo
                 ParserRuleContext parent = ctx.any_name().getParent();
-                int index = parent.children.indexOf(originalNode);
-                parent.children.set(0, newAliasNode);
+                parent.children.set(0, this.modifyToken(originalNode));
             }
         }
-
         return super.visitTable_name(ctx);
     }
+    
+    public TerminalNodeImpl modifyToken(TerminalNodeImpl originalNode) {
+            // Obtener el token original
+            Token originalToken = originalNode.getSymbol();
+
+            // Crear un nuevo token con el nuevo alias
+            CommonToken newAliasToken = new CommonToken(originalToken);
+            newAliasToken.setText(newAlias);
+
+            // Crear un nuevo nodo terminal para el nuevo alias
+            TerminalNodeImpl newAliasNode = new TerminalNodeImpl(newAliasToken);
+
+            return newAliasNode;
+    }
+    
 
     @Override
     protected String defaultResult() {
@@ -124,10 +93,9 @@ public class TransformAliasVisitor extends SQLiteParserBaseVisitor<String> {
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
         if (aggregate == null) {
-            return nextResult; // Si el resultado acumulado es null, simplemente devuelve el resultado del nodo
-                               // hijo
+            return nextResult; 
         } else {
-            return aggregate + nextResult; // Concatena los resultados
+            return aggregate + nextResult; 
         }
     }
 
