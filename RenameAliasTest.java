@@ -73,11 +73,12 @@ public class RenameAliasTest {
 
 	@Test
 	public void testAliasExist() {
-		// Testea que si el alias existe, se haya cambiado correctamente
+		// Testea que si el alias existe y el nuevo alias no está siendo utilizado, la consulta se 
+		// haya modificado correctamente
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias)); // rename alias de una tabla
+			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias)); 
 
 			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
@@ -89,11 +90,11 @@ public class RenameAliasTest {
 
 	@Test
 	public void testAliasNotExist() {
-		// Testea que si el alias no existe la query no haya cambiado
+		// Testea que la consulta no cambie si el alias que se quiere modificar no existe
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
-			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias)); // rename alias de una tabla
+			assertEquals(queryWithAlias, refactoring.refactor(queryWithAlias));
 
 			// rename alias de una tabla
 			refactoring.setAlias("ciu", "c");
@@ -104,31 +105,16 @@ public class RenameAliasTest {
 	}
 
 	@Test
-	public void testQueryWithoutAlias() {// falla pero no se por que
-		// Testea que la query sin alias no se haya cambiado
+	public void testQueryWithoutAlias() {
+		// Testea que no se modifique la consulta si esta no tiene alias
 		try {
 			// rename alias de una columna
 			refactoring.setAlias("nom_p", "pais");
 			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
 
 			// rename alias de una tabla
-			// refactoring.setAlias("ciudades", "c");
-			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
-		} catch (RefactoringException e) {
-			assertTrue(false);
-		}
-	}
-
-	@Test
-	public void testNewAliasNotExist() {
-		// Testea que el nuevo alias no esté siendo utilizado
-		try {
-			// rename alias de una columna
-			refactoring.setAlias("nom_pais", "pais");
-			assertEquals(queryColumnRefactored, refactoring.refactor(queryWithAlias));
-			// rename alias de una tabla
 			refactoring.setAlias("cities", "c");
-			assertEquals(queryTableRefactored, refactoring.refactor(queryWithAlias));
+			assertEquals(queryWithoutAlias, refactoring.refactor(queryWithoutAlias));
 		} catch (RefactoringException e) {
 			assertTrue(false);
 		}
@@ -136,7 +122,7 @@ public class RenameAliasTest {
 
 	@Test
 	public void testNewAliasExist() {
-		// Testea que si el nuevo alias ya existe no se hacen cambios
+		// Testea que si el nuevo alias ya existe no se realicen modificaciones
 
 		// rename alias de una columna
 		refactoring.setAlias("nom_pais", "p");
@@ -155,14 +141,14 @@ public class RenameAliasTest {
 
 	@Test
 	public void testAliasIsNameOfTable() {
-		// Testea que si el alias es igual al nombre de la tabla no se hace el cambio
+		// Testea que si el alias es igual al nombre de la tabla no se hagan modificaciones 
 		refactoring.setAlias("p", "paises");
 		assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
 	}
 
 	@Test
 	public void testAliasIsNameOfColumn() {
-		// Testea que si el alias es igual al nombre de la columna no se hace el cambio
+		// Testea que si el alias es igual al nombre de la columna no se hagan modificaciones 
 		refactoring.setAlias("nom_pais", "nombre_pais");
 		assertThrows(RefactoringException.class, () -> refactoring.refactor(queryWithAlias));
 	}

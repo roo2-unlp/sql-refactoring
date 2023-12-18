@@ -23,10 +23,9 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 	@Override
 	protected String aggregateResult(String aggregate, String nextResult) {
 		if (aggregate == null) {
-			return aggregate; // Si el resultado acumulado es null, simplemente devuelve el resultado del nodo
-								// hijo
+			return aggregate; 
 		} else {
-			return aggregate + nextResult; // Concatena los resultados
+			return aggregate + nextResult;
 		}
 	}
 
@@ -34,10 +33,8 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 	public String visitColumn_alias(SQLiteParser.Column_aliasContext ctx) {
 		if (this.esValido) {
 			String currentAlias = ctx.IDENTIFIER().getText();
-			// Verificar que el nuevo alias no se repita en la consulta
 			this.existInTheQuery(currentAlias);
 		}
-		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
 
@@ -45,11 +42,8 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 	public String visitTable_alias(SQLiteParser.Table_aliasContext ctx) {
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
-			// Verificar que el nuevo alias no se repita en la consulta
 			this.existInTheQuery(currentAlias);
 		}
-
-		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
 
@@ -57,10 +51,8 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 	public String visitColumn_name(SQLiteParser.Column_nameContext ctx) {
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
-			// Verificar que el nuevo alias no se repita en la consulta
 			this.existInTheQuery(currentAlias);
 		}
-		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
 
@@ -68,17 +60,13 @@ public class CheckAliasVisitor extends SQLiteParserBaseVisitor<String> {
 	public String visitTable_name(SQLiteParser.Table_nameContext ctx) {
 		if (this.esValido) {
 			String currentAlias = ctx.any_name().getChild(0).getText();
-			// Verificar que el nuevo alias no se repita en la consulta
 			this.existInTheQuery(currentAlias);
 		}
-		// Retornar el texto del contexto si las verificaciones son exitosas
 		return ctx.getText();
 	}
 
 	public void existInTheQuery(String currentAlias) {
-		// Verificar que el nuevo alias no se repita en la consulta
 		if (currentAlias.equalsIgnoreCase(this.newAlias)) {
-			System.err.println("Error: El nuevo alias ya existe en la consulta.");
 			this.esValido = false;
 		}
 	}

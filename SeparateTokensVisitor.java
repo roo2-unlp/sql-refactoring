@@ -26,28 +26,6 @@ public class SeparateTokensVisitor extends SQLiteParserBaseVisitor<String> {
         return separatedWords;
     }
 
-    /*
-     * private void appendSeparatedWords(String text) {
-     * if (!text.equals(",") && !text.equals(";")) {
-     * if (separatedWords.length() > 0 && !text.equals(".")) {
-     * if (!this.esEspecial || !text.equals(")")) {
-     * separatedWords.append(" ");
-     * } else {
-     * this.esEspecial = false;
-     * }
-     * separatedWords.append(text);
-     * } else {
-     * if (text.equals(".")) {
-     * this.esEspecial = true;
-     * separatedWords.append(text);
-     * } else {
-     * separatedWords.append(text);
-     * }
-     * }
-     * } else
-     * separatedWords.append(text);
-     * }
-     */
     private void appendSeparatedWords(String text) {
 
         if (separatedWords.length() > 0) {
@@ -78,8 +56,8 @@ public class SeparateTokensVisitor extends SQLiteParserBaseVisitor<String> {
     @Override
     protected String aggregateResult(String aggregate, String nextResult) {
         if (aggregate == null) {
-            return nextResult; // Si el resultado acumulado es null, simplemente devuelve el resultado del nodo
-                               // hijo
+            return nextResult; // Si el resultado acumulado es null, devuelve 
+            				   // el resultado del nodo hijo
         } else {
             return aggregate + nextResult; // Concatena los resultados
         }
