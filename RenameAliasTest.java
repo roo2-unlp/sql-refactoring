@@ -60,7 +60,6 @@ public class RenameAliasTest {
 				+ ")"
 				+ ") AS cities"
 				+ " JOIN paises AS p ON cities.nombre_pais = p.nombre_pais;";
-
 	}
 
 	@Test
