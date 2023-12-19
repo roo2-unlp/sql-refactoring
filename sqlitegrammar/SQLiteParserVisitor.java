@@ -1,9 +1,7 @@
-// Generated from ./sqlitegrammar/SQLiteParser.g4 by ANTLR 4.13.1
-package codAnt;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+package sqlitegrammar;
 
-import codAnt.SQLiteParser;
-import codAnt.SQLiteParser.*;
+// Generated from ./sqlitegrammar/SQLiteParser.g4 by ANTLR 4.13.1
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced

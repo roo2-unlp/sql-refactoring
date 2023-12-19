@@ -1,3 +1,6 @@
+import java.util.Arrays;
+
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -12,19 +15,39 @@ import sqlitegrammar.SQLiteParser;
 public class UsingDistinctInsteadGroupBy extends Refactoring {
 private StringBuilder conEspacios = new StringBuilder();
 
+	/* Metodo para crear el arbol SQLiteParse con la consulta SQLite ingresada como un string
+	 * utilizando la gramatica provista por la catedra */
 	private SQLiteParser createSQLiteParser (String text) {
+		//se convierte el texto en un flujo de caracteres
 	    CharStream charStream = CharStreams.fromString(text);
+	    
+	    //se divide el flujo de caracteres en tokens creando el lexer, cada token es
+	    //una unidad lexica
 	    SQLiteLexer lexer = new SQLiteLexer(charStream);
+	    
+	    //se organizan los token producidos por el lexer para ser consumidos por el parse
 	    CommonTokenStream tokens = new CommonTokenStream(lexer);
+	    
+	    //se crea un parse, realiza el analisis sintactico
 	    SQLiteParser parser = new SQLiteParser(tokens); 
-	    parser.setErrorHandler(new BailErrorStrategy()); // usar la estrategia de error Bail
+	    
+	    //se utiliza el manejador de errores Bail, esta arroja una excepcion
+	    //cuando se encuentran errores de sintacticos
+	    parser.setErrorHandler(new BailErrorStrategy());
+	    
+	    //se devuelve el parse listo para ser analizado y recorrido
 	    return parser;
 	}
     
+	
+	/* Implementacion del metodo abtracto de la clase Refacoring donde
+	 * se chequean las precondiciones que se deben cumplir para poder aplicar el refactoring */
     @Override
 	protected boolean checkPreconditions(String text) {
 		SQLiteParser parser;
 		ParseTree newParseTree;
+		
+		//se crea el parse y se analiza que no tenga errores
 		try {
 			parser = this.createSQLiteParser(text);
 			newParseTree = parser.parse();
@@ -38,14 +61,24 @@ private StringBuilder conEspacios = new StringBuilder();
 		    return false;
 		}
         
+		//herramienta que utilizamos para poder ver los arboles de las consultas que ingresabamos
+		//se puede quitar los comentarios de las 2 loineas siguientes para poder ver los arboles
+        //TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), newParseTree);
+        //viewer.open();
+		
         conEspacios.setLength(0);
+        
+        //se crea el visitor que se utilizara para recorrer el arbol
         ConditionVisitor visitor = new ConditionVisitor();
+        
+        //se visita e imprime
 	    visitor.visit(newParseTree); 
         imprimirNodos(newParseTree);
-        System.out.println(arreglarString());
         return visitor.getPrecondicion();    	     		
 	}
 
+    /* Implementacion del metodo abstracto de la clase Refactorin donde se realiza
+     * la transformacion de una consulta*/
 	@Override
 	protected String transform(String text) {
 		SQLiteParser parser;
@@ -68,14 +101,17 @@ private StringBuilder conEspacios = new StringBuilder();
         visitor.visit(tree);
         imprimirNodos(tree);   
         String transformedText = arreglarString();   
-        System.out.println(arreglarString());
         return transformedText;
 	}
 
+	/* Implementacion del metodo abtracto de la clase Refacoring donde
+	 * se chequean las post condiciones que se deben cumplir para poder
+	 * considerar que el refactoring fue aplicado correctamente*/
 	@Override
 	protected boolean checkPostconditions(String text) {
 		SQLiteParser parser;
         ParseTree newParseTree;
+        
         try {
         	parser = this.createSQLiteParser(text);
         	newParseTree = parser.parse();
@@ -86,6 +122,8 @@ private StringBuilder conEspacios = new StringBuilder();
 		catch (ParseCancellationException e) {
 		    return false;
 		}
+        TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()), newParseTree);
+        viewer.open();
         ConditionVisitor postConditionsVisitor = new ConditionVisitor();
         postConditionsVisitor.visit(newParseTree);
         conEspacios.setLength(0);
@@ -94,6 +132,9 @@ private StringBuilder conEspacios = new StringBuilder();
         return postConditionsVisitor.getPostcondicion();
 	}
 	
+	/* Metodo privado utilizado para agregar espacios al string que contiene una
+	 * consulta SQLite, donde se recorre el arbol formado por la consulta
+	 * y se van guardando los textos de los tokens en un stringBuilder*/
 	private void imprimirNodos(ParseTree tree) {
     	for (int i = 0; i < tree.getChildCount(); i++) {
             ParseTree child = tree.getChild(i);
@@ -113,12 +154,10 @@ private StringBuilder conEspacios = new StringBuilder();
     	
     }
 	
+	/* Metodo privado para eliminar los espacios en blanco entre los puntos
+	 * y los nombres de las columnas y le quita el <EOF> al final del string*/
 	private String arreglarString() {
 		return conEspacios.toString().replaceAll("\\s*\\.\\s*", ".").replaceAll(" ; <EOF>", ";");
 	}
 	
 }
-	
-
-
-

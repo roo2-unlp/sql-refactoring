@@ -12,11 +12,14 @@ public class UsingDistinctInsteadGroupByVisitor extends SQLiteParserBaseVisitor<
 
     }
     
+    /*Metodo utilizado para recorrer las distintas partes del SELECT 
+     * para poder insertar el nodo DISTINCT y eliminar los nodos
+     * GROUP y BY juntos con sus expresiones*/
     @Override
     public String visitSelect_core(SQLiteParser.Select_coreContext ctx) {
         int selectIndice = -1;
         int groupByIndice = -1;
-
+        
         for (int i = 0; i < ctx.children.size(); i++) {
             ParseTree hijo = ctx.children.get(i);
 
@@ -26,12 +29,12 @@ public class UsingDistinctInsteadGroupByVisitor extends SQLiteParserBaseVisitor<
 
                 if (tipoSimbolo == SQLiteParser.SELECT_) {
                     selectIndice = i;
-
+                    
                     Token distinctToken = new CommonToken(SQLiteParser.DISTINCT_, "DISTINCT");
                     TerminalNodeImpl distinctNode = new TerminalNodeImpl(distinctToken);
-
                     ctx.children.add(selectIndice + 1, distinctNode);
-                } else if (tipoSimbolo == SQLiteParser.GROUP_) {
+                    
+                }  else if (tipoSimbolo == SQLiteParser.GROUP_) {
                     groupByIndice = i;
                     break;
                 }
