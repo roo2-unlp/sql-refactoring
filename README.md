@@ -98,7 +98,7 @@ Dada una consulta SQL y un alias a eliminar, busca dicho alias en la consulta, l
 El `AliasCheckerVisitor` recorre el árbol generado por Antlr4 en busca del alias a remover. Si lo encuentra, establece en verdadero el valor de la variable booleana "aliasEncontrado" (inicialmente falsa) y guarda la referencia a la tabla/columna en "aliasReference".
 
 ### RemoveAliasVisitor
-El `RemoveAliasVisitor` recorre el árbol generado por Antlr4. En cada nodo visitado, construye la consulta transformada utilizando la variable "querySeparate", que es un `StringBuilder`. Además, en los nodos donde se puede declarar un alias, este se elimina junto con la palabra clave "as". Por lo tanto, cada referencia al alias en la consulta se reemplaza por el nombre de la tabla o columna almacenado en "aliasReference".
+El `RemoveAliasVisitor` recorre el árbol generado por Antlr4. En cada nodo visitado, construye la consulta ingresada utilizando la variable "querySeparate", que es un `StringBuilder`. Además, en los nodos donde se puede declarar un alias, este se elimina junto con la palabra clave "as"(si es que el alias se declaro con "as"). Por lo tanto, cada referencia al alias en la consulta se reemplaza por el nombre de la tabla o columna almacenado en "aliasReference".
 
 ### RemoveAliasRefactoring
 `RemoveAliasRefactoring` es una subclase de `Refactoring` que define la lógica para verificar las precondiciones y postcondiciones, realizar las transformaciones y establecer el alias a remover. Utiliza el patrón Template Method.
